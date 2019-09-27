@@ -3,9 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import 'bootstrap/dist/css/bootstrap.css';
-import '../src/style/style.scss';
-import '../src/style/css/animate.css'
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

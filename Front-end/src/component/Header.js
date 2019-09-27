@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import Body from './Body'
 
 export default class Header extends Component {
     render() {
@@ -24,7 +23,6 @@ export default class Header extends Component {
                         </div>
                     </div>
                 </nav>
-                <Body />
             </div>
         )
     }

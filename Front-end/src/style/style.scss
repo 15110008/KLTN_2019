@@ -12888,7 +12888,6 @@ textarea.form-control {
 
 .ftco-animate {
 	opacity: 0;
-	visibility: hidden;
 }
 
 .bg-primary {
@@ -14287,4 +14286,17 @@ textarea.form-control {
 		stroke-dasharray: 89, 200;
 		stroke-dashoffset: -136px;
 	}
+}
+
+.header-image {
+	position: relative;
+	background-attachment: fixed
+}
+
+.p-50 {
+	padding-top: 50px;
+}
+
+.location-icon{
+	background-image: url('../images/locaition.svg')
 }
