@@ -78,7 +78,7 @@ export default class Body extends Component {
                                                 <li><span className="flaticon-bathtub"></span>2</li>
                                                 <li><span className="flaticon-floor-plan"></span>1,878 sqft</li>
                                             </ul>
-                                            <h3><a href="properties-single.html">The Blue Sky Home</a></h3>
+                                            <h3><a href="properties-single.html">The Blue Sky Home </a></h3>
                                             <span className="location">Oakland</span>
                                             <a href="properties-single.html" className="d-flex align-items-center justify-content-center btn-custom">
                                                 <span className="ion-ios-link"></span>
