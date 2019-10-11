@@ -1,0 +1,1 @@
+export const MONITORING_PROJECTS_DATABASE_URL = process.env.MONITORING_PROJECTS_DATABASE_URL || 'mongodb://admin:admin123@ds245170.mlab.com:45170/monitoring_projects_db';
