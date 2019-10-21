@@ -21,7 +21,7 @@ import {
     LoginWithFacebookErrors,
     LoginWithGoogleErrors
 } from '../error-codes/account.error-codes';
-import { 
+import {
     AccountStatus,
     AccountRole,
     PasswordDefault
@@ -74,7 +74,7 @@ const loginWithFacebook = async (req, res) => {
                     facebook,
                     password
                 });
-                console.log('bbbbbbbb')
+                console.log('bbbbbbbb');
                 if (!account) throw new NotImplementError(LoginWithFacebookErrors.CREATE_FAIL_NEW_ACCOUNT);
                 jwt = GenerateToken(AccountRepository.getPayloadJwtSchema(account));
                 if (!jwt) throw new NotImplementError(LoginWithFacebookErrors.LOGIN_FAIL);
