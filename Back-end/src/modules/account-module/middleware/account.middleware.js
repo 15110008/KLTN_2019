@@ -15,9 +15,10 @@ import {
 } from '../error-codes/account.error-codes';
 
 const createAccountInput = (req, res, next) => {
-    const { email, password } = req.body;
+    const { name, email, password } = req.body;
     try {
         if (!req.body) throw CreateAccountErrors.NO_DATA;
+        if (!name) throw CreateAccountErrors.NO_NAME;
         if (!email) throw CreateAccountErrors.NO_EMAIL;
         if (!password) throw CreateAccountErrors.NO_PASSWORD;
         if (!Validator.isEmail(email)) throw CreateAccountErrors.INVALID_EMAIL;
