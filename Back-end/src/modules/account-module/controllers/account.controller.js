@@ -74,7 +74,11 @@ const loginWithFacebook = async (req, res) => {
                     facebook,
                     password
                 });
+<<<<<<< HEAD
                 //console.log('bbbbbbbb');
+=======
+                console.log('bbbbbbbb');
+>>>>>>> 253e23236f10f944a4d7611b261ffd99dd5bfc56
                 if (!account) throw new NotImplementError(LoginWithFacebookErrors.CREATE_FAIL_NEW_ACCOUNT);
                 jwt = GenerateToken(AccountRepository.getPayloadJwtSchema(account));
                 if (!jwt) throw new NotImplementError(LoginWithFacebookErrors.LOGIN_FAIL);
