@@ -7,5 +7,5 @@ export const CreateDestinationErrors = {
     AUTH_FAIL: 'AUTH_FAIL',
     NO_RIGHT: 'NO_RIGHT',
     CREATE_FAILURE: 'CREATE_FAILURE',
-    
-}
+
+};

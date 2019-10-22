@@ -52,7 +52,7 @@ const login = async (req, res) => {
         const isMatchPassword = await account.comparePassword(password);
         if (!isMatchPassword) throw new ValidationError(AccountLoginErrors.WRONG_PASSWORD);
         const jwt = GenerateToken(AccountRepository.getPayloadJwtSchema(account));
-        return res.onSuccess({ jwt });
+        return res.onSuccess(jwt, account.name);
     } catch (error) {
         return res.onError(error);
     }
@@ -62,7 +62,7 @@ const loginWithFacebook = async (req, res) => {
     const { facebook } = req.body;
     try {
         let jwt;
-        //console.log('aaaaaa');
+        // console.log('aaaaaa');
         const isExistedFacebookId = await AccountRepository.isExistedFacebookId(facebook.facebookId);
         if (!isExistedFacebookId) { // first login with facebook
             const isExistedEmail = await AccountRepository.isExistedEmail(facebook.facebookEmail);
@@ -74,11 +74,7 @@ const loginWithFacebook = async (req, res) => {
                     facebook,
                     password
                 });
-<<<<<<< HEAD
-                //console.log('bbbbbbbb');
-=======
-                console.log('bbbbbbbb');
->>>>>>> 253e23236f10f944a4d7611b261ffd99dd5bfc56
+                // console.log('bbbbbbbb');
                 if (!account) throw new NotImplementError(LoginWithFacebookErrors.CREATE_FAIL_NEW_ACCOUNT);
                 jwt = GenerateToken(AccountRepository.getPayloadJwtSchema(account));
                 if (!jwt) throw new NotImplementError(LoginWithFacebookErrors.LOGIN_FAIL);

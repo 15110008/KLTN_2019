@@ -1,4 +1,4 @@
-//import Validator from 'validator';
+// import Validator from 'validator';
 import ValidationError from '../../../errors-handle/validation.errors';
 import {
     CreateDestinationErrors,
@@ -6,7 +6,7 @@ import {
 
 
 const createDestinationInput = (req, res, next) => {
-    const { jwt } = req.headers; 
+    const { jwt } = req.headers;
     const {
         name,
         description,
@@ -14,11 +14,11 @@ const createDestinationInput = (req, res, next) => {
         latitude
     } = req.body;
     try {
-        if(!jwt) throw CreateDestinationErrors.NO_TOKEN;
-        if(!name) throw CreateDestinationErrors.NO_NAME;
-        if(!description) throw CreateDestinationErrors.NO_DESCRIPTION;
-        if(!longitude) throw CreateDestinationErrors.NO_LONGITUDE;
-        if(!latitude) throw CreateDestinationErrors.NO_LATITUDE;
+        if (!jwt) throw CreateDestinationErrors.NO_TOKEN;
+        if (!name) throw CreateDestinationErrors.NO_NAME;
+        if (!description) throw CreateDestinationErrors.NO_DESCRIPTION;
+        if (!longitude) throw CreateDestinationErrors.NO_LONGITUDE;
+        if (!latitude) throw CreateDestinationErrors.NO_LATITUDE;
         return next();
     } catch (error) {
         return res.onError(new ValidationError(error));
@@ -27,4 +27,4 @@ const createDestinationInput = (req, res, next) => {
 
 export default {
     createDestinationInput,
-}
+};

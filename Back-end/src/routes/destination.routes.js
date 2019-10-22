@@ -4,6 +4,6 @@ import DestinationValidate from '../modules/destination-module/middleware/destin
 
 const router = express.Router();
 
-//POST
-//Create destination
+// POST
+// Create destination
 router.post('/destination', DestinationValidate.createDestinationInput, DestinationController.create);
