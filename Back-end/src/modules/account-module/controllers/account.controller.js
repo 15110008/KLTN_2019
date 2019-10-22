@@ -52,7 +52,7 @@ const login = async (req, res) => {
         const isMatchPassword = await account.comparePassword(password);
         if (!isMatchPassword) throw new ValidationError(AccountLoginErrors.WRONG_PASSWORD);
         const jwt = GenerateToken(AccountRepository.getPayloadJwtSchema(account));
-        return res.onSuccess(jwt, account.name);
+        return res.onSuccess({ jwt }, { name: account.name });
     } catch (error) {
         return res.onError(error);
     }

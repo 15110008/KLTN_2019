@@ -14,14 +14,16 @@ form h1 {
 
 input {
     margin: 40px 25px;
-    width: 350px;
+    width: 200px;
     display: block;
     border: none;
     padding: 10px 0;
     border-bottom: solid 1px #1abc9c;
     transition: all 0.3s cubic-bezier(0.64, 0.09, 0.08, 1);
     background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 96%, #1abc9c 4%);
+    background-position: -200px 0;
     background-size: 200px 100%;
+    background-repeat: no-repeat;
     color: #0e6252;
 }
 
@@ -29,6 +31,7 @@ input:focus,
 input:valid {
     box-shadow: none;
     outline: none;
+    background-position: 0 0;
 }
 
 input:focus::-webkit-input-placeholder,
@@ -37,37 +40,4 @@ input:valid::-webkit-input-placeholder {
     font-size: 11px;
     transform: translateY(-20px);
     visibility: visible !important;
-}
-
-.kep-login-facebook {
-    font-size: 10px !important;
-    margin-left: 25px;
-    height: 50px;
-    padding: unset;
-    width: 350px;
-}
-
-.modal-body {
-    margin: auto;
-}
-
-.Toastify__progress-bar {
-    display: none
-}
-
-.btn-group {
-    .btn-primary {
-        background: rgb(253, 216, 53) !important;
-        border: unset !important;
-        border-top-right-radius: unset !important;
-        border-bottom-right-radius: unset !important;
-        width: 350px;
-        height: 50px;
-        border-radius: 5px;
-    }
-}
-
-.modal-60w {
-    max-width: none !important;
-    width: 60%;
 }
