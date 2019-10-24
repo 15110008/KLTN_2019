@@ -60,7 +60,6 @@ export default class formLogin extends Component {
                 name: this.state.name,
             }).then(response => {
                 if (response.data.success) {
-                    this.onClose()
                     toast.success('Tạo tài khoản thành công')
                     this.props.userVisible && this.props.userVisible()
                 } else {
