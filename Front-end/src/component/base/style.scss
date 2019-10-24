@@ -17,7 +17,7 @@ input {
     width: 350px;
     display: block;
     border: none;
-    padding: 10px 0;
+    padding-top: 13px;
     border-bottom: solid 1px #1abc9c;
     transition: all 0.3s cubic-bezier(0.64, 0.09, 0.08, 1);
     background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 96%, #1abc9c 4%);
@@ -48,7 +48,7 @@ input:valid::-webkit-input-placeholder {
 }
 
 .modal-body {
-    margin: auto;
+    // margin: auto;
 }
 
 .Toastify__progress-bar {
@@ -70,4 +70,8 @@ input:valid::-webkit-input-placeholder {
 .modal-60w {
     max-width: none !important;
     width: 60%;
+}
+
+.background-login-form {
+    background-image: url('../../images/graphic-map.png');
 }

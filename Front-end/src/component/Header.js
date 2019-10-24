@@ -71,7 +71,7 @@ export default class Header extends Component {
                     </div>
                 </nav>
                 <Modal
-                    title={'Đăng nhập'}
+                    // title={'Đăng nhập'}
                     content={this.contentLogin()}
                     show={this.state.addModalShow}
                     onHide={this.addModalClose}

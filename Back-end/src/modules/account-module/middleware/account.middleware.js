@@ -30,14 +30,14 @@ const createAccountInput = (req, res, next) => {
 const logInAccountInput = (req, res, next) => {
     const { email, password } = req.body;
     try {
-        console.log("TCL: logInAccountInput -> email", email)
+        console.log('TCL: logInAccountInput -> email', email);
         if (!req.body) throw AccountLoginErrors.NO_DATA;
         if (!email) throw AccountLoginErrors.NO_EMAIL;
         if (!password) throw AccountLoginErrors.NO_PASSWORD;
         if (!Validator.isEmail(email)) throw AccountLoginErrors.INVALID_EMAIL;
         return next();
     } catch (error) {
-        console.log("TCL: logInAccountInput -> error", error)
+        console.log('TCL: logInAccountInput -> error', error);
         return res.onError(new ValidationError(error));
     }
 };
