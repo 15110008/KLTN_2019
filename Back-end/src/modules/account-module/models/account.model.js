@@ -19,7 +19,8 @@ const AccountSchema = new Schema({
         required: true,
     },
     phone: {
-        type: String
+        type: String,
+        default: null
     },
     facebook: {
         facebookId: String,
@@ -35,7 +36,8 @@ const AccountSchema = new Schema({
         googleEmail: String,
     },
     avatar: {
-        type: String
+        type: String,
+        default: null
     },
     status: {
         type: String,

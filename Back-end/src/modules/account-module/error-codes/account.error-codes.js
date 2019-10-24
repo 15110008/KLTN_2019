@@ -1,5 +1,6 @@
 export const CreateAccountErrors = {
     NO_DATA: 'NO_DATA',
+    NO_NAME: 'NO_NAME',
     NO_EMAIL: 'NO_EMAIL',
     NO_PASSWORD: 'NO_PASSWORD',
     INVALID_EMAIL: 'INVALID_EMAIL',

@@ -11,7 +11,7 @@ export default class ModalCore extends Component {
         return (
             <Modal
                 {...this.props}
-                dialogClassName="modal-60w"
+                size="lg"
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
             >
@@ -24,8 +24,28 @@ export default class ModalCore extends Component {
                     {this.props.content}
                 </Modal.Body>
                 <Modal.Footer>
+                    <Button onClick={this.props.onClick}>Close</Button>
+                    <Button onClick={this.props.onClick}>Login</Button>
                 </Modal.Footer>
             </Modal>
         );
     }
+
+
+    // render() {
+    //     const [modalShow, setModalShow] = React.useState(false);
+
+    //     return (
+    //         <ButtonToolbar>
+    //             <Button variant="primary" onClick={() => setModalShow(true)}>
+    //                 Launch vertically centered modal
+    //         </Button>
+
+    //             <MyVerticallyCenteredModal
+    //                 show={modalShow}
+    //                 onHide={() => setModalShow(false)}
+    //             />
+    //         </ButtonToolbar>
+    //     );
+    // }
 }

@@ -30,11 +30,11 @@ import {
 
 
 const create = async (req, res) => {
-    const { email, password } = req.body;
+    const { name, email, password } = req.body;
     try {
         const existed = await AccountRepository.isExistedEmail(email);
         if (existed) throw new AlreadyExistError(CreateAccountErrors.EMAIL_ALREADY_EXIST);
-        const account = await AccountRepository.create({ email, password });
+        const account = await AccountRepository.create({ name, email, password });
         if (!account) throw new NotImplementError(CreateAccountErrors.CREATE_FAIL);
         return res.onSuccess(account);
     } catch (error) {
@@ -52,7 +52,7 @@ const login = async (req, res) => {
         const isMatchPassword = await account.comparePassword(password);
         if (!isMatchPassword) throw new ValidationError(AccountLoginErrors.WRONG_PASSWORD);
         const jwt = GenerateToken(AccountRepository.getPayloadJwtSchema(account));
-        return res.onSuccess({ jwt });
+        return res.onSuccess({ jwt }, { name: account.name });
     } catch (error) {
         return res.onError(error);
     }
@@ -62,7 +62,7 @@ const loginWithFacebook = async (req, res) => {
     const { facebook } = req.body;
     try {
         let jwt;
-        console.log('aaaaaa');
+        // console.log('aaaaaa');
         const isExistedFacebookId = await AccountRepository.isExistedFacebookId(facebook.facebookId);
         if (!isExistedFacebookId) { // first login with facebook
             const isExistedEmail = await AccountRepository.isExistedEmail(facebook.facebookEmail);
@@ -74,7 +74,7 @@ const loginWithFacebook = async (req, res) => {
                     facebook,
                     password
                 });
-                console.log('bbbbbbbb');
+                // console.log('bbbbbbbb');
                 if (!account) throw new NotImplementError(LoginWithFacebookErrors.CREATE_FAIL_NEW_ACCOUNT);
                 jwt = GenerateToken(AccountRepository.getPayloadJwtSchema(account));
                 if (!jwt) throw new NotImplementError(LoginWithFacebookErrors.LOGIN_FAIL);
@@ -160,6 +160,7 @@ const getAccounts = async (req, res) => {
         if (!accounts) throw new NotFoundError(GetAccountsErrors.GET_FAIL);
         const result = accounts.map((account) => {
             const accountInfo = {};
+            accountInfo._id = account._id;
             accountInfo.name = account.name;
             accountInfo.avatar = account.avatar;
             accountInfo.status = account.status;
@@ -186,6 +187,7 @@ const getAccount = async (req, res) => {
         const accountInfo = await AccountRepository.getAccountById(accountId);
         if (!accountInfo) throw new NotFoundError(GetAccountErrors.GET_FAIL);
         return res.onSuccess({
+            _id: accountInfo._id,
             name: accountInfo.name,
             avatar: accountInfo.avatar,
             status: accountInfo.status,
@@ -209,6 +211,7 @@ const updateInfo = async (req, res) => {
         const account = await AccountRepository.getAccountById(authenData.accountId);
         if (!account) throw new NotFoundError(UpdateAccountErrors.GET_FAIL);
         return res.onSuccess({
+            _id: account._id,
             name: account.name,
             avatar: account.avatar,
             status: account.status,
@@ -261,6 +264,7 @@ const blockUnblockAccount = async (req, res) => {
         const result = await AccountRepository.getAccountAfterBlock(accountId);
         if (!result) throw new NotFoundError(BlockUnblockAccountErrors.GET_FAIL);
         return res.onSuccess({
+            _id: result._id,
             name: result.name,
             avatar: result.avatar,
             status: result.status,

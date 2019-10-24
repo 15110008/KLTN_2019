@@ -10,85 +10,13 @@ const { TabPane } = Tabs;
 
 
 export default class formLogin extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isLoggedIn: false,
-            userId: '',
-            name: '',
-            email: '',
-            picture: ''
-        }
-        this.onSubmit = this.onSubmit.bind(this);
-    }
-
-    componentClicked() {
-        console.log('clicked')
-    }
-
-    responseFacebook(response) {
-        console.log("TCL: Header -> responseFacebook -> response", response)
-    }
-
-    onSubmit(e) {
-        axios.post('http://localhost:3000/v1/account/login', {
-            email: this.state.email,
-            password: this.state.password
-        }).then(response => {
-            console.log("TCL: formLogin -> onSubmit -> response", response)
-            if (response.data.success) {
-                this.onClose()
-                this.props.userVisible && this.props.userVisible()
-            } else {
-                toast.error(response.data.message)
-            }
-        }).catch(error => {
-            toast.error('Lỗi server, vui lòng thử lại sau!')
-        });
-    }
-
-    onChange(val, field) {
-        if (field == 'email') {
-            this.setState({
-                email: val.target.value
-            });
-        } else {
-            this.setState({
-                password: val.target.value
-            });
-        }
-    }
-
-    onClose() {
-        this.props.onCloseModal && this.props.onCloseModal()
-    }
 
     callback(key) {
         console.log(key);
     }
 
-    handleSubmit = e => {
-        e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                console.log('Received values of form: ', values);
-            }
-        });
-    };
 
     render() {
-        let fbContent;
-        if (this.state.isLoggedIn) {
-            fbContent = null
-        } else {
-            fbContent = (<FacebookLogin
-                appId="430163910969334"
-                autoLoad={false}
-                fields="name,email,picture"
-                onClick={this.componentClicked}
-                callback={this.responseFacebook}
-            />)
-        }
         return (
             <div>
                 <div className='row'>

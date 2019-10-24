@@ -1,1 +1,0 @@
-export const GLOBAL_API_PATH = 'localhost:3000/v1/'

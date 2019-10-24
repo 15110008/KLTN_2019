@@ -15,9 +15,10 @@ import {
 } from '../error-codes/account.error-codes';
 
 const createAccountInput = (req, res, next) => {
-    const { email, password } = req.body;
+    const { name, email, password } = req.body;
     try {
         if (!req.body) throw CreateAccountErrors.NO_DATA;
+        if (!name) throw CreateAccountErrors.NO_NAME;
         if (!email) throw CreateAccountErrors.NO_EMAIL;
         if (!password) throw CreateAccountErrors.NO_PASSWORD;
         if (!Validator.isEmail(email)) throw CreateAccountErrors.INVALID_EMAIL;
@@ -30,14 +31,12 @@ const createAccountInput = (req, res, next) => {
 const logInAccountInput = (req, res, next) => {
     const { email, password } = req.body;
     try {
-        console.log('TCL: logInAccountInput -> email', email);
         if (!req.body) throw AccountLoginErrors.NO_DATA;
         if (!email) throw AccountLoginErrors.NO_EMAIL;
         if (!password) throw AccountLoginErrors.NO_PASSWORD;
         if (!Validator.isEmail(email)) throw AccountLoginErrors.INVALID_EMAIL;
         return next();
     } catch (error) {
-        console.log('TCL: logInAccountInput -> error', error);
         return res.onError(new ValidationError(error));
     }
 };
