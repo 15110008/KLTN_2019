@@ -17,7 +17,10 @@ export default class formLogin extends Component {
             userId: '',
             name: '',
             email: '',
-            picture: ''
+            picture: '',
+            password: '',
+            phoneNumber: '',
+            password2: ''
         }
         this.onSubmit = this.onSubmit.bind(this);
     }
@@ -47,16 +50,45 @@ export default class formLogin extends Component {
         });
     }
 
-    onChange(val, field) {
-        if (field == 'email') {
-            this.setState({
-                email: val.target.value
-            });
+    createAccount() {
+        if (this.state.password != this.state.password2) {
+            toast.error('Mật khẩu 2 không khớp')
         } else {
-            this.setState({
-                password: val.target.value
+            axios.post('http://localhost:3000/v1/account', {
+                email: this.state.email,
+                password: this.state.password,
+                name: this.state.name,
+            }).then(response => {
+                if (response.data.success) {
+                    this.onClose()
+                    toast.success('Tạo tài khoản thành công')
+                    this.props.userVisible && this.props.userVisible()
+                } else {
+                    toast.error(response.data.message)
+                }
+            }).catch(error => {
+                toast.error('Lỗi server, vui lòng thử lại sau!')
             });
         }
+    }
+
+    onChange(val, field) {
+        if (field == 'name') {
+            this.setState({ name: val.target.value })
+        } else if (field == 'email') {
+            this.setState({ email: val.target.value })
+
+        } else if (field == 'phoneNumber') {
+            this.setState({ phoneNumber: val.target.value })
+
+        } else if (field == 'password') {
+            this.setState({ password: val.target.value })
+
+        } else if (field == 'password2') {
+            this.setState({ password2: val.target.value })
+
+        }
+
     }
 
     onClose() {
@@ -66,6 +98,15 @@ export default class formLogin extends Component {
     callback(key) {
         console.log(key);
     }
+
+    handleSubmit = e => {
+        e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                console.log('Received values of form: ', values);
+            }
+        });
+    };
 
     render() {
         let fbContent;
@@ -79,6 +120,10 @@ export default class formLogin extends Component {
                 onClick={this.componentClicked}
                 callback={this.responseFacebook}
             />)
+        }
+        const formItemLayout = {
+            labelCol: { span: 4 },
+            wrapperCol: { span: 14 },
         }
         return (
             <div>
@@ -94,24 +139,25 @@ export default class formLogin extends Component {
                     <div className="col-md-6">
                         <Tabs defaultActiveKey="1" onChange={this.callback}>
                             <TabPane tab="Đăng nhập" key="1">
-                                <input placeholder="Nhập Email" type="text" required="" value={this.state.email} onChange={(e) => this.onChange(e, 'email')} />
-                                <input placeholder="Nhập mật khẩu" type="password" required="" value={this.state.password} onChange={(e) => this.onChange(e, 'password')} />
+                                <input placeholder="Email" type="text" required="" value={this.state.email} onChange={(e) => this.onChange(e, 'email')} />
+                                <input placeholder="Mật khẩu" type="password" required="" value={this.state.password} onChange={(e) => this.onChange(e, 'password')} />
                                 {fbContent}
                                 <div style={{ display: 'flex', paddingLeft: '25px', paddingTop: '20px' }}>
                                     <div className='btn-group' >
-
-                                        <button onClick={this.onSubmit} className='btn btn-primary' > Đăng nhập </button>
+                                        <button onClick={() => this.onSubmit()} className='btn btn-primary' > Đăng nhập </button>
                                     </div>
                                 </div>
                             </TabPane>
                             <TabPane tab="Tạo tài khoản" key="2">
-                                <input placeholder="Nhập Email" type="text" required="" value={this.state.email} onChange={(e) => this.onChange(e, 'email')} />
-                                <input placeholder="Nhập mật khẩu" type="password" required="" value={this.state.password} onChange={(e) => this.onChange(e, 'password')} />
-                                <input placeholder="Nhập mật khẩu lần 2" type="password" required="" value={this.state.password} onChange={(e) => this.onChange(e, 'password')} />
+                                <input placeholder="Tên" type="text" required="" value={this.state.name} onChange={(e) => this.onChange(e, 'name')} />
+                                <input placeholder="SĐT" type="text" required="" value={this.state.phoneNumber} onChange={(e) => this.onChange(e, 'phoneNumber')} />
+                                <input placeholder="Email" type="text" required="" value={this.state.email} onChange={(e) => this.onChange(e, 'email')} />
+                                <input placeholder="Mật khẩu" type="password" required="" value={this.state.password} onChange={(e) => this.onChange(e, 'password')} />
+                                <input placeholder="Mật khẩu lần 2" type="password" required="" value={this.state.password2} onChange={(e) => this.onChange(e, 'password2')} />
                                 <div style={{ display: 'flex', paddingLeft: '25px', paddingTop: '20px' }}>
                                     <div className='btn-group' >
 
-                                        <button onClick={this.onSubmit} className='btn btn-primary' > Tạo tài khoản </button>
+                                        <button onClick={() => this.createAccount()} className='btn btn-primary' > Tạo tài khoản </button>
                                     </div>
                                 </div>
                             </TabPane>
