@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-import Modal from './base/Modal'
-import { ButtonToolbar } from 'react-bootstrap'
-import FacebookLogin from 'react-facebook-login'
 import LoginForm from './base/formLogin'
+import Modal from './base/Modal'
 
 
 
@@ -20,19 +18,27 @@ export default class Header extends Component {
     }
     addModalClose = () => this.setState({ addModalShow: false })
     setUser = () => this.setState({ userVisible: true })
+    getName = (name) => this.setState({ name: name })
+    getEmail = (email) => this.setState({ email: email })
 
     contentLogin() {
         return (
             <LoginForm
+                ref={c => this.loginFormRef = c}
                 onCloseModal={this.addModalClose}
                 userVisible={this.setUser}
+                getName={this.getName}
+                getEmail={this.getEmail}
             />
         )
     }
 
+
+
     user() {
         return <div style={{ padding: '8px' }}>
-            <i class="fa fa-user-circle-o" aria-hidden="true" style={{ padding: '8px' }}></i> asdasasddsas
+            <i className="fa fa-user-circle-o" aria-hidden="true" style={{ padding: '8px' }}></i>
+            {this.state.name === '' ? this.state.email : this.state.name}
         </div>
     }
 

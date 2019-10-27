@@ -1,10 +1,11 @@
-import { Tabs, Form, Icon, Input, Button, Checkbox } from 'antd';
+import { Tabs } from 'antd';
 import 'antd/dist/antd.css';
 import axios from 'axios';
 import React, { Component } from 'react';
 import FacebookLogin from 'react-facebook-login';
 import { toast, ToastContainer } from 'react-toastify';
 import './style.scss';
+import _ from 'lodash'
 
 const { TabPane } = Tabs;
 
@@ -41,17 +42,21 @@ export default class formLogin extends Component {
             console.log("TCL: formLogin -> onSubmit -> response", response)
             if (response.data.success) {
                 this.onClose()
+                localStorage.setItem('jwt', response.data.result.jwt);
                 this.props.userVisible && this.props.userVisible()
+                this.props.getName && this.props.getName(!_.isEmpty(response.data.meta) ? response.data.meta.name : '')
+                this.props.getEmail && this.props.getEmail(this.state.email)
             } else {
                 toast.error(response.data.message)
             }
         }).catch(error => {
+            console.log("TCL: formLogin -> onSubmit -> error", error)
             toast.error('Lỗi server, vui lòng thử lại sau!')
         });
     }
 
     createAccount() {
-        if (this.state.password != this.state.password2) {
+        if (this.state.password !== this.state.password2) {
             toast.error('Mật khẩu 2 không khớp')
         } else {
             axios.post('http://localhost:3000/v1/account', {
@@ -72,18 +77,18 @@ export default class formLogin extends Component {
     }
 
     onChange(val, field) {
-        if (field == 'name') {
+        if (field === 'name') {
             this.setState({ name: val.target.value })
-        } else if (field == 'email') {
+        } else if (field === 'email') {
             this.setState({ email: val.target.value })
 
-        } else if (field == 'phoneNumber') {
+        } else if (field === 'phoneNumber') {
             this.setState({ phoneNumber: val.target.value })
 
-        } else if (field == 'password') {
+        } else if (field === 'password') {
             this.setState({ password: val.target.value })
 
-        } else if (field == 'password2') {
+        } else if (field === 'password2') {
             this.setState({ password2: val.target.value })
 
         }
@@ -119,10 +124,6 @@ export default class formLogin extends Component {
                 onClick={this.componentClicked}
                 callback={this.responseFacebook}
             />)
-        }
-        const formItemLayout = {
-            labelCol: { span: 4 },
-            wrapperCol: { span: 14 },
         }
         return (
             <div>
