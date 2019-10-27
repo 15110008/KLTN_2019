@@ -26,7 +26,6 @@ const AccountSchema = new Schema({
         facebookId: String,
         facebookToken: String,
         facebookName: String,
-        facebookPhone: String,
         facebookEmail: String
     },
     google: {

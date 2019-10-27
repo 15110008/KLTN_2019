@@ -151,11 +151,11 @@ const me = async (req, res) => {
 };
 
 const getAccounts = async (req, res) => {
-    const { jwt } = req.headers;
+    // const { jwt } = req.headers;
     try {
-        const authenData = VerifyToken(jwt);
-        if (!authenData.accountId) throw new NotImplementError(GetAccountsErrors.AUTH_FAIL);//
-        if (authenData.role !== AccountRole.MANAGER) throw new Unauthorized(GetAccountsErrors.NO_RIGHT);
+        // const authenData = VerifyToken(jwt);
+        // if(!authenData.accountId) throw new NotImplementError(GetAccountsErrors.AUTH_FAIL);//
+        // if(authenData.role !== AccountRole.MANAGER) throw new Unauthorized(GetAccountsErrors.NO_RIGHT);
         const accounts = await AccountRepository.getAccounts();
         if (!accounts) throw new NotFoundError(GetAccountsErrors.GET_FAIL);
         const result = accounts.map((account) => {

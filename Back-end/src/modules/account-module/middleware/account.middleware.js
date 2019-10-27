@@ -6,7 +6,7 @@ import {
     LoginWithFacebookErrors,
     LoginWithGoogleErrors,
     MeAccountErrors,
-    GetAccountsErrors,
+    // GetAccountsErrors,
     GetAccountErrors,
     UpdateAccountErrors,
     ChangePasswordErrors,
@@ -101,9 +101,9 @@ const meInput = (req, res, next) => {
 };
 
 const getAccountsInput = (req, res, next) => {
-    const { jwt } = req.headers;
+    // const { jwt } = req.headers;
     try {
-        if (!jwt) throw GetAccountsErrors.NO_TOKEN;
+        // if (!jwt) throw GetAccountsErrors.NO_TOKEN;
         return next();
     } catch (error) {
         return res.onError(new ValidationError(error));
