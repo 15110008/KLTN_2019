@@ -2,40 +2,43 @@ import { Table } from 'antd';
 import React, { Component } from 'react';
 import Axios from 'axios';
 
-export default class Dashboard extends Component {
+export default class Destination extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [
-        {
-          key: '1',
-          id: 'John Brown',
-          age: 32,
-          address: 'New York No. 1 Lake Park',
-          tags: ['nice', 'developer'],
-        },
       ]
     }
     this.columnDefs = [
       {
         title: 'Id',
-        dataIndex: 'id',
-        key: 'id',
+        dataIndex: '_id',
+        key: '_id',
       },
       {
-        title: 'Name',
+        title: 'Tên',
         dataIndex: 'name',
         key: 'name',
       },
       {
-        title: 'Email',
-        dataIndex: 'email',
-        key: 'email',
+        title: 'Hình ảnh',
+        dataIndex: 'images',
+        key: 'images',
       },
       {
-        title: 'Phone',
-        key: 'phone',
-        dataIndex: 'phone',
+        title: 'Mô tả',
+        key: 'description',
+        dataIndex: 'description',
+      },
+      {
+        title: 'Kinh độ',
+        key: 'longitude',
+        dataIndex: 'longitude',
+      },
+      {
+        title: 'Vĩ độ',
+        key: 'latitude',
+        dataIndex: 'latitude',
       },
       {
         title: 'Action',
@@ -58,10 +61,12 @@ export default class Dashboard extends Component {
   }
 
   loadData() {
-    Axios.get('http://localhost:3000/v1/accounts')
+    Axios.get('http://localhost:3000/v1/destination')
       .then((response) => {
         if (response.data.success) {
-          console.log("TCL: Dashboard -> loadData -> response", response)
+          this.setState({
+            data: response.data.data
+          })
         } else {
         }
       }).catch(error => {

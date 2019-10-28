@@ -13,13 +13,13 @@ import MobileMenu from '../../components/MobileMenu';
 /**
  * Pages
  */
-import Dashboard from '../Dashboard';
+import Account from '../Account';
 import Components from '../Components';
 import UserProfile from '../UserProfile';
 import MapsPage from '../MapsPage';
 import Forms from '../Forms';
-import Charts from '../Charts';
-import Calendar from '../Calendar';
+import Destination from '../Destination';
+import Place from '../Place';
 import Tables from '../Tables';
 
 const Main = ({
@@ -42,14 +42,14 @@ const Main = ({
 
         <div className="main-panel">
           <Header />
-          <Route exact path="/" component={Dashboard} />
+          <Route exact path="/" component={Account} />
           {/* <Route path="/components" component={Components} />
           <Route path="/profile" component={UserProfile} />
           <Route path="/forms" component={Forms} />
           <Route path="/tables" component={Tables} />
-          <Route path="/maps" component={MapsPage} />
-          <Route path="/charts" component={Charts} />
-          <Route path="/calendar" component={Calendar} /> */}
+          <Route path="/maps" component={MapsPage} /> */}
+          <Route path="/destination" component={Destination} />
+          <Route path="/place" component={Place} />
           <Footer />
         </div>
       </div>
