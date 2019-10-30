@@ -3,37 +3,11 @@ import ReactDOM from 'react-dom';
 import { Form, Input, Modal, Radio } from 'antd';
 import axios from 'axios'
 
-export default class FormEdit extends Component {
+export default class FormCreate extends Component {
     constructor(props) {
         super(props);
         this.state = {
         };
-    }
-
-    componentDidMount() {
-        this.loadData(this.props.id)
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.id != this.props.id) {
-            this.loadData(nextProps.id)
-        }
-    }
-
-    loadData(id) {
-        axios.get('http://localhost:3000/v1/account/' + id)
-            .then((res) => {
-                if (res.data.success) {
-                    const data = res.data.result
-                    const formData = {
-                        email: data.email ? data.email : null,
-                        name: data.name ? data.name : null,
-                        phone: data.phone ? data.phone : null,
-                    }
-                    console.log("TCL: FormEdit -> loadData -> formData", formData)
-                    this.formRef.setFieldsValue(formData);
-                }
-            })
     }
 
     render() {
@@ -63,15 +37,20 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                     <Form.Item label="Email">
                         {getFieldDecorator('email', {
                             rules: [{ required: true, message: 'Bạn phải nhập email' }],
-                        })(<Input readOnly />)}
+                        })(<Input />)}
+                    </Form.Item>
+                    <Form.Item label="Mật khẩu">
+                        {getFieldDecorator('password', {
+                            rules: [{ required: true, message: 'Bạn phải nhập mật khẩu' }],
+                        })(<Input type='password' />)}
                     </Form.Item>
                     <Form.Item label="Tên">
                         {getFieldDecorator('name', {
                             rules: [{ required: true, message: 'Bạn phải nhập tên' }],
-                        })(<Input readOnly={this.props.readOnly} type="textarea" />)}
+                        })(<Input type="textarea" />)}
                     </Form.Item>
                     <Form.Item label="Số điện thoại">
-                        {getFieldDecorator('phone')(<Input readOnly={this.props.readOnly} />)}
+                        {getFieldDecorator('phone')(<Input />)}
                     </Form.Item>
                 </Form>
             );

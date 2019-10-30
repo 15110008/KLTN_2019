@@ -1,8 +1,9 @@
 import { Table } from 'antd';
 import React, { Component } from 'react';
 import Axios from 'axios';
-import { Modal, Button } from 'antd';
+import { Modal, Button, notification } from 'antd';
 import FormEdit from './form/FormEdit'
+import FormCreate from './form/formCreate'
 
 export default class Account extends Component {
   constructor(props) {
@@ -47,7 +48,7 @@ export default class Account extends Component {
         key: 'action',
         render: (text, record) => (
           <div>
-            <button className='btn btn-detail' style={{ marginRight: '10px' }} onClick={() => this.setState({ formDetail: true })}>Chi tiết</button>
+            <button className='btn btn-detail' style={{ marginRight: '10px' }} onClick={() => this.setState({ formDetail: true, id: record._id })}>Chi tiết</button>
             <button className='btn btn-edit' onClick={() => this.setState({ formEdit: true, id: record._id })}>Sửa</button>
             <button className='btn btn-delete' onClick={() => this.onDelete()}>Xóa</button>
           </div>
@@ -59,17 +60,19 @@ export default class Account extends Component {
   handleOk = () => {
     this.setState({ loading: true });
     setTimeout(() => {
-      this.setState({ loading: false, formEdit: false });
+      this.setState({ loading: false, formEdit: false, formCreate: false });
     }, 3000);
   };
 
   handleCancel = () => {
-    this.setState({ formEdit: false, formDetail: false });
+    this.setState({ formEdit: false, formDetail: false, formCreate: false });
   };
 
   componentDidMount() {
     this.loadData()
   }
+
+
 
   loadData() {
     Axios.get('http://localhost:3000/v1/accounts')
@@ -86,6 +89,69 @@ export default class Account extends Component {
       });
   }
 
+  onSaveEdit() {
+    const data = this.formEditRef.formRef.getFieldsValue()
+    const token = localStorage.getItem('jwt')
+    this.formEditRef.formRef.validateFields(err => {
+      if (!err) {
+        Axios.put('http://localhost:3000/v1/account', {
+          headers: { jwt: token }, ...data
+        })
+          .then((res) => {
+            if (res.data.success) {
+              notification['success']({
+                message: 'Lưu thành công',
+                onClick: () => {
+                  console.log('Notification Clicked!');
+                },
+              });
+              this.loadData()
+              this.setState({
+                formEdit: false
+              })
+            } else {
+              notification['error']({
+                message: res.data.message,
+                onClick: () => {
+                  console.log('Notification Clicked!');
+                },
+              });
+            }
+          })
+      }
+    });
+  }
+
+  onSaveCreate() {
+    const data = this.formCreateRef.formRef.getFieldsValue()
+    this.formCreateRef.formRef.validateFields(err => {
+      if (!err) {
+        Axios.post('http://localhost:3000/v1/account', data)
+          .then((res) => {
+            if (res.data.success) {
+              notification['success']({
+                message: 'Tạo mới thành công',
+                onClick: () => {
+                  console.log('Notification Clicked!');
+                },
+              });
+              this.loadData()
+              this.setState({
+                formCreate: false
+              })
+            } else {
+              notification['error']({
+                message: res.data.message,
+                onClick: () => {
+                  console.log('Notification Clicked!');
+                },
+              });
+            }
+          })
+      }
+    });
+  }
+
   render() {
     return (
       <div
@@ -96,15 +162,24 @@ export default class Account extends Component {
           margin: 'auto'
         }}
       >
+        <div className='row'>
+          <div className='col-md-10'></div>
+          <div className='col-md-2'>
+            <button className='btn btn-create' onClick={() => this.setState({ formCreate: true })}>
+              <i className="fa fa-plus" aria-hidden="true" style={{ marginRight: '5px' }}></i>
+              Tạo mới
+            </button>
+          </div>
+        </div>
         <Table columns={this.columnDefs} dataSource={this.state.data} />
         <Modal
-          visible={this.state.formEdit}
+          visible={this.state.formCreate}
           title="Cập nhật account"
           centered
           onOk={this.handleOk}
           onCancel={this.handleCancel}
           footer={[
-            <Button key="submit" type="primary" loading={this.state.loading} onClick={this.handleOk}>
+            <Button key="submit" type="primary" loading={this.state.loading} onClick={() => this.onSaveCreate()}>
               Lưu
             </Button>,
             <Button key="back" onClick={this.handleCancel}>
@@ -112,7 +187,24 @@ export default class Account extends Component {
             </Button>,
           ]}
         >
-          <FormEdit id={this.state.id} />
+          <FormCreate ref={c => this.formCreateRef = c} />
+        </Modal>
+        <Modal
+          visible={this.state.formEdit}
+          title="Cập nhật account"
+          centered
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+          footer={[
+            <Button key="submit" type="primary" loading={this.state.loading} onClick={() => this.onSaveEdit()}>
+              Lưu
+            </Button>,
+            <Button key="back" onClick={this.handleCancel}>
+              Đóng
+            </Button>,
+          ]}
+        >
+          <FormEdit ref={c => this.formEditRef = c} id={this.state.id} />
         </Modal>
         <Modal
           visible={this.state.formDetail}
@@ -125,7 +217,7 @@ export default class Account extends Component {
             </Button>,
           ]}
         >
-          <FormEdit />
+          <FormEdit ref={c => this.formDetailRef = c} id={this.state.id} readOnly={true} />
         </Modal>
       </div >
     );

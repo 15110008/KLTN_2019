@@ -21,7 +21,7 @@ export default class FormEdit extends Component {
     }
 
     loadData(id) {
-        axios.get('http://localhost:3000/v1/account/' + id)
+        axios.get('http://localhost:3000/v1/place/' + id)
             .then((res) => {
                 if (res.data.success) {
                     const data = res.data.result
@@ -66,9 +66,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                         })(<Input readOnly />)}
                     </Form.Item>
                     <Form.Item label="Tên">
-                        {getFieldDecorator('name', {
-                            rules: [{ required: true, message: 'Bạn phải nhập tên' }],
-                        })(<Input readOnly={this.props.readOnly} type="textarea" />)}
+                        {getFieldDecorator('name')(<Input readOnly={this.props.readOnly} type="textarea" />)}
                     </Form.Item>
                     <Form.Item label="Số điện thoại">
                         {getFieldDecorator('phone')(<Input readOnly={this.props.readOnly} />)}

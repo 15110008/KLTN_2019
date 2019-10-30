@@ -1,6 +1,8 @@
 import { Table } from 'antd';
 import React, { Component } from 'react';
 import Axios from 'axios';
+import { Modal, Button } from 'antd';
+import FormEdit from './form/FormEdit'
 
 export default class Place extends Component {
   constructor(props) {
@@ -45,9 +47,9 @@ export default class Place extends Component {
         key: 'action',
         render: (text, record) => (
           <div>
-            <button className='btn btn-detail' style={{ marginRight: '10px' }}>Chi tiết</button>
-            <button className='btn btn-edit'>Sửa</button>
-            <button className='btn btn-delete'>Xóa</button>
+            <button className='btn btn-detail' style={{ marginRight: '10px' }} onClick={() => this.setState({ formDetail: true, id: record._id })}>Chi tiết</button>
+            <button className='btn btn-edit' onClick={() => this.setState({ formEdit: true, id: record._id })}>Sửa</button>
+            <button className='btn btn-delete' onClick={() => this.onDelete()}>Xóa</button>
           </div>
         ),
       },
@@ -59,6 +61,17 @@ export default class Place extends Component {
   componentDidMount() {
     this.loadData()
   }
+
+  handleOk = () => {
+    this.setState({ loading: true });
+    setTimeout(() => {
+      this.setState({ loading: false, formEdit: false });
+    }, 3000);
+  };
+
+  handleCancel = () => {
+    this.setState({ formEdit: false, formDetail: false });
+  };
 
   loadData() {
     Axios.get('http://localhost:3000/v1/place')
@@ -85,6 +98,36 @@ export default class Place extends Component {
         }}
       >
         <Table columns={this.columnDefs} dataSource={this.state.data} />
+        <Modal
+          visible={this.state.formEdit}
+          title="Cập nhật account"
+          centered
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+          footer={[
+            <Button key="submit" type="primary" loading={this.state.loading} onClick={() => this.onSave()}>
+              Lưu
+            </Button>,
+            <Button key="back" onClick={this.handleCancel}>
+              Đóng
+            </Button>,
+          ]}
+        >
+          <FormEdit ref={c => this.formEditRef = c} id={this.state.id} />
+        </Modal>
+        <Modal
+          visible={this.state.formDetail}
+          title="Chi tiết"
+          centered
+          onCancel={this.handleCancel}
+          footer={[
+            <Button key="back" onClick={this.handleCancel}>
+              Đóng
+            </Button>,
+          ]}
+        >
+          <FormEdit ref={c => this.formDetailRef = c} id={this.state.id} readOnly={true} />
+        </Modal>
       </div>
     );
   }
