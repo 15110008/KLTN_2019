@@ -14,7 +14,7 @@ class Nav extends Component {
         <li className={location.pathname === '/' ? 'active' : null}>
           <Link to="/">
             <i className="pe-7s-graph"></i>
-            <p>Dashboard</p>
+            <p>Account</p>
           </Link>
         </li>
         {/* <li className={this.isPathActive('/components') || this.state.componentMenuOpen ? 'active' : null}>
@@ -113,19 +113,19 @@ class Nav extends Component {
               </ul>
             </div>
           </Collapse>
-        </li>
-        <li className={this.isPathActive('/charts') ? 'active' : null}>
-          <Link to="/charts">
-            <i className="pe-7s-graph"></i>
-            <p>Charts</p>
-          </Link>
-        </li>
-        <li className={this.isPathActive('/calendar') ? 'active' : null}>
-          <Link to="/calendar">
-            <i className="pe-7s-date"></i>
-            <p>Calendar</p>
-          </Link>
         </li> */}
+        <li className={this.isPathActive('/destination') ? 'active' : null}>
+          <Link to="/destination">
+            <i className="pe-7s-graph"></i>
+            <p>Điểm đến</p>
+          </Link>
+        </li>
+        <li className={this.isPathActive('/place') ? 'active' : null}>
+          <Link to="/place">
+            <i className="pe-7s-date"></i>
+            <p>Địa điểm</p>
+          </Link>
+        </li>
       </ul>
     );
   }

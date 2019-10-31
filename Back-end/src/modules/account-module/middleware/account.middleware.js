@@ -112,10 +112,10 @@ const getAccountsInput = (req, res, next) => {
 };
 
 const getAccountInput = (req, res, next) => {
-    const { jwt } = req.headers;
+    // const { jwt } = req.headers;
     const accountId = req.params.id;
     try {
-        if (!jwt) throw GetAccountErrors.NO_TOKEN;
+        // if (!jwt) throw GetAccountErrors.NO_TOKEN;
         if (!accountId) throw GetAccountErrors.NO_ACCOUNT_ID;
         return next();
     } catch (error) {

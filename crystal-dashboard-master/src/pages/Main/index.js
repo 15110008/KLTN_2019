@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Route, Router } from 'react-router-dom';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import { setMobileNavVisibility } from '../../reducers/Layout';
+import { Modal } from 'antd';
 import { withRouter } from 'react-router-dom';
+import FormLogin from './FormLogin'
 
 import Header from './Header';
 import Footer from './Footer';
@@ -13,48 +15,68 @@ import MobileMenu from '../../components/MobileMenu';
 /**
  * Pages
  */
-import Dashboard from '../Dashboard';
+import Account from '../Account';
 import Components from '../Components';
 import UserProfile from '../UserProfile';
 import MapsPage from '../MapsPage';
 import Forms from '../Forms';
-import Charts from '../Charts';
-import Calendar from '../Calendar';
+import Destination from '../Destination';
+import Place from '../Place';
 import Tables from '../Tables';
 
-const Main = ({
-  mobileNavVisibility,
-  hideMobileMenu,
-  history
-}) => {
-  history.listen(() => {
-    if (mobileNavVisibility === true) {
-      hideMobileMenu();
+class Main extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      render: false,
+      visible: true
     }
-  });
-  return (
-    <div className={cx({
-      'nav-open': mobileNavVisibility === true
-    })}>
-      <div className="wrapper">
-        <div className="close-layer" onClick={hideMobileMenu}></div>
-        <SideBar />
+  }
 
-        <div className="main-panel">
-          <Header />
-          <Route exact path="/" component={Dashboard} />
-          {/* <Route path="/components" component={Components} />
+  addModalClose = () => {
+    this.setState({ visible: false, render: true })
+  }
+
+  render() {
+    return (
+      <div>
+        <Modal
+          visible={this.state.visible ? true : false}
+          title="Đăng nhẫp"
+          centered
+          onCancel={this.handleCancel}
+          footer={[
+
+          ]}
+        >
+          <FormLogin ref={c => this.formLogin = c} onCloseModal={this.addModalClose} />
+        </Modal>
+        {this.state.render ?
+          <div className={cx({
+            'nav-open': true
+          })}>
+            <div className="wrapper">
+              {/* <div className="close-layer" onClick={hideMobileMenu}></div> */}
+              <SideBar />
+
+              <div className="main-panel">
+                <Header />
+                <Route exact path="/" component={Account} />
+                {/* <Route path="/components" component={Components} />
           <Route path="/profile" component={UserProfile} />
           <Route path="/forms" component={Forms} />
           <Route path="/tables" component={Tables} />
-          <Route path="/maps" component={MapsPage} />
-          <Route path="/charts" component={Charts} />
-          <Route path="/calendar" component={Calendar} /> */}
-          <Footer />
-        </div>
+          <Route path="/maps" component={MapsPage} /> */}
+                <Route path="/destination" component={Destination} />
+                <Route path="/place" component={Place} />
+                <Footer />
+              </div>
+            </div>
+          </div> : ''
+        }
       </div>
-    </div>
-  )
+    )
+  }
 };
 
 const mapStateToProp = state => ({
