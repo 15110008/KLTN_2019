@@ -29,27 +29,39 @@ export default class FormCreate extends Component {
 const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
     // eslint-disable-next-line
     class extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = {
+                formLayout: 'horizontal',
+            };
+        }
         render() {
+            const { formLayout } = this.state;
+            const formItemLayout =
+                formLayout === 'horizontal'
+                    ? {
+                        labelCol: { span: 5 },
+                        wrapperCol: { span: 17 },
+                    }
+                    : null;
             const { visible, onCancel, onCreate, form } = this.props;
             const { getFieldDecorator } = form;
             return (
-                <Form layout="horizontal">
-                    <Form.Item label="Email">
+                <Form layout={formLayout} labelAlign="left">
+                    <Form.Item {...formItemLayout} label="Email" >
                         {getFieldDecorator('email', {
                             rules: [{ required: true, message: 'Bạn phải nhập email' }],
                         })(<Input />)}
                     </Form.Item>
-                    <Form.Item label="Mật khẩu">
+                    <Form.Item {...formItemLayout} label="Mật khẩu" >
                         {getFieldDecorator('password', {
                             rules: [{ required: true, message: 'Bạn phải nhập mật khẩu' }],
-                        })(<Input type='password' />)}
+                        })(<Input />)}
                     </Form.Item>
-                    <Form.Item label="Tên">
-                        {getFieldDecorator('name', {
-                            rules: [{ required: true, message: 'Bạn phải nhập tên' }],
-                        })(<Input type="textarea" />)}
+                    <Form.Item {...formItemLayout} label="Tên">
+                        {getFieldDecorator('name')(<Input type="textarea" />)}
                     </Form.Item>
-                    <Form.Item label="Số điện thoại">
+                    <Form.Item {...formItemLayout} label="Số điện thoại">
                         {getFieldDecorator('phone')(<Input />)}
                     </Form.Item>
                 </Form>

@@ -1,8 +1,10 @@
 import { Table } from 'antd';
 import React, { Component } from 'react';
 import Axios from 'axios';
-import { Modal, Button } from 'antd';
+import { Modal, Button, notification } from 'antd';
 import FormEdit from './form/FormEdit'
+import FormCreate from './form/FormCreate'
+import _ from 'lodash'
 
 export default class Place extends Component {
   constructor(props) {
@@ -65,26 +67,62 @@ export default class Place extends Component {
   handleOk = () => {
     this.setState({ loading: true });
     setTimeout(() => {
-      this.setState({ loading: false, formEdit: false });
+      this.setState({ loading: false, formEdit: false, formCreate: false });
     }, 3000);
   };
 
   handleCancel = () => {
-    this.setState({ formEdit: false, formDetail: false });
+    this.setState({ formEdit: false, formDetail: false, formCreate: false });
   };
 
   loadData() {
-    Axios.get('http://localhost:3000/v1/place')
-      .then((response) => {
-        if (response.data.success) {
-          this.setState({
-            data: response.data.data
+    // Axios.get('http://localhost:3000/v1/place')
+    //   .then((response) => {
+    //     if (response.data.success) {
+    //       this.setState({
+    //         data: response.data.data
+    //       })
+    //     } else {
+    //     }
+    //   }).catch(error => {
+    //     console.log("TCL: formLogin -> onSubmit -> error", error)
+    //   });
+  }
+
+  onSaveCreate() {
+    const token = localStorage.getItem('jwt')
+    const params = {
+      headers: { jwt: token },
+    }
+    const data = this.formCreateRef.formRef.getFieldsValue()
+    console.log("TCL: Place -> onSaveCreate -> data", data)
+
+    this.formCreateRef.formRef.validateFields(err => {
+      if (!err) {
+        Axios.post('http://localhost:3000/v1/place', data, params)
+          .then((res) => {
+            if (res.data.success) {
+              notification['success']({
+                message: 'Tạo mới thành công',
+                onClick: () => {
+                  console.log('Notification Clicked!');
+                },
+              });
+              this.loadData()
+              this.setState({
+                formCreate: false
+              })
+            } else {
+              notification['error']({
+                message: res.data.message,
+                onClick: () => {
+                  console.log('Notification Clicked!');
+                },
+              });
+            }
           })
-        } else {
-        }
-      }).catch(error => {
-        console.log("TCL: formLogin -> onSubmit -> error", error)
-      });
+      }
+    });
   }
 
   render() {
@@ -97,7 +135,34 @@ export default class Place extends Component {
           margin: 'auto'
         }}
       >
+        <div className='row'>
+          <div className='col-md-10'></div>
+          <div className='col-md-2'>
+            <button className='btn btn-create' onClick={() => this.setState({ formCreate: true })}>
+              <i className="fa fa-plus" aria-hidden="true" style={{ marginRight: '5px' }}></i>
+              Tạo mới
+            </button>
+          </div>
+        </div>
         <Table columns={this.columnDefs} dataSource={this.state.data} />
+        <Modal
+          visible={this.state.formCreate}
+          title="Cập nhật account"
+          width={700}
+          centered
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+          footer={[
+            <Button key="submit" type="primary" loading={this.state.loading} onClick={() => this.onSaveCreate()}>
+              Lưu
+            </Button>,
+            <Button key="back" onClick={this.handleCancel}>
+              Đóng
+            </Button>,
+          ]}
+        >
+          <FormCreate ref={c => this.formCreateRef = c} />
+        </Modal>
         <Modal
           visible={this.state.formEdit}
           title="Cập nhật account"
@@ -105,7 +170,7 @@ export default class Place extends Component {
           onOk={this.handleOk}
           onCancel={this.handleCancel}
           footer={[
-            <Button key="submit" type="primary" loading={this.state.loading} onClick={() => this.onSave()}>
+            <Button key="submit" type="primary" loading={this.state.loading} onClick={() => this.onSaveEdit()}>
               Lưu
             </Button>,
             <Button key="back" onClick={this.handleCancel}>

@@ -26,6 +26,7 @@ export default class FormEdit extends Component {
                 if (res.data.success) {
                     const data = res.data.result
                     const formData = {
+                        id: id,
                         email: data.email ? data.email : null,
                         name: data.name ? data.name : null,
                         phone: data.phone ? data.phone : null,
@@ -60,6 +61,10 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
             const { getFieldDecorator } = form;
             return (
                 <Form layout="horizontal">
+                    <Form.Item label="Id">
+                        {getFieldDecorator('_id', {
+                        })(<Input disabled={true} />)}
+                    </Form.Item>
                     <Form.Item label="Email">
                         {getFieldDecorator('email', {
                             rules: [{ required: true, message: 'Bạn phải nhập email' }],

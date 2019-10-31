@@ -29,7 +29,15 @@ class Main extends Component {
     super(props);
     this.state = {
       render: false,
-      visible: true
+      visible: true,
+    }
+  }
+  componentDidMount() {
+    if (localStorage.getItem('jwt')) {
+      this.setState({
+        visible: false,
+        render: true
+      })
     }
   }
 

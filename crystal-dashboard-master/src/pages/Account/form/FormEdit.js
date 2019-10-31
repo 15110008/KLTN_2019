@@ -26,6 +26,7 @@ export default class FormEdit extends Component {
                 if (res.data.success) {
                     const data = res.data.result
                     const formData = {
+                        _id: id,
                         email: data.email ? data.email : null,
                         name: data.name ? data.name : null,
                         phone: data.phone ? data.phone : null,
@@ -55,22 +56,38 @@ export default class FormEdit extends Component {
 const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
     // eslint-disable-next-line
     class extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = {
+                formLayout: 'horizontal',
+            };
+        }
         render() {
+            const { formLayout } = this.state;
+            const formItemLayout =
+                formLayout === 'horizontal'
+                    ? {
+                        labelCol: { span: 5 },
+                        wrapperCol: { span: 17 },
+                    }
+                    : null;
             const { visible, onCancel, onCreate, form } = this.props;
             const { getFieldDecorator } = form;
             return (
-                <Form layout="horizontal">
-                    <Form.Item label="Email">
+                <Form layout={formLayout} labelAlign="left">
+                    <Form.Item {...formItemLayout} label="Id" >
+                        {getFieldDecorator('_id', {
+                        })(<Input readOnly />)}
+                    </Form.Item>
+                    <Form.Item {...formItemLayout} label="Email" >
                         {getFieldDecorator('email', {
                             rules: [{ required: true, message: 'Bạn phải nhập email' }],
                         })(<Input readOnly />)}
                     </Form.Item>
-                    <Form.Item label="Tên">
-                        {getFieldDecorator('name', {
-                            rules: [{ required: true, message: 'Bạn phải nhập tên' }],
-                        })(<Input readOnly={this.props.readOnly} type="textarea" />)}
+                    <Form.Item {...formItemLayout} label="Tên">
+                        {getFieldDecorator('name')(<Input readOnly={this.props.readOnly} type="textarea" />)}
                     </Form.Item>
-                    <Form.Item label="Số điện thoại">
+                    <Form.Item {...formItemLayout} label="Số điện thoại">
                         {getFieldDecorator('phone')(<Input readOnly={this.props.readOnly} />)}
                     </Form.Item>
                 </Form>

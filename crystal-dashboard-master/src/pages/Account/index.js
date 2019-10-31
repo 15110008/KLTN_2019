@@ -92,11 +92,12 @@ export default class Account extends Component {
   onSaveEdit() {
     const data = this.formEditRef.formRef.getFieldsValue()
     const token = localStorage.getItem('jwt')
+    const params = {
+      headers: { jwt: token },
+    }
     this.formEditRef.formRef.validateFields(err => {
       if (!err) {
-        Axios.put('http://localhost:3000/v1/account', {
-          headers: { jwt: token }, ...data
-        })
+        Axios.put('http://localhost:3000/v1/account/' + this.state.id, data, params)
           .then((res) => {
             if (res.data.success) {
               notification['success']({
