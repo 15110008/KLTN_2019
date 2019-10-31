@@ -16,6 +16,15 @@ const getPlace = async (placeId) => {
     const result = await PlaceSchema.findOne({ _id: placeId, isDeleted: false });
     return result;
 };
+const getRateComment = async (placeId) => {
+    const result = await PlaceSchema.find(
+        {
+            placeId,
+            isDeleted: false
+        }
+);
+    return result;
+};
 const updatePlace = async (placeId, data) => {
     const result = await PlaceSchema.updateOne({
         _id: placeId,
@@ -40,6 +49,7 @@ export default {
     create,
     getPlaces,
     getPlace,
+    getRateComment,
     updatePlace,
     deletePlace
 };

@@ -82,11 +82,14 @@ const deleteDestinationInput = (req, res, next) => {
 };
 // create like and comment
 const createLikeCommentInput = (req, res, next) => {
-    const { jwt } = req.headers;
-    const destinationId = req.params;
-    const { comment } = req.body;
+    const {
+        jwt,
+        destinationId,
+        comment
+    } = req.body;
     try {
         if (!jwt) throw CreateLikeCommentErrors.NO_TOKEN;
+        // if(!accountId) throw CreateLikeCommentErrors.NO_ACCOUNT_ID;
         if (!destinationId) throw CreateLikeCommentErrors.NO_DESTINATION_ID;
         if (!comment) throw CreateLikeCommentErrors.NO_COMMENT;
         return next();

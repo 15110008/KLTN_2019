@@ -2,23 +2,23 @@ import mongoose, {
     Schema
 } from 'mongoose';
 
-const DestinationAccountSchema = new Schema({
-    destinationId: {
+const PlaceAccountSchema = new Schema({
+    placeId: {
         type: Schema.Types.ObjectId,
         required: true,
-        ref: 'Destination'
+        ref: 'Place'
     },
     accountId: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: 'Account'
     },
-    like: {
-        type: Boolean,
-        default: false,
+    rating: {
+        type: Number,
+        default: null
     },
     comment: {
-        type: String
+        type: String,
     },
     isDeleted: {
         type: Boolean,
@@ -26,4 +26,4 @@ const DestinationAccountSchema = new Schema({
     }
 });
 
-export default mongoose.model('DestinationAccount', DestinationAccountSchema);
+export default mongoose.model('PlaceAccount', PlaceAccountSchema);

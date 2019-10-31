@@ -9,6 +9,7 @@ import {
     // GetAccountsErrors,
     GetAccountErrors,
     UpdateAccountErrors,
+    UpdateAccount1Errors,
     ChangePasswordErrors,
     BlockUnblockAccountErrors,
     DeleteAccountErrors
@@ -124,11 +125,25 @@ const getAccountInput = (req, res, next) => {
 
 const updateAccountInput = (req, res, next) => {
     const { jwt } = req.headers;
-    const { name, avatar, phone } = req.body;
+    const { name, phone } = req.body;
     try {
         if (!req.body) throw UpdateAccountErrors.NO_DATA;
-        if (!jwt) throw MeAccountErrors.NO_TOKEN;
-        req.body = { name, avatar, phone };
+        if (!jwt) throw UpdateAccountErrors.NO_TOKEN;
+        req.body = { name, phone };
+        return next();
+    } catch (error) {
+        return res.onError(new ValidationError(error));
+    }
+};
+const updateAccount1Input = (req, res, next) => {
+    const { jwt } = req.headers;
+    const accountId = req.params.id;
+    const { name, phone } = req.body;
+    try {
+        if (!req.body) throw UpdateAccount1Errors.NO_DATA;
+        if (!accountId) throw UpdateAccount1Errors.NO_ACCOUNT_ID;
+        if (!jwt) throw UpdateAccount1Errors.NO_TOKEN;
+        req.body = { name, phone };
         return next();
     } catch (error) {
         return res.onError(new ValidationError(error));
@@ -199,6 +214,7 @@ export default {
     getAccountsInput,
     getAccountInput,
     updateAccountInput,
+    updateAccount1Input,
     reduceInput,
     changePasswordInput,
     blockUnblockAccountInput,

@@ -9,6 +9,7 @@ import {
     CreatePlaceErrors,
     GetPlacesErrors,
     GetPlaceErrors,
+    GetRateCommentErrors,
     UpdatePlaceErrors,
     DeletePlaceErrors
 } from '../error-codes/place.error-codes';
@@ -97,6 +98,18 @@ const getPlace = async (req, res) => {
         return res.onError(error);
     }
 };
+const getRateComment = async (req, res) => {
+    const placeId = req.params.id;
+    try {
+        const place = await PlaceRepository.getPlace(placeId);
+        if (!place) throw new NotFoundError(GetRateCommentErrors.PLACE_NEVER_EXIST);
+        const result = await PlaceRepository.getRateComment(placeId);
+        if (!result) throw new NotImplementError(GetRateCommentErrors.GET_FAIL);
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
 const updatePlace = async (req, res) => {
     const { jwt } = req.headers;
     const placeId = req.params.id;
@@ -147,6 +160,7 @@ export default {
     create,
     getPlaces,
     getPlace,
+    getRateComment,
     updatePlace,
     deletePlace
 };

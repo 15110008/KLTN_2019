@@ -129,17 +129,20 @@ const deleteDestination = async (req, res) => {
 };
 // create like and comment
 const createLikeComment = async (req, res) => {
-    const { jwt } = req.headers;
-    const destinationId = req.params.id;
-    const { comment } = req.body;
+    const {
+        jwt,
+        destinationId,
+        comment
+    } = req.body;
     try {
         const authenData = VerifyToken(jwt);
         if (!authenData) throw new NotImplementError(CreateLikeCommentErrors.AUTH_FAIL);
-        const account = await AccountRepository.getAccountById(authenData.accountId);
+        const { accountId } = authenData.accountId;
+        const account = await AccountRepository.getAccountById(accountId);
         if (!account) throw new NotFoundError(CreateLikeCommentErrors.ACCOUNT_NEVER_EXIST);
         const destination = await DestinationRepository.getDestination(destinationId);
         if (!destination) throw new NotFoundError(CreateLikeCommentErrors.DESTINATION_NEVER_EXIST);
-        const result = await DestinationRepository.createLikeComment(comment);
+        const result = await DestinationRepository.createLikeComment({ destinationId, accountId, comment });
         if (!result) throw new NotImplementError(CreateLikeCommentErrors.CREATE_FAIL);
         return res.onSuccess(result);
     } catch (error) {

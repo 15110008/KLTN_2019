@@ -19,7 +19,8 @@ import {
     BlockUnblockAccountErrors,
     DeleteAccountErrors,
     LoginWithFacebookErrors,
-    LoginWithGoogleErrors
+    LoginWithGoogleErrors,
+    UpdateAccount1Errors
 } from '../error-codes/account.error-codes';
 import {
     AccountStatus,
@@ -223,6 +224,33 @@ const updateInfo = async (req, res) => {
     }
 };
 
+const updateAccount = async (req, res) => {
+    const { jwt } = req.headers;
+    const accountId = req.params.id;
+    const data = req.body;
+    try {
+        const authenData = VerifyToken(jwt);
+        if (!authenData) throw new NotImplementError(UpdateAccount1Errors.AUTH_FAIL);
+        if (authenData.role !== AccountRole.MANAGER) throw new Unauthorized(UpdateAccount1Errors.NO_RIGHT);
+        const account1 = await AccountRepository.getAccountById(accountId);
+        if (!account1) throw new NotFoundError(UpdateAccount1Errors.ACCOUNT_NEVER_EXIST);
+        const updated = await AccountRepository.updateInfo(accountId, data);
+        if (!updated) throw new NotImplementError(UpdateAccount1Errors.UPDATED_FAILURE);
+        const account = await AccountRepository.getAccountById(accountId);
+        if (!account) throw new NotFoundError(UpdateAccount1Errors.GET_FAIL);
+        return res.onSuccess({
+            _id: account._id,
+            name: account.name,
+            avatar: account.avatar,
+            status: account.status,
+            email: account.email,
+            phone: account.phone,
+        });
+    } catch (error) {
+        return res.onError(error);
+    }
+};
+
 const changePassword = async (req, res) => {
     const { oldPassword, newPassword } = req.body;
     const { jwt } = req.headers;
@@ -299,6 +327,7 @@ export default {
     getAccounts,
     getAccount,
     updateInfo,
+    updateAccount,
     changePassword,
     blockUnblockAccount,
     deleteAccount

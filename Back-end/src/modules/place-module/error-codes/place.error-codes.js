@@ -23,6 +23,11 @@ export const GetPlaceErrors = {
     NO_PLACE_ID: 'NO_PLACE_ID',
     GET_FAIL: 'GET_FAIL',
 };
+export const GetRateCommentErrors = {
+    NO_PLACE_ID: 'NO_PLACE_ID',
+    PLACE_NEVER_EXIST: 'PLACE_NEVER_EXIST',
+    GET_FAIL: 'GET_FAIL',
+};
 export const UpdatePlaceErrors = {
     NO_TOKEN: 'NO_TOKEN',
     NO_PLACE_ID: 'NO_PLACE_ID',

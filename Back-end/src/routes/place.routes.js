@@ -13,6 +13,8 @@ router.post('/place', PlaceValidate.createPlaceInput, PlaceController.create);
 router.get('/place', PlaceController.getPlaces);
 // get one place with id
 router.get('/place/:id', PlaceValidate.getPlaceInput, PlaceController.getPlace);
+// get rating and comment of place
+router.get('/place/rating-comment/:id', PlaceValidate.getRateCommentInput, PlaceController.getRateComment);
 
 // PUT
 router.put('/place/:id', PlaceValidate.updatePlaceInput, PlaceValidate.reduceInput, PlaceController.updatePlace);

@@ -85,6 +85,17 @@ export const UpdateAccountErrors = {
     AUTH_FAIL: 'AUTH_FAIL',
     UPDATED_FAILURE: 'UPDATED_FAILURE',
     GET_FAIL: 'GET_FAIL',
+    NO_TOKEN: 'NO_TOKEN'
+};
+export const UpdateAccount1Errors = {
+    NO_DATA: 'NO_DATA',
+    NO_TOKEN: 'NO_TOKEN',
+    NO_ACCOUNT_ID: 'NO_ACCOUNT_ID',
+    AUTH_FAIL: 'AUTH_FAIL',
+    NO_RIGHT: 'NO_RIGHT',
+    ACCOUNT_NEVER_EXIST: 'ACCOUNT_NEVER_EXIST',
+    UPDATED_FAILURE: 'UPDATED_FAILURE',
+    GET_FAIL: 'GET_FAIL'
 };
 
 export const ChangePasswordErrors = {

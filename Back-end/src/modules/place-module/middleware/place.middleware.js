@@ -2,6 +2,7 @@ import ValidationError from '../../../errors-handle/validation.errors';
 import {
     CreatePlaceErrors,
     GetPlaceErrors,
+    GetRateCommentErrors,
     UpdatePlaceErrors,
     DeletePlaceErrors
 } from '../error-codes/place.error-codes';
@@ -40,6 +41,15 @@ const getPlaceInput = (req, res, next) => {
     const placeId = req.params.id;
     try {
         if (!placeId) throw GetPlaceErrors.NO_PLACE_ID;
+        return next();
+    } catch (error) {
+        return res.onError(new ValidationError(error));
+    }
+};
+const getRateCommentInput = (req, res, next) => {
+    const placeId = req.params.id;
+    try {
+        if (!placeId) throw GetRateCommentErrors.NO_PLACE_ID;
         return next();
     } catch (error) {
         return res.onError(new ValidationError(error));
@@ -104,6 +114,7 @@ const deletePlaceInput = (req, res, next) => {
 export default {
     createPlaceInput,
     getPlaceInput,
+    getRateCommentInput,
     updatePlaceInput,
     reduceInput,
     deletePlaceInput

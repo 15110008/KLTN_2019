@@ -24,7 +24,9 @@ router.get('/accounts', AccountValidate.getAccountsInput, AccountController.getA
 router.get('/account/:id', AccountValidate.getAccountInput, AccountController.getAccount);
 
 // PUT
-// thay đổi thông tin của account (name, phone)
+// admin change account info
+router.put('/account/:id', AccountValidate.updateAccount1Input, AccountValidate.reduceInput, AccountController.updateAccount);
+// user thay đổi thông tin của account (name, phone)
 router.put('/account', AccountValidate.updateAccountInput, AccountValidate.reduceInput, AccountController.updateInfo);
 // thay đổi password của account khi đã đăng nhập vào
 router.put('/account/changepassword', AccountValidate.changePasswordInput, AccountController.changePassword);
