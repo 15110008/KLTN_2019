@@ -10,7 +10,7 @@ const PlaceSchema = new Schema({
         type: String
     },
     location: {
-        type: [String]
+        type: String
     },
     phone: {
         type: String
