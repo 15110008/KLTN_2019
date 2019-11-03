@@ -7,9 +7,9 @@ const { Option } = Select;
 export default class ComboField extends Component {
     render() {
         return (
-            <Select defaultValue={this.props.defaultValue} onChange={this.props.onChange}>
-                {this.props.options.map(x => {
-                    return <Option value={x.value}>{x.label}</Option>
+            <Select onChange={this.props.onChange}>
+                {this.props.options && this.props.options.map((x, index) => {
+                    return <Option key={index} value={x.value}>{x.label}</Option>
                 })}
             </Select>
         )

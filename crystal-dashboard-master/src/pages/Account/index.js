@@ -24,19 +24,14 @@ export default class Account extends Component {
     }
     this.columnDefs = [
       {
-        title: 'Id',
-        dataIndex: '_id',
-        key: '_id',
+        title: 'Email',
+        dataIndex: 'email',
+        key: 'email',
       },
       {
         title: 'Tên',
         dataIndex: 'name',
         key: 'name',
-      },
-      {
-        title: 'Email',
-        dataIndex: 'email',
-        key: 'email',
       },
       {
         title: 'Số điện thoại',
@@ -50,7 +45,7 @@ export default class Account extends Component {
           <div>
             <button className='btn btn-detail' style={{ marginRight: '10px' }} onClick={() => this.setState({ formDetail: true, id: record._id })}>Chi tiết</button>
             <button className='btn btn-edit' onClick={() => this.setState({ formEdit: true, id: record._id })}>Sửa</button>
-            <button className='btn btn-delete' onClick={() => this.onDelete()}>Xóa</button>
+            <button className='btn btn-delete' onClick={() => this.onDelete(record._id)}>Xóa</button>
           </div>
         ),
       },
@@ -70,6 +65,34 @@ export default class Account extends Component {
 
   componentDidMount() {
     this.loadData()
+  }
+
+  onDelete(id) {
+    const token = localStorage.getItem('jwt')
+    const params = {
+      headers: { jwt: token },
+    }
+    Axios.delete('http://localhost:3000/v1/account/' + id, params)
+      .then((response) => {
+        if (response.data.success) {
+          notification['success']({
+            message: 'Xóa thành công',
+            onClick: () => {
+              console.log('Notification Clicked!');
+            },
+          });
+          this.loadData()
+        } else {
+          notification['error']({
+            message: response.data.message,
+            onClick: () => {
+              console.log('Notification Clicked!');
+            },
+          });
+        }
+      }).catch(error => {
+        console.log("TCL: formLogin -> onSubmit -> error", error)
+      });
   }
 
 

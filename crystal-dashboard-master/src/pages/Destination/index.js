@@ -1,64 +1,82 @@
 import { Table } from 'antd';
 import React, { Component } from 'react';
 import Axios from 'axios';
+import { Modal, Button, notification } from 'antd';
+import FormEdit from './form/FormEdit'
+import FormCreate from './form/FormCreate'
+import _ from 'lodash'
 
 export default class Destination extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [
-      ]
+      data: [],
+      destinationOption: []
     }
-    this.columnDefs = [
-      {
-        title: 'Id',
-        dataIndex: '_id',
-        key: '_id',
-      },
-      {
-        title: 'Tên',
-        dataIndex: 'name',
-        key: 'name',
-      },
-      {
-        title: 'Hình ảnh',
-        dataIndex: 'images',
-        key: 'images',
-      },
-      {
-        title: 'Mô tả',
-        key: 'description',
-        dataIndex: 'description',
-      },
-      {
-        title: 'Kinh độ',
-        key: 'longitude',
-        dataIndex: 'longitude',
-      },
-      {
-        title: 'Vĩ độ',
-        key: 'latitude',
-        dataIndex: 'latitude',
-      },
-      {
-        title: 'Action',
-        key: 'action',
-        render: (text, record) => (
-          <div>
-            <button className='btn btn-detail' style={{ marginRight: '10px' }}>Chi tiết</button>
-            <button className='btn btn-edit'>Sửa</button>
-            <button className='btn btn-delete'>Xóa</button>
-          </div>
-        ),
-      },
-    ];
-
-
+    this.optionCategory = [
+      { value: 1, label: 'Du lịch văn hóa' },
+      { value: 2, label: 'Du lịch ẩm thực' },
+      { value: 3, label: 'Du lịch tham quan' },
+      { value: 4, label: 'Du lịch nghỉ dưỡng' },
+    ]
   }
+
+  columnDefs = [
+    {
+      title: 'Tên địa điểm',
+      width: 300,
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Mô tả',
+      width: 300,
+      key: 'description',
+      dataIndex: 'description',
+    },
+    {
+      title: 'Hình ảnh',
+      key: 'images',
+      dataIndex: 'images',
+    },
+    {
+      title: 'Kinh độ',
+      key: 'longitude',
+      dataIndex: 'longitude',
+    },
+
+    {
+      title: 'Vĩ độ',
+      key: 'latitude',
+      dataIndex: 'latitude',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text, record) => (
+        <div>
+          <button className='btn btn-detail' style={{ marginRight: '10px' }} onClick={() => this.setState({ formDetail: true, id: record._id })}>Chi tiết</button>
+          <button className='btn btn-edit' onClick={() => this.setState({ formEdit: true, id: record._id })}>Sửa</button>
+          <button className='btn btn-delete' onClick={() => this.onDelete(record._id)}>Xóa</button>
+        </div>
+      ),
+    },
+  ];
 
   componentDidMount() {
     this.loadData()
   }
+
+  handleOk = () => {
+    this.setState({ loading: true });
+    setTimeout(() => {
+      this.setState({ loading: false, formEdit: false, formCreate: false });
+    }, 3000);
+  };
+
+  handleCancel = () => {
+    this.setState({ formEdit: false, formDetail: false, formCreate: false });
+  };
 
   loadData() {
     Axios.get('http://localhost:3000/v1/destination')
@@ -67,11 +85,111 @@ export default class Destination extends Component {
           this.setState({
             data: response.data.data
           })
+          console.log("TCL: destination -> loadData -> data", response.data.data)
+
         } else {
+        }
+      }).catch(error => {
+        console.log("TCL: destination -> loadData -> error", error)
+      });
+  }
+
+  onDelete(id) {
+    const token = localStorage.getItem('jwt')
+    const params = {
+      headers: { jwt: token },
+    }
+    Axios.delete('http://localhost:3000/v1/destination/' + id, params)
+      .then((response) => {
+        if (response.data.success) {
+          notification['success']({
+            message: 'Xóa thành công',
+            onClick: () => {
+              console.log('Notification Clicked!');
+            },
+          });
+          this.loadData()
+        } else {
+          notification['error']({
+            message: response.data.message,
+            onClick: () => {
+              console.log('Notification Clicked!');
+            },
+          });
         }
       }).catch(error => {
         console.log("TCL: formLogin -> onSubmit -> error", error)
       });
+  }
+
+  onSaveCreate() {
+    const token = localStorage.getItem('jwt')
+    const params = {
+      headers: { jwt: token },
+    }
+    const data = this.formCreateRef.formRef.getFieldsValue()
+    console.log("TCL: destination -> onSaveCreate -> data", data)
+
+    this.formCreateRef.formRef.validateFields(err => {
+      if (!err) {
+        Axios.post('http://localhost:3000/v1/destination', data, params)
+          .then((res) => {
+            if (res.data.success) {
+              notification['success']({
+                message: 'Tạo mới thành công',
+                onClick: () => {
+                  console.log('Notification Clicked!');
+                },
+              });
+              this.loadData()
+              this.setState({
+                formCreate: false
+              })
+            } else {
+              notification['error']({
+                message: res.data.message,
+                onClick: () => {
+                  console.log('Notification Clicked!');
+                },
+              });
+            }
+          })
+      }
+    });
+  }
+
+  onSaveEdit() {
+    const data = this.formEditRef.formRef.getFieldsValue()
+    const token = localStorage.getItem('jwt')
+    const params = {
+      headers: { jwt: token },
+    }
+    this.formEditRef.formRef.validateFields(err => {
+      if (!err) {
+        Axios.put('http://localhost:3000/v1/destination/' + this.state.id, data, params)
+          .then((res) => {
+            if (res.data.success) {
+              notification['success']({
+                message: 'Lưu thành công',
+                onClick: () => {
+                  console.log('Notification Clicked!');
+                },
+              });
+              this.loadData()
+              this.setState({
+                formEdit: false
+              })
+            } else {
+              notification['error']({
+                message: res.data.message,
+                onClick: () => {
+                  console.log('Notification Clicked!');
+                },
+              });
+            }
+          })
+      }
+    });
   }
 
   render() {
@@ -84,7 +202,66 @@ export default class Destination extends Component {
           margin: 'auto'
         }}
       >
-        <Table columns={this.columnDefs} dataSource={this.state.data} />
+        <div className='row'>
+          <div className='col-md-10'></div>
+          <div className='col-md-2'>
+            <button className='btn btn-create' onClick={() => this.setState({ formCreate: true })}>
+              <i className="fa fa-plus" aria-hidden="true" style={{ marginRight: '5px' }}></i>
+              Tạo mới
+            </button>
+          </div>
+        </div>
+        <Table bordered columns={this.columnDefs} dataSource={this.state.data} />
+        <Modal
+          visible={this.state.formCreate}
+          title="Tạo mới địa điểm"
+          width={700}
+          centered
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+          footer={[
+            <Button key="submit" type="primary" loading={this.state.loading} onClick={() => this.onSaveCreate()}>
+              Lưu
+            </Button>,
+            <Button key="back" onClick={this.handleCancel}>
+              Đóng
+            </Button>,
+          ]}
+        >
+          <FormCreate ref={c => this.formCreateRef = c} />
+        </Modal>
+        <Modal
+          visible={this.state.formEdit}
+          title="Cập nhật địa điểm"
+          width={700}
+          centered
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+          footer={[
+            <Button key="submit" type="primary" loading={this.state.loading} onClick={() => this.onSaveEdit()}>
+              Lưu
+            </Button>,
+            <Button key="back" onClick={this.handleCancel}>
+              Đóng
+            </Button>,
+          ]}
+        >
+          <FormEdit ref={c => this.formEditRef = c} id={this.state.id} />
+        </Modal>
+        <Modal
+          visible={this.state.formDetail}
+          title="Chi tiết địa điểm"
+          width={700}
+          centered
+          onCancel={this.handleCancel}
+          footer={[
+            <Button key="back" onClick={this.handleCancel}>
+              Đóng
+            </Button>,
+          ]}
+        >
+          <FormEdit ref={c => this.formDetailRef = c} id={this.state.id} readOnly={true} />
+        </Modal>
       </div>
     );
   }

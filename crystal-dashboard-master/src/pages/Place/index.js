@@ -10,55 +10,71 @@ export default class Place extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [
-      ]
+      data: [],
+      destinationOption: []
     }
-    this.columnDefs = [
-      {
-        title: 'Id',
-        dataIndex: '_id',
-        key: '_id',
-      },
-      {
-        title: 'Tên',
-        dataIndex: 'name',
-        key: 'name',
-      },
-      {
-        title: 'Hình ảnh',
-        dataIndex: 'images',
-        key: 'images',
-      },
-      {
-        title: 'Mô tả',
-        key: 'description',
-        dataIndex: 'description',
-      },
-      {
-        title: 'Kinh độ',
-        key: 'longitude',
-        dataIndex: 'longitude',
-      },
-      {
-        title: 'Vĩ độ',
-        key: 'latitude',
-        dataIndex: 'latitude',
-      },
-      {
-        title: 'Action',
-        key: 'action',
-        render: (text, record) => (
-          <div>
-            <button className='btn btn-detail' style={{ marginRight: '10px' }} onClick={() => this.setState({ formDetail: true, id: record._id })}>Chi tiết</button>
-            <button className='btn btn-edit' onClick={() => this.setState({ formEdit: true, id: record._id })}>Sửa</button>
-            <button className='btn btn-delete' onClick={() => this.onDelete()}>Xóa</button>
-          </div>
-        ),
-      },
-    ];
-
-
+    this.optionCategory = [
+      { value: 1, label: 'Du lịch văn hóa' },
+      { value: 2, label: 'Du lịch ẩm thực' },
+      { value: 3, label: 'Du lịch tham quan' },
+      { value: 4, label: 'Du lịch nghỉ dưỡng' },
+    ]
   }
+
+  columnDefs = [
+    {
+      title: 'Tên địa điểm',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Điểm đến',
+      dataIndex: 'destinationId',
+      key: 'destinationId',
+      render: (text, record) => {
+        if (this.state.destinationOption) {
+          const destination = _.find(this.state.destinationOption, x => {
+            return text == x.value
+          })
+          return destination && destination.label
+        }
+      }
+    },
+    {
+      title: 'Loại hình du lịch',
+      key: 'category',
+      dataIndex: 'category',
+      render: (text, record) => {
+        if (this.optionCategory) {
+          const category = _.find(this.optionCategory, x => {
+            return text == x.value
+          })
+          return category && category.label
+        }
+      }
+    },
+    {
+      title: 'Giá cả',
+      key: 'price',
+      dataIndex: 'price',
+    },
+    {
+      title: 'Mô tả',
+      key: 'description',
+      dataIndex: 'description',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text, record) => (
+        <div>
+          <button className='btn btn-detail' style={{ marginRight: '10px' }} onClick={() => this.setState({ formDetail: true, id: record._id })}>Chi tiết</button>
+          <button className='btn btn-edit' onClick={() => this.setState({ formEdit: true, id: record._id })}>Sửa</button>
+          <button className='btn btn-delete' onClick={() => this.onDelete(record._id)}>Xóa</button>
+        </div>
+      ),
+    },
+  ];
 
   componentDidMount() {
     this.loadData()
@@ -76,17 +92,64 @@ export default class Place extends Component {
   };
 
   loadData() {
-    // Axios.get('http://localhost:3000/v1/place')
-    //   .then((response) => {
-    //     if (response.data.success) {
-    //       this.setState({
-    //         data: response.data.data
-    //       })
-    //     } else {
-    //     }
-    //   }).catch(error => {
-    //     console.log("TCL: formLogin -> onSubmit -> error", error)
-    //   });
+    Axios.get('http://localhost:3000/v1/place')
+      .then((response) => {
+        if (response.data.success) {
+          this.setState({
+            data: response.data.data
+          })
+          console.log("TCL: Place -> loadData -> data", response.data.data)
+
+        } else {
+        }
+      }).catch(error => {
+        console.log("TCL: Place -> loadData -> error", error)
+      });
+    Axios.get('http://localhost:3000/v1/destination')
+      .then((res) => {
+        const data = res.data.data
+        const destinationOption = []
+        data.map(x => {
+          destinationOption.push({
+            value: x._id,
+            label: x.name
+          })
+        })
+
+        this.setState({
+          destinationOption: destinationOption
+        })
+      }).catch((error) => {
+
+      })
+  }
+
+  onDelete(id) {
+    const token = localStorage.getItem('jwt')
+    const params = {
+      headers: { jwt: token },
+    }
+    Axios.delete('http://localhost:3000/v1/place/' + id, params)
+      .then((response) => {
+        if (response.data.success) {
+          notification['success']({
+            message: 'Xóa thành công',
+            onClick: () => {
+              console.log('Notification Clicked!');
+            },
+          });
+          this.loadData()
+        } else {
+          notification['error']({
+            message: response.data.message,
+            onClick: () => {
+              console.log('Notification Clicked!');
+            },
+          });
+        }
+      }).catch(error => {
+        console.log("TCL: formLogin -> onSubmit -> error", error)
+      });
   }
 
   onSaveCreate() {
@@ -125,6 +188,40 @@ export default class Place extends Component {
     });
   }
 
+  onSaveEdit() {
+    const data = this.formEditRef.formRef.getFieldsValue()
+    const token = localStorage.getItem('jwt')
+    const params = {
+      headers: { jwt: token },
+    }
+    this.formEditRef.formRef.validateFields(err => {
+      if (!err) {
+        Axios.put('http://localhost:3000/v1/place/' + this.state.id, data, params)
+          .then((res) => {
+            if (res.data.success) {
+              notification['success']({
+                message: 'Lưu thành công',
+                onClick: () => {
+                  console.log('Notification Clicked!');
+                },
+              });
+              this.loadData()
+              this.setState({
+                formEdit: false
+              })
+            } else {
+              notification['error']({
+                message: res.data.message,
+                onClick: () => {
+                  console.log('Notification Clicked!');
+                },
+              });
+            }
+          })
+      }
+    });
+  }
+
   render() {
     return (
       <div
@@ -147,7 +244,7 @@ export default class Place extends Component {
         <Table columns={this.columnDefs} dataSource={this.state.data} />
         <Modal
           visible={this.state.formCreate}
-          title="Cập nhật account"
+          title="Tạo mới địa điểm"
           width={700}
           centered
           onOk={this.handleOk}
@@ -165,7 +262,8 @@ export default class Place extends Component {
         </Modal>
         <Modal
           visible={this.state.formEdit}
-          title="Cập nhật account"
+          title="Cập nhật địa điểm"
+          width={700}
           centered
           onOk={this.handleOk}
           onCancel={this.handleCancel}
@@ -182,7 +280,8 @@ export default class Place extends Component {
         </Modal>
         <Modal
           visible={this.state.formDetail}
-          title="Chi tiết"
+          title="Chi tiết địa điểm"
+          width={700}
           centered
           onCancel={this.handleCancel}
           footer={[
