@@ -26,12 +26,23 @@ const createPlaceInput = (req, res, next) => {
         if (!name) throw CreatePlaceErrors.NO_NAME;
         if (!category) throw CreatePlaceErrors.NO_CATEGORY;
         if (!location) throw CreatePlaceErrors.NO_LOCATION;
-        if (!phone) throw CreatePlaceErrors.NO_PHONE;
+        // if (!phone) throw CreatePlaceErrors.NO_PHONE;
         if (!description) throw CreatePlaceErrors.NO_DESCRIPTION;
-        if (!price) throw CreatePlaceErrors.NO_PRICE;
+        // if (!price) throw CreatePlaceErrors.NO_PRICE;
         if (!longitude) throw CreatePlaceErrors.NO_LONGITUDE;
         if (!latitude) throw CreatePlaceErrors.NO_LATITUDE;
         if (!destinationId) throw CreatePlaceErrors.NO_DESTINATION_ID;
+        req.body = {
+            name,
+            category,
+            location,
+            phone,
+            description,
+            price,
+            longitude,
+            latitude,
+            destinationId
+        };
         return next();
     } catch (error) {
         return res.onError(new ValidationError(error));

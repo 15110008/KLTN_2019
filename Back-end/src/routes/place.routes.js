@@ -6,7 +6,7 @@ const router = express.Router();
 
 // POST
 // create place
-router.post('/place', PlaceValidate.createPlaceInput, PlaceController.create);
+router.post('/place', PlaceValidate.createPlaceInput, PlaceValidate.reduceInput, PlaceController.create);
 
 // GET
 // get list place

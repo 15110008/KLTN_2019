@@ -13,13 +13,15 @@ const PlaceSchema = new Schema({
         type: String
     },
     phone: {
-        type: String
+        type: String,
+        default: null
     },
     description: {
         type: String,
     },
     price: {
         type: String,
+        default: null
     },
     images: {
         type: [String],
@@ -30,6 +32,10 @@ const PlaceSchema = new Schema({
     },
     latitude: {
         type: Number
+    },
+    rate: {
+        type: Number,
+        default: null
     },
     isDeleted: {
         type: Boolean,
