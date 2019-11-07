@@ -47,6 +47,7 @@ export default class FormEdit extends Component {
 
 
     async loadData(id) {
+        this.formRef.resetFields()
         await axios.get('http://localhost:3000/v1/place/' + id)
             .then((res) => {
                 if (res.data.success) {
