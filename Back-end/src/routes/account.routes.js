@@ -1,8 +1,34 @@
 import express from 'express';
+import multer from 'multer';
 import AccountController from '../modules/account-module/controllers/account.controller';
 import AccountValidate from '../modules/account-module/middleware/account.middleware';
 
 const router = express.Router();
+
+const storage = multer.diskStorage({
+    destination(req, file, cb) {
+        // console.log(file);
+        cb(null, './src/uploads');
+    },
+    filename(req, file, cb) {
+        cb(null, new Date().toISOString() + file.originalname);
+    }
+});
+const fileFilter = (req, file, cb) => {
+    // reject a file
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+      cb(null, true);
+    } else {
+      cb(null, false);
+    }
+};
+const upload = multer({
+    storage,
+    limits: {
+      fileSize: 1024 * 1024 * 5
+    },
+    fileFilter
+  });
 
 // Create use routers
 // POST
@@ -14,6 +40,8 @@ router.post('/account/login', AccountValidate.logInAccountInput, AccountControll
 router.post('/account/login/facebook', AccountValidate.loginWithFacebookInput, AccountValidate.reduceInput, AccountController.loginWithFacebook);
 // login with google
 router.post('/account/login/google', AccountValidate.loginWithGoogleInput, AccountValidate.reduceInput, AccountController.loginWithGoogle);
+// upload image
+router.post('/account/upload', upload.single('avatar'), AccountValidate.upload, AccountController.uploadImage);
 
 // GET
 // lấy thông tin của chính bản thân
@@ -32,6 +60,7 @@ router.put('/account', AccountValidate.updateAccountInput, AccountValidate.reduc
 router.put('/account/changepassword', AccountValidate.changePasswordInput, AccountController.changePassword);
 // block-unblock account đối với các bài viết (by admin)
 router.put('/account/block-unblock/:id', AccountValidate.blockUnblockAccountInput, AccountController.blockUnblockAccount);
+
 
 // DELETE
 router.delete('/account/:id', AccountValidate.deleteAccountInput, AccountController.deleteAccount);

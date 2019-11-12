@@ -124,3 +124,12 @@ export const BlockUnblockAccountErrors = {
     GET_FAIL: 'GET_FAIL',
 
 };
+
+export const UploadImageErrors = {
+    NO_TOKEN: 'NO_TOKEN',
+    NO_IMAGE: 'NO_IMAGE',
+    AUTH_FAIL: 'AUTH_FAIL',
+    ACCOUNT_NEVER_EXIST: 'ACCOUNT_NEVER_EXIST',
+    UPLOAD_FAILURE: 'UPLOAD_FAILURE',
+    GET_FAIL: 'GET_FAIL'
+};

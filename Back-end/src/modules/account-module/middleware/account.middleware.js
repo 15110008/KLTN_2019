@@ -6,6 +6,7 @@ import {
     LoginWithFacebookErrors,
     LoginWithGoogleErrors,
     MeAccountErrors,
+    UploadImageErrors,
     // GetAccountsErrors,
     GetAccountErrors,
     UpdateAccountErrors,
@@ -205,6 +206,19 @@ const deleteAccountInput = (req, res, next) => {
         return res.onError(new ValidationError(error));
     }
 };
+
+const upload = (req, res, next) => {
+    const { jwt } = req.headers;
+    const avatar = req.file.path;
+    try {
+        if (!jwt) throw UploadImageErrors.NO_TOKEN;
+        if (!avatar) throw UploadImageErrors.NO_IMAGE;
+        return next();
+    } catch (error) {
+        return res.onError(new ValidationError(error));
+    }
+};
+
 export default {
     createAccountInput,
     logInAccountInput,
@@ -218,5 +232,6 @@ export default {
     reduceInput,
     changePasswordInput,
     blockUnblockAccountInput,
-    deleteAccountInput
+    deleteAccountInput,
+    upload
 };

@@ -1,4 +1,5 @@
 // Errors
+
 import AlreadyExistError from '../../../errors-handle/already-exist.errors';
 import NotFoundError from '../../../errors-handle/not-found.errors';
 import ValidationError from '../../../errors-handle/validation.errors';
@@ -20,7 +21,8 @@ import {
     DeleteAccountErrors,
     LoginWithFacebookErrors,
     LoginWithGoogleErrors,
-    UpdateAccount1Errors
+    UpdateAccount1Errors,
+    UploadImageErrors
 } from '../error-codes/account.error-codes';
 import {
     AccountStatus,
@@ -38,6 +40,26 @@ const create = async (req, res) => {
         const account = await AccountRepository.create({ name, email, password });
         if (!account) throw new NotImplementError(CreateAccountErrors.CREATE_FAIL);
         return res.onSuccess(account);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
+
+
+const uploadImage = async (req, res) => {
+    const { jwt } = req.headers;
+    const avatar = req.file.path;
+    req.body = { avatar };
+    try {
+        const authenData = VerifyToken(jwt);
+        if (!jwt) throw new NotImplementError(UploadImageErrors.AUTH_FAIL);
+        const account = await AccountRepository.isExistedAccount(authenData.accountId);
+        if (!account) throw new NotFoundError(UploadImageErrors.ACCOUNT_NEVER_EXIST);
+        const upload = await AccountRepository.uploadImage(authenData.accountId, req.body);
+        if (!upload) throw new NotImplementError(UploadImageErrors.UPLOAD_FAILURE);
+        const result = await AccountRepository.getAccountById(authenData.accountId);
+        if (!result) throw new NotImplementError(UploadImageErrors.GET_FAIL);
+        return res.onSuccess(result);
     } catch (error) {
         return res.onError(error);
     }
@@ -320,6 +342,7 @@ const deleteAccount = async (req, res) => {
 };
 export default {
     create,
+    uploadImage,
     login,
     loginWithFacebook,
     loginWithGoogle,

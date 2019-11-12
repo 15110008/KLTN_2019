@@ -1,6 +1,7 @@
 import ValidationError from '../../../errors-handle/validation.errors';
 import {
     CreatePlaceErrors,
+    CreateCommentErrors,
     GetPlaceErrors,
     GetRateCommentErrors,
     UpdatePlaceErrors,
@@ -42,6 +43,29 @@ const createPlaceInput = (req, res, next) => {
             longitude,
             latitude,
             destinationId
+        };
+        return next();
+    } catch (error) {
+        return res.onError(new ValidationError(error));
+    }
+};
+const createRaComInput = (req, res, next) => {
+    const {
+        jwt,
+        placeId,
+        rating,
+        comment
+    } = req.body;
+    try {
+        if (!jwt) throw CreateRatingCommentErrors.NO_TOKEN;
+        // if(!accountId) throw CreateLikeCommentErrors.NO_ACCOUNT_ID;
+        if (!placeId) throw CreateRatingCommentErrors.NO_PLACE_ID;
+        if (!rating || !comment) throw CreateRatingCommentErrors.NO_DATA;
+        req.body = {
+            jwt,
+            placeId,
+            rating,
+            comment
         };
         return next();
     } catch (error) {
@@ -124,6 +148,7 @@ const deletePlaceInput = (req, res, next) => {
 };
 export default {
     createPlaceInput,
+    createRaComInput,
     getPlaceInput,
     getRateCommentInput,
     updatePlaceInput,

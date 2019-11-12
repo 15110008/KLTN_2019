@@ -2,7 +2,7 @@ import AccountSchema from '../models/account.model';
 import { AccountStatus } from '../commons/account-status.common';
 
 const isExistedEmail = async (email) => {
-    const result = await AccountSchema.findOne({ email });
+    const result = await AccountSchema.findOne({ email, isDeleted: false });
     return result;
 };
 
@@ -24,7 +24,7 @@ const getPayloadJwtSchema = (account) => {
 };
 
 const getAccountById = async (accountId) => {
-    const result = await AccountSchema.findOne({ _id: accountId, status: AccountStatus.ACTIVE });
+    const result = await AccountSchema.findOne({ _id: accountId, status: AccountStatus.ACTIVE, isDeleted: false });
     return result;
 };
 
@@ -117,6 +117,17 @@ const updateGoogleToken = async (googleId, token) => {
     if (result.n !== 0) return true;
     return false;
 };
+
+const uploadImage = async (accountId, data) => {
+    const result = await AccountSchema.updateOne({
+        _id: accountId,
+        isDeleted: false,
+        status: AccountStatus.ACTIVE
+    },
+        { ...data });
+    if (result.n === result.nModified) return true;
+    return false;
+};
 export default {
     create,
     isExistedEmail,
@@ -135,5 +146,6 @@ export default {
     isExistedGoogleId,
     updateAccount,
     updateFacebookToken,
-    updateGoogleToken
+    updateGoogleToken,
+    uploadImage
 };

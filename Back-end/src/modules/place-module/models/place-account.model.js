@@ -19,6 +19,7 @@ const PlaceAccountSchema = new Schema({
     },
     comment: {
         type: String,
+        default: null
     },
     isDeleted: {
         type: Boolean,

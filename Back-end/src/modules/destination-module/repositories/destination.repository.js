@@ -2,9 +2,9 @@ import DestinationSchema from '../models/destination.model';
 import DestinationAccountSchema from '../models/destination-account.model';
 
 const isExistedDestination = async (name) => {
-    const result = await DestinationSchema.findOne({ 
-        name, 
-        isDeleted: false 
+    const result = await DestinationSchema.findOne({
+        name,
+        isDeleted: false
     });
     return result;
 };
