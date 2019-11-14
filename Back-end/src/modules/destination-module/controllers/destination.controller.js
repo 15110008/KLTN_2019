@@ -205,9 +205,7 @@ const uploadImage = async (req, res) => {
 };
 const insertImage = async (req, res) => {
     const { jwt } = req.headers;
-    const { destinationId } = req.body.destinationId;
-    const i = req.file;
-    console.log(i);
+    const { destinationId } = req.body;
     const images = req.file.path;
     req.body = { images };
     // console.log(images);
@@ -234,8 +232,7 @@ const insertImage = async (req, res) => {
 };
 const updateImage = async (req, res) => {
     const { jwt } = req.headers;
-    const { destinationId } = req.body.destinationId;
-    const { string } = req.body.string;
+    const { destinationId, string } = req.body;
     const images = req.file.path;
     req.body = { string, images };
     try {
