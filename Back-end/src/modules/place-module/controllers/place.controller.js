@@ -77,34 +77,31 @@ const createRaCom = async (req, res) => {
                 comment
             });
             if (!result) throw new NotImplementError(CreateRatingCommentErrors.CREATE_FAIL);
-        }
-        else {
-            if (rating) {
+        } else if (rating) {
                 if (comment) {
-                    const update = await PlaceRepository.updateRaCom({placeId, accountId, rating, comment});
-                    if(!update) throw new NotImplementError(CreateRatingCommentErrors.UPDATE_RATING_COMMNENT_FAILURE);
+                    const update = await PlaceRepository.updateRaCom({
+ placeId, accountId, rating, comment
+});
+                    if (!update) throw new NotImplementError(CreateRatingCommentErrors.UPDATE_RATING_COMMNENT_FAILURE);
                     result = await PlaceRepository.existed(placeId, accountId);
                     if (!result) throw new NotFoundError(CreateRatingCommentErrors.GET_FAIL);
-                }
-                else {
+                } else {
                     const update = await PlaceRepository.updateRa({ placeId, accountId, rating });
                     if (!update) throw new NotImplementError(CreateRatingCommentErrors.UPDATE_RATING_FAILURE);
                     result = await PlaceRepository.existed(placeId, accountId);
                     if (!result) throw new NotFoundError(CreateRatingCommentErrors.GET_FAIL);
                 }
-                //update rate
+                // update rate
                 const count = await PlaceRepository.countRating();
-                if(!count) throw new NotImplementError(CreateRatingCommentErrors.COUNT_FAILURE);
+                if (!count) throw new NotImplementError(CreateRatingCommentErrors.COUNT_FAILURE);
                 const amount = await PlaceRepository.sumRating();
-                if(!amount) throw new NotImplementError(CreateRatingCommentErrors.AMOUNT_RATING_FAILURE);
-            }
-            else {
-                const update = await PlaceRepository.updateCom({placeId, accountId, comment});
-                if(!update) throw new NotImplementError(CreateRatingCommentErrors.UPDATE_COMMENT_FAILURE);
+                if (!amount) throw new NotImplementError(CreateRatingCommentErrors.AMOUNT_RATING_FAILURE);
+            } else {
+                const update = await PlaceRepository.updateCom({ placeId, accountId, comment });
+                if (!update) throw new NotImplementError(CreateRatingCommentErrors.UPDATE_COMMENT_FAILURE);
                 result = await PlaceRepository.existed(placeId, accountId);
-                if (!result) throw new NotFoundError(CreateRatingCommentErrors.GET_FAIL); 
+                if (!result) throw new NotFoundError(CreateRatingCommentErrors.GET_FAIL);
             }
-        }
         return res.onSuccess(result);
     } catch (error) {
         return res.onError(error);

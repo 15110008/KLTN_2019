@@ -60,6 +60,34 @@ const getAccountLikeComment = async (destinationId, accountId) => {
     });
     return result;
 };
+const uploadImage = async (destinationId, data) => {
+    const result = await DestinationSchema.updateOne({
+        _id: destinationId,
+        isDeleted: false
+    },
+        { ...data });
+    if (result.n === result.nModified) return true;
+    return false;
+};
+const insertImage = async (destinationId, data) => {
+    const result = await DestinationSchema.updateOne({
+        _id: destinationId,
+        isDeleted: false
+    },
+    { $push: { images: data } });
+    if (result.n === result.nModified) return true;
+    return false;
+};
+const updateImage = async (destinationId, string, data) => {
+    const result = await DestinationSchema.updateOne({
+        _id: destinationId,
+        isDeleted: false,
+        images: string
+    },
+    { $set: { 'images.$': data } });
+    if (result.n === result.nModified) return true;
+    return false;
+};
 export default {
     isExistedDestination,
     create,
@@ -69,5 +97,8 @@ export default {
     deleteDestination,
     createLikeComment,
     getLikeAndComment,
-    getAccountLikeComment
+    getAccountLikeComment,
+    uploadImage,
+    insertImage,
+    updateImage
 };

@@ -2,11 +2,14 @@ import ValidationError from '../../../errors-handle/validation.errors';
 import {
     CreateDestinationErrors,
     GetDestinationErrors,
+    UploadImageErrors,
     UpdateDestinationErrors,
     DeleteDestinationErrors,
     CreateLikeCommentErrors,
     GetLikeAndCommentErrors,
-    GetAccountLikeCommentErrors
+    GetAccountLikeCommentErrors,
+    InsertImageErrors,
+    UpdateImageErrors
 } from '../error-codes/destination.error-codes';
 
 const createDestinationInput = (req, res, next) => {
@@ -119,6 +122,47 @@ const getAccountLikeCommentInput = (req, res, next) => {
         return res.onError(new ValidationError(error));
     }
 };
+const upload = (req, res, next) => {
+    const { jwt } = req.headers;
+    const destinationId = req.body;
+    const avatar = req.file.path;
+    try {
+        if (!jwt) throw UploadImageErrors.NO_TOKEN;
+        if (!destinationId) throw UploadImageErrors.NO_DESTINATION_ID;
+        if (!avatar) throw UploadImageErrors.NO_IMAGE;
+        return next();
+    } catch (error) {
+        return res.onError(new ValidationError(error));
+    }
+};
+const insertInput = (req, res, next) => {
+    const { jwt } = req.headers;
+    const destinationId = req.body;
+    const images = req.file.path;
+    try {
+        if (!jwt) throw InsertImageErrors.NO_TOKEN;
+        if (!destinationId) throw InsertImageErrors.NO_DESTINATION_ID;
+        if (!images) throw InsertImageErrors.NO_IMAGE;
+        return next();
+    } catch (error) {
+        return res.onError(new ValidationError(error));
+    }
+};
+const updateImage = (req, res, next) => {
+    const { jwt } = req.headers;
+    const destinationId = req.body;
+    const string = req.body;
+    const images = req.file.path;
+    try {
+        if (!jwt) throw UpdateImageErrors.NO_TOKEN;
+        if (!destinationId) throw UpdateImageErrors.NO_DESTINATION_ID;
+        if (!string) throw UpdateImageErrors.NO_STRING;
+        if (!images) throw UpdateImageErrors.NO_IMAGE;
+        return next();
+    } catch (error) {
+        return res.onError(new ValidationError(error));
+    }
+};
 export default {
     createDestinationInput,
     getDestinationInput,
@@ -127,5 +171,8 @@ export default {
     deleteDestinationInput,
     createLikeCommentInput,
     getLikeAndCommentInput,
-    getAccountLikeCommentInput
+    getAccountLikeCommentInput,
+    upload,
+    insertInput,
+    updateImage
 };

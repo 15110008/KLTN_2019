@@ -1,7 +1,7 @@
 import ValidationError from '../../../errors-handle/validation.errors';
 import {
     CreatePlaceErrors,
-    CreateCommentErrors,
+    CreateRatingCommentErrors,
     GetPlaceErrors,
     GetRateCommentErrors,
     UpdatePlaceErrors,

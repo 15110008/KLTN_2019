@@ -8,7 +8,7 @@ const router = express.Router();
 const storage = multer.diskStorage({
     destination(req, file, cb) {
         // console.log(file);
-        cb(null, './src/uploads');
+        cb(null, './uploads');
     },
     filename(req, file, cb) {
         cb(null, new Date().toISOString() + file.originalname);
@@ -40,7 +40,7 @@ router.post('/account/login', AccountValidate.logInAccountInput, AccountControll
 router.post('/account/login/facebook', AccountValidate.loginWithFacebookInput, AccountValidate.reduceInput, AccountController.loginWithFacebook);
 // login with google
 router.post('/account/login/google', AccountValidate.loginWithGoogleInput, AccountValidate.reduceInput, AccountController.loginWithGoogle);
-// upload image
+// upload avatar
 router.post('/account/upload', upload.single('avatar'), AccountValidate.upload, AccountController.uploadImage);
 
 // GET

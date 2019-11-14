@@ -7,7 +7,10 @@ import {
     DeleteDestinationErrors,
     GetLikeAndCommentErrors,
     GetAccountLikeCommentErrors,
-    CreateLikeCommentErrors
+    CreateLikeCommentErrors,
+    UploadImageErrors,
+    InsertImageErrors,
+    UpdateImageErrors
 } from '../error-codes/destination.error-codes';
 import { AccountRole } from '../../account-module/commons/account-status.common';
 import NotImplementError from '../../../errors-handle/not-implemented.errors';
@@ -180,6 +183,81 @@ const getAccountLikeComment = async (req, res) => {
         return res.onError(error);
     }
 };
+const uploadImage = async (req, res) => {
+    const { jwt } = req.headers;
+    const { destinationId } = req.body.destinationId;
+    const avatar = req.file.path;
+    req.body = { avatar };
+    try {
+        const authenData = VerifyToken(jwt);
+        if (!jwt) throw new NotImplementError(UploadImageErrors.AUTH_FAIL);
+        if (authenData.role !== AccountRole.MANAGER) throw new Unauthorized(UploadImageErrors.NO_RIGHT);
+        const destination = await DestinationRepository.getDestination(destinationId);
+        if (!destination) throw new NotFoundError(UploadImageErrors.DESTINATION_NEVER_EXIST);
+        const upload = await DestinationRepository.uploadImage(destinationId, req.body);
+        if (!upload) throw new NotImplementError(UploadImageErrors.UPLOAD_FAILURE);
+        const result = await DestinationRepository.getDestination(destinationId);
+        if (!result) throw new NotImplementError(UploadImageErrors.GET_FAIL);
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
+const insertImage = async (req, res) => {
+    const { jwt } = req.headers;
+    const { destinationId } = req.body.destinationId;
+    const i = req.file;
+    console.log(i);
+    const images = req.file.path;
+    req.body = { images };
+    // console.log(images);
+    try {
+        const authenData = VerifyToken(jwt);
+        if (!jwt) throw new NotImplementError(InsertImageErrors.AUTH_FAIL);
+        if (authenData.role !== AccountRole.MANAGER) throw new Unauthorized(InsertImageErrors.NO_RIGHT);
+        const destination = await DestinationRepository.getDestination(destinationId);
+        if (!destination) throw new NotFoundError(InsertImageErrors.DESTINATION_NEVER_EXIST);
+        const arrays = destination.images;
+        const array = arrays.map(async (arr) => {
+            if (arr === req.body.images) throw new AlreadyExistError(InsertImageErrors.SAME_IMAGE);
+        });
+        await Promise.all(array);
+        const upload = await DestinationRepository.insertImage(destinationId, req.body.images);
+        if (!upload) throw new NotImplementError(InsertImageErrors.INSERT_FAILURE);
+        const result = await DestinationRepository.getDestination(destinationId);
+        console.log(result.images[1]);
+        if (!result) throw new NotImplementError(InsertImageErrors.GET_FAIL);
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
+const updateImage = async (req, res) => {
+    const { jwt } = req.headers;
+    const { destinationId } = req.body.destinationId;
+    const { string } = req.body.string;
+    const images = req.file.path;
+    req.body = { string, images };
+    try {
+        const authenData = VerifyToken(jwt);
+        if (!jwt) throw new NotImplementError(UpdateImageErrors.AUTH_FAIL);
+        if (authenData.role !== AccountRole.MANAGER) throw new Unauthorized(UpdateImageErrors.NO_RIGHT);
+        const destination = await DestinationRepository.getDestination(destinationId);
+        if (!destination) throw new NotFoundError(UpdateImageErrors.DESTINATION_NEVER_EXIST);
+        const arrays = destination.images;
+        const array = arrays.map(async (arr) => {
+            if (arr === req.body.images) throw new AlreadyExistError(UpdateImageErrors.SAME_IMAGE);
+        });
+        await Promise.all(array);
+        const upload = await DestinationRepository.updateImage(destinationId, req.body.string, req.body.images);
+        if (!upload) throw new NotImplementError(UpdateImageErrors.UPDATE_FAILURE);
+        const result = await DestinationRepository.getDestination(destinationId);
+        if (!result) throw new NotImplementError(UpdateImageErrors.GET_FAIL);
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
 export default {
     create,
     getDestinations,
@@ -188,5 +266,8 @@ export default {
     deleteDestination,
     createLikeComment,
     getLikeAndComment,
-    getAccountLikeComment
+    getAccountLikeComment,
+    uploadImage,
+    insertImage,
+    updateImage
 };

@@ -18,7 +18,7 @@ export function AppExpress() {
 
     app.use(bodyParser.json());
 
-    app.use('./src/uploads', express.static('uploads'));
+    app.use('/uploads', express.static('uploads'));
 
     app.use(cors());
 

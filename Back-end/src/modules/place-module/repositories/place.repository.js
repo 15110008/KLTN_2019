@@ -90,11 +90,11 @@ const updateCom = async (placeId, accountId, comment) => {
         comment
     });
     return result;
-}
+};
 const countRating = async () => {
     const result = await PlaceAccountSchema.find(
         {
-            rating : {$ne: null},
+            rating: { $ne: null },
             isDeleted: false
         }
     ).count();
@@ -102,11 +102,11 @@ const countRating = async () => {
 };
 const sumRating = async () => {
     const result = await PlaceAccountSchema.aggregate([
-        { $match: { rating: {$ne: null} } },
-        { $group: { $sum: '$rating'} }
+        { $match: { rating: { $ne: null } } },
+        { $group: { $sum: '$rating' } }
     ]);
     return result;
-}
+};
 export default {
     isExistPlace,
     create,
