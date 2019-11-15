@@ -5,7 +5,9 @@ import {
     GetPlaceErrors,
     GetRateCommentErrors,
     UpdatePlaceErrors,
-    DeletePlaceErrors
+    DeletePlaceErrors,
+    InsertImageErrors,
+    UpdateImageErrors
 } from '../error-codes/place.error-codes';
 
 const createPlaceInput = (req, res, next) => {
@@ -146,6 +148,34 @@ const deletePlaceInput = (req, res, next) => {
         return res.onError(new ValidationError(error));
     }
 };
+const insertInput = (req, res, next) => {
+    const { jwt } = req.headers;
+    const placeId = req.body;
+    const images = req.file.path;
+    try {
+        if (!jwt) throw InsertImageErrors.NO_TOKEN;
+        if (!placeId) throw InsertImageErrors.NO_PLACE_ID;
+        if (!images) throw InsertImageErrors.NO_IMAGE;
+        return next();
+    } catch (error) {
+        return res.onError(new ValidationError(error));
+    }
+};
+const updateImage = (req, res, next) => {
+    const { jwt } = req.headers;
+    const placeId = req.body;
+    const string = req.body;
+    const images = req.file.path;
+    try {
+        if (!jwt) throw UpdateImageErrors.NO_TOKEN;
+        if (!placeId) throw UpdateImageErrors.NO_PLACE_ID;
+        if (!string) throw UpdateImageErrors.NO_STRING;
+        if (!images) throw UpdateImageErrors.NO_IMAGE;
+        return next();
+    } catch (error) {
+        return res.onError(new ValidationError(error));
+    }
+};
 export default {
     createPlaceInput,
     createRaComInput,
@@ -153,5 +183,7 @@ export default {
     getRateCommentInput,
     updatePlaceInput,
     reduceInput,
-    deletePlaceInput
+    deletePlaceInput,
+    insertInput,
+    updateImage
 };

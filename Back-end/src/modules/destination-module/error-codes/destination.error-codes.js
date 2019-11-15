@@ -91,5 +91,6 @@ export const UpdateImageErrors = {
     SAME_IMAGE: 'SAME_IMAGE',
     UPDATE_FAILURE: 'UPDATE_FAILURE',
     GET_FAIL: 'GET_FAIL',
-    
+    NO_STRING: 'NO_STRING'
+
 };

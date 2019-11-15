@@ -107,6 +107,25 @@ const sumRating = async () => {
     ]);
     return result;
 };
+const insertImage = async (placeId, data) => {
+    const result = await PlaceSchema.updateOne({
+        _id: placeId,
+        isDeleted: false
+    },
+    { $push: { images: data } });
+    if (result.n === result.nModified) return true;
+    return false;
+};
+const updateImage = async (placeId, string, data) => {
+    const result = await PlaceSchema.updateOne({
+        _id: placeId,
+        isDeleted: false,
+        images: string
+    },
+    { $set: { 'images.$': data } });
+    if (result.n === result.nModified) return true;
+    return false;
+};
 export default {
     isExistPlace,
     create,
@@ -121,5 +140,7 @@ export default {
     updateRa,
     updateCom,
     countRating,
-    sumRating
+    sumRating,
+    insertImage,
+    updateImage
 };

@@ -223,7 +223,6 @@ const insertImage = async (req, res) => {
         const upload = await DestinationRepository.insertImage(destinationId, req.body.images);
         if (!upload) throw new NotImplementError(InsertImageErrors.INSERT_FAILURE);
         const result = await DestinationRepository.getDestination(destinationId);
-        console.log(result.images[1]);
         if (!result) throw new NotImplementError(InsertImageErrors.GET_FAIL);
         return res.onSuccess(result);
     } catch (error) {

@@ -14,6 +14,8 @@ import {
     GetRateCommentErrors,
     UpdatePlaceErrors,
     DeletePlaceErrors,
+    InsertImageErrors,
+    UpdateImageErrors
 } from '../error-codes/place.error-codes';
 
 const create = async (req, res) => {
@@ -213,6 +215,57 @@ const deletePlace = async (req, res) => {
         return res.onError(error);
     }
 };
+const insertImage = async (req, res) => {
+    const { jwt } = req.headers;
+    const { placeId } = req.body;
+    const images = req.file.path;
+    req.body = { images };
+    // console.log(images);
+    try {
+        const authenData = VerifyToken(jwt);
+        if (!jwt) throw new NotImplementError(InsertImageErrors.AUTH_FAIL);
+        if (authenData.role !== AccountRole.MANAGER) throw new Unauthorized(InsertImageErrors.NO_RIGHT);
+        const place = await PlaceRepository.getPlace(placeId);
+        if (!place) throw new NotFoundError(InsertImageErrors.PLACE_NEVER_EXIST);
+        const arrays = place.images;
+        const array = arrays.map(async (arr) => {
+            if (arr === req.body.images) throw new AlreadyExistError(InsertImageErrors.SAME_IMAGE);
+        });
+        await Promise.all(array);
+        const upload = await PlaceRepository.insertImage(placeId, req.body.images);
+        if (!upload) throw new NotImplementError(InsertImageErrors.INSERT_FAILURE);
+        const result = await PlaceRepository.getPlace(placeId);
+        if (!result) throw new NotImplementError(InsertImageErrors.GET_FAIL);
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
+const updateImage = async (req, res) => {
+    const { jwt } = req.headers;
+    const { placeId, string } = req.body;
+    const images = req.file.path;
+    req.body = { string, images };
+    try {
+        const authenData = VerifyToken(jwt);
+        if (!jwt) throw new NotImplementError(UpdateImageErrors.AUTH_FAIL);
+        if (authenData.role !== AccountRole.MANAGER) throw new Unauthorized(UpdateImageErrors.NO_RIGHT);
+        const place = await PlaceRepository.getPlace(placeId);
+        if (!place) throw new NotFoundError(UpdateImageErrors.PLACE_NEVER_EXIST);
+        const arrays = place.images;
+        const array = arrays.map(async (arr) => {
+            if (arr === req.body.images) throw new AlreadyExistError(UpdateImageErrors.SAME_IMAGE);
+        });
+        await Promise.all(array);
+        const upload = await PlaceRepository.updateImage(placeId, req.body.string, req.body.images);
+        if (!upload) throw new NotImplementError(UpdateImageErrors.UPDATE_FAILURE);
+        const result = await PlaceRepository.getPlace(placeId);
+        if (!result) throw new NotImplementError(UpdateImageErrors.GET_FAIL);
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
 export default {
     create,
     createRaCom,
@@ -220,5 +273,7 @@ export default {
     getPlace,
     getComment,
     updatePlace,
-    deletePlace
+    deletePlace,
+    insertImage,
+    updateImage
 };
