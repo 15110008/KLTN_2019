@@ -44,7 +44,15 @@ input:valid::-webkit-input-placeholder {
     margin-left: 25px;
     height: 50px;
     padding: unset;
-    width: 350px;
+    width: 175px;
+}
+
+.google-login-btn {
+    >button {
+        height: 50px !important;
+        padding: unset;
+        width: 175px;
+    }
 }
 
 .modal-body {
@@ -74,4 +82,51 @@ input:valid::-webkit-input-placeholder {
 
 .background-login-form {
     background-image: url('../../images/graphic-map.png');
+}
+
+.destination-card-name {
+    font-family: 'Helvetica Neue',
+        Helvetica,
+        Arial,
+        sans-serif;
+    font-weight: 600;
+    font-size: 1.1em;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.destination-card-price {
+    height: 60px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    color: #ff3366;
+}
+
+.step {
+    text-align: center;
+    padding: 10px 0;
+    line-height: 35px;
+    width: 55px;
+    height: 55px;
+    background-color: #ff3366;
+    border-radius: 50%;
+    font-size: 30px;
+    color: #ffffff;
+    margin-bottom: 15px;
+}
+
+.text-title {
+    color: #212121;
+    font-size: 24px;
+    font-family: "Helvetica Neue",
+        Helvetica,
+        Arial,
+        sans-serif;
+    font-weight: 500;
+    margin-bottom: 15px;
 }

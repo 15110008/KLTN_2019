@@ -62,10 +62,32 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
             };
         }
 
+        handlePreview = async file => {
+            if (!file.url && !file.preview) {
+                file.preview = await this.getBase64(file.originFileObj);
+            }
+
+            this.setState({
+                previewImage: file.url || file.preview,
+                previewVisible: true,
+            });
+        };
+
+        getBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+
         render() {
             const props = {
                 action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
                 listType: 'picture',
+                onPreview: this.handlePreview
             };
             const { formLayout } = this.state;
             const formItemLayout =

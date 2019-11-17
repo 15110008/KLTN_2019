@@ -1,9 +1,9 @@
-import { Tabs } from 'antd';
+import { Tabs, notification } from 'antd';
 import 'antd/dist/antd.css';
 import axios from 'axios';
 import React, { Component } from 'react';
 import FacebookLogin from 'react-facebook-login';
-import { toast, ToastContainer } from 'react-toastify';
+import GoogleLogin from 'react-google-login';
 import './style.scss';
 import _ from 'lodash'
 
@@ -31,7 +31,37 @@ export default class formLogin extends Component {
     }
 
     responseFacebook(response) {
+        const me = this
         console.log("TCL: Header -> responseFacebook -> response", response)
+        const params = {
+            facebook: {
+                facebookId: response.id,
+                facebookToken: response.accessToken,
+                facebookName: response.name,
+                facebookEmail: response.email
+            }
+        }
+        axios.post('http://localhost:3000/v1/account/login/facebook', params).then(res => {
+            if (res.data.success) {
+                this.onClose()
+                localStorage.setItem('jwt', res.data.result);
+                localStorage.setItem('name', response.name ? response.name : null);
+                localStorage.setItem('email', response.email ? response.email : null);
+                this.userVisible && this.userVisible()
+                this.getName && this.getName(response.name)
+                this.getEmail && this.getEmail(response.email)
+            } else {
+                notification['error']({
+                    message: res.data.message,
+                });
+            }
+        }).catch(error => {
+            console.log("TCL: formLogin -> onSubmit -> error", error)
+        });
+    }
+
+    responseGoogle(response) {
+        console.log(response);
     }
 
     onSubmit(e) {
@@ -43,21 +73,26 @@ export default class formLogin extends Component {
             if (response.data.success) {
                 this.onClose()
                 localStorage.setItem('jwt', response.data.result.jwt);
+                localStorage.setItem('name', response.data.meta ? response.data.meta.name : null);
+                localStorage.setItem('email', this.state.email);
                 this.props.userVisible && this.props.userVisible()
                 this.props.getName && this.props.getName(!_.isEmpty(response.data.meta) ? response.data.meta.name : '')
                 this.props.getEmail && this.props.getEmail(this.state.email)
             } else {
-                toast.error(response.data.message)
+                notification['error']({
+                    message: response.data.message,
+                });
             }
         }).catch(error => {
             console.log("TCL: formLogin -> onSubmit -> error", error)
-            toast.error('Lỗi server, vui lòng thử lại sau!')
         });
     }
 
     createAccount() {
         if (this.state.password !== this.state.password2) {
-            toast.error('Mật khẩu 2 không khớp')
+            notification['error']({
+                message: 'Mật khẩu 2 không khớp!'
+            });
         } else {
             axios.post('http://localhost:3000/v1/account', {
                 email: this.state.email,
@@ -65,13 +100,13 @@ export default class formLogin extends Component {
                 name: this.state.name,
             }).then(response => {
                 if (response.data.success) {
-                    toast.success('Tạo tài khoản thành công')
                     this.props.userVisible && this.props.userVisible()
                 } else {
-                    toast.error(response.data.message)
+                    notification['error']({
+                        message: response.data.message,
+                    });
                 }
             }).catch(error => {
-                toast.error('Lỗi server, vui lòng thử lại sau!')
             });
         }
     }
@@ -114,15 +149,29 @@ export default class formLogin extends Component {
 
     render() {
         let fbContent;
+        let googleContent;
         if (this.state.isLoggedIn) {
             fbContent = null
+            googleContent = null
         } else {
             fbContent = (<FacebookLogin
                 appId="430163910969334"
                 autoLoad={false}
                 fields="name,email,picture"
                 onClick={this.componentClicked}
+                onClose={() => this.onClose()}
+                userVisible={() => this.props.userVisible()}
+                getName={() => this.props.getName()}
+                getEmail={() => this.props.getEmail()}
                 callback={this.responseFacebook}
+            />)
+
+            googleContent = (< GoogleLogin
+                clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
+                buttonText="Login"
+                onSuccess={this.responseGoogle}
+                onFailure={this.responseGoogle}
+                cookiePolicy={'single_host_origin'}
             />)
         }
         return (
@@ -141,7 +190,10 @@ export default class formLogin extends Component {
                             <TabPane tab="Đăng nhập" key="1">
                                 <input placeholder="Email" type="text" required="" value={this.state.email} onChange={(e) => this.onChange(e, 'email')} />
                                 <input placeholder="Mật khẩu" type="password" required="" value={this.state.password} onChange={(e) => this.onChange(e, 'password')} />
-                                {fbContent}
+                                <div style={{ display: 'flex' }}>
+                                    {fbContent}
+                                    <span className='google-login-btn'>{googleContent}</span>
+                                </div>
                                 <div style={{ display: 'flex', paddingLeft: '25px', paddingTop: '20px' }}>
                                     <div className='btn-group' >
                                         <button onClick={() => this.onSubmit()} className='btn btn-primary' > Đăng nhập </button>
@@ -165,7 +217,6 @@ export default class formLogin extends Component {
 
                     </div>
                 </div>
-                <ToastContainer autoClose={3000} />
             </div >
         )
     }

@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import LoginForm from './base/formLogin'
 import Modal from './base/Modal'
-
+import { Menu, Dropdown, Icon } from 'antd'
+import Loading from './base/Loading'
 
 
 export default class Header extends Component {
@@ -13,9 +14,20 @@ export default class Header extends Component {
             userId: '',
             name: '',
             email: '',
-            picture: ''
+            picture: '',
+            userVisible: false,
         }
+        this.menu = (
+            <Menu>
+                <Menu.Item>
+                    <div onClick={() => this.signOut()}>
+                        Đăng xuất
+      </div>
+                </Menu.Item>
+            </Menu>
+        );
     }
+
     addModalClose = () => this.setState({ addModalShow: false })
     setUser = () => this.setState({ userVisible: true })
     getName = (name) => this.setState({ name: name })
@@ -33,13 +45,33 @@ export default class Header extends Component {
         )
     }
 
-
+    componentDidMount() {
+        this.checkJwt()
+    }
 
     user() {
         return <div style={{ padding: '8px' }}>
-            <i className="fa fa-user-circle-o" aria-hidden="true" style={{ padding: '8px' }}></i>
-            {this.state.name === '' ? this.state.email : this.state.name}
+            <Dropdown overlay={this.menu}>
+                <div>
+                    <i className="fa fa-user-circle-o" aria-hidden="true" style={{ padding: '8px' }}></i>
+                    {this.state.name === '' ? this.state.email : this.state.name}
+                    <Icon style={{
+                        marginTop: '8px',
+                        position: 'absolute',
+                        paddingLeft: '5px'
+                    }} type="down" />
+                </div>
+            </Dropdown>,
         </div>
+    }
+
+    signOut() {
+        // this.props.onOpenLoading()
+        // setTimeout(this.props.onCloseLoading(), 1000);
+        localStorage.clear()
+        this.setState({
+            userVisible: false
+        })
     }
 
     login() {
@@ -48,6 +80,27 @@ export default class Header extends Component {
                 addModalShow: true
             })}
         ></div>
+    }
+
+    checkJwt() {
+        let hours = 1
+        let jwt = localStorage.getItem('jwt')
+        let email = localStorage.getItem('email')
+        let name = localStorage.getItem('name')
+        if (jwt && (new Date().getTime() - jwt > hours * 60 * 60 * 1000)) {
+            localStorage.clear()
+        }
+        if (jwt) {
+            this.setState({
+                userVisible: true
+            })
+            this.getName(name)
+            this.getEmail(email)
+        } else {
+            this.setState({
+                userVisible: false
+            })
+        }
     }
 
     render() {

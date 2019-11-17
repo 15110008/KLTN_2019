@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import TopArea from './topArea'
+import Trip from './trip/Trip'
+import Destination from './detination/Destination'
 
 export default class Body extends Component {
     render() {
@@ -12,46 +14,43 @@ export default class Body extends Component {
                         <div className="row justify-content-center">
                             <div className="col-md-12 heading-section text-center  mb-5">
                                 <span className="subheading">Our Services</span>
-                                <h2 className="mb-2">The smartest way to buy a home</h2>
+                                <h2 className="mb-2">Lên lịch trình du lịch theo sở thích cá nhân</h2>
                             </div>
                         </div>
                         <div className="row d-flex">
-                            <div className="col-md-3 d-flex align-self-stretch ">
+                            <div className="col-md-4 d-flex align-self-stretch ">
                                 <div className="media block-6 services d-block text-center">
-                                    <div className="icon d-flex justify-content-center align-items-center"><span className="flaticon-piggy-bank"></span>
+                                    <div className="icon d-flex justify-content-center align-items-center">
+                                        <img style={{ width: '70px', height: '70px' }}
+                                            src={'https://triphunter.vn/assets/icons/icon_planding_1-498fc51965ac4eeaf09cb257c6a0013a406ae2d504290fc16194f1b03fd3f839.svg'} />
                                     </div>
                                     <div className="media-body py-md-4">
-                                        <h3>No Downpayment</h3>
-                                        <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
+                                        <h3>Tìm điểm đến</h3>
+                                        <p>Tìm điểm tham quan, nhà hàng, khách sạn dễ dàng và nhanh chóng nhất.</p>
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-md-3 d-flex align-self-stretch ">
+                            <div className="col-md-4 d-flex align-self-stretch ">
                                 <div className="media block-6 services d-block text-center">
-                                    <div className="icon d-flex justify-content-center align-items-center"><span className="flaticon-wallet"></span>
+                                    <div className="icon d-flex justify-content-center align-items-center">
+                                        <img style={{ width: '70px', height: '70px' }}
+                                            src={'https://triphunter.vn/assets/icons/icon_planding_2-1aa4e8b9b5fafac6d00d74b76af29b2507d2348237f438fe33d46e1a26233977.svg'} />
                                     </div>
                                     <div className="media-body py-md-4">
-                                        <h3>All Cash Offer</h3>
-                                        <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
+                                        <h3>Dễ dàng tạo lịch trình</h3>
+                                        <p>Chỉ cần nhập điểm đi & đến, tự động tạo lịch trình theo sở thích của bạn.</p>
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-md-3 d-flex align-self-stretch ">
+                            <div className="col-md-4 d-flex align-self-stretch ">
                                 <div className="media block-6 services d-block text-center">
-                                    <div className="icon d-flex justify-content-center align-items-center"><span className="flaticon-file"></span></div>
-                                    <div className="media-body py-md-4">
-                                        <h3>Experts in Your Corner</h3>
-                                        <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-md-3 d-flex align-self-stretch ">
-                                <div className="media block-6 services d-block text-center">
-                                    <div className="icon d-flex justify-content-center align-items-center"><span className="flaticon-locked"></span>
+                                    <div className="icon d-flex justify-content-center align-items-center">
+                                        <img style={{ width: '70px', height: '70px' }}
+                                            src={'https://triphunter.vn/assets/icons/icon_planding_3-9a749999bba1966e72741860e7892de3e55fbdea4d2dade5e13a82883eae422b.svg'} />
                                     </div>
                                     <div className="media-body py-md-4">
-                                        <h3>Lokced in Pricing</h3>
-                                        <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
+                                        <h3>Có thể chỉnh sửa, chia sẻ</h3>
+                                        <p>Giao diện thân thiện, dễ dàng thêm, xóa, sắp xếp lịch trình và chia sẻ cùng bạn bè tham gia chuyến đi của mình</p>
                                     </div>
                                 </div>
                             </div>
@@ -59,275 +58,65 @@ export default class Body extends Component {
                     </div>
                 </section>
                 <section className="ftco-section goto-here">
+                    <Trip />
+                </section>
+                <section className="ftco-section goto-here">
+                    <Destination />
+                </section>
+                {/*end Service */}
+                <section className="ftco-section ftco-degree-bg services-section img mx-md-5">
                     <div className="container">
                         <div className="row justify-content-center">
                             <div className="col-md-12 heading-section text-center  mb-5">
-                                <span className="subheading">What we offer</span>
-                                <h2 className="mb-2">Exclusive Offer For You</h2>
+                                <span className="subheading"></span>
+                                <h2 className="mb-2">Tạo lịch trình trong 30 giây</h2>
                             </div>
                         </div>
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-md-4">
-                                    <div className="property-wrap ">
-                                        <button href="properties-single.html" className="img" style={{ backgroundImage: `url(images/work-1.jpg)` }}></button>
-                                        <div className="text">
-                                            <p className="price"><span className="old-price">800,000</span><span className="orig-price">$3,050<small>/mo</small></span></p>
-                                            <ul className="property_list">
-                                                <li><span className="flaticon-bed"></span>3</li>
-                                                <li><span className="flaticon-bathtub"></span>2</li>
-                                                <li><span className="flaticon-floor-plan"></span>1,878 sqft</li>
-                                            </ul>
-                                            <h3><a href="properties-single.html">The Blue Sky Home </a></h3>
-                                            <span className="location">Oakland</span>
-                                            <a href="properties-single.html" className="d-flex align-items-center justify-content-center btn-custom">
-                                                <span className="ion-ios-link"></span>
-                                            </a>
-                                        </div>
+                        <div className='row'>
+                            <div className='col-md-6'>
+                                <img className="img" src={"../images/laptop.png"} />
+                            </div>
+                            <div className='col-md-6' style={{ float: 'left', display: 'flex', alignItems: 'center' }}>
+                                <div>
+                                    <p className='step'>1</p>
+                                    <div className='text-title'>
+                                        Tạo lịch trình dễ dàng
                                     </div>
-                                </div>
-                                <div className="col-md-4">
-                                    <div className="property-wrap ">
-                                        <button href="properties-single.html" className="img" style={{ backgroundImage: `url(images/work-2.jpg)` }}></button>
-                                        <div className="text">
-                                            <p className="price"><span className="old-price">800,000</span><span className="orig-price">$3,050<small>/mo</small></span></p>
-                                            <ul className="property_list">
-                                                <li><span className="flaticon-bed"></span>3</li>
-                                                <li><span className="flaticon-bathtub"></span>2</li>
-                                                <li><span className="flaticon-floor-plan"></span>1,878 sqft</li>
-                                            </ul>
-                                            <h3><a href="properties-single.html">The Blue Sky Home</a></h3>
-                                            <span className="location">Oakland</span>
-                                            <a href="properties-single.html" className="d-flex align-items-center justify-content-center btn-custom">
-                                                <span className="ion-ios-link"></span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-md-4">
-                                    <div className="property-wrap ">
-                                        <button href="properties-single.html" className="img" style={{ backgroundImage: `url(images/work-3.jpg)` }}></button>
-                                        <div className="text">
-                                            <p className="price"><span className="old-price">800,000</span><span className="orig-price">$3,050<small>/mo</small></span></p>
-                                            <ul className="property_list">
-                                                <li><span className="flaticon-bed"></span>3</li>
-                                                <li><span className="flaticon-bathtub"></span>2</li>
-                                                <li><span className="flaticon-floor-plan"></span>1,878 sqft</li>
-                                            </ul>
-                                            <h3><a href="properties-single.html">The Blue Sky Home</a></h3>
-                                            <span className="location">Oakland</span>
-                                            <a href="properties-single.html" className="d-flex align-items-center justify-content-center btn-custom">
-                                                <span className="ion-ios-link"></span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="col-md-4">
-                                    <div className="property-wrap ">
-                                        <button href="properties-single.html" className="img" style={{ backgroundImage: `url(images/work-4.jpg)` }}></button>
-                                        <div className="text">
-                                            <p className="price"><span className="old-price">800,000</span><span className="orig-price">$3,050<small>/mo</small></span></p>
-                                            <ul className="property_list">
-                                                <li><span className="flaticon-bed"></span>3</li>
-                                                <li><span className="flaticon-bathtub"></span>2</li>
-                                                <li><span className="flaticon-floor-plan"></span>1,878 sqft</li>
-                                            </ul>
-                                            <h3><a href="properties-single.html">The Blue Sky Home</a></h3>
-                                            <span className="location">Oakland</span>
-                                            <a href="properties-single.html" className="d-flex align-items-center justify-content-center btn-custom">
-                                                <span className="ion-ios-link"></span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-md-4">
-                                    <div className="property-wrap ">
-                                        <button href="properties-single.html" className="img" style={{ backgroundImage: `url(images/work-5.jpg)` }}></button>
-                                        <div className="text">
-                                            <p className="price"><span className="old-price">800,000</span><span className="orig-price">$3,050<small>/mo</small></span></p>
-                                            <ul className="property_list">
-                                                <li><span className="flaticon-bed"></span>3</li>
-                                                <li><span className="flaticon-bathtub"></span>2</li>
-                                                <li><span className="flaticon-floor-plan"></span>1,878 sqft</li>
-                                            </ul>
-                                            <h3><a href="properties-single.html">The Blue Sky Home</a></h3>
-                                            <span className="location">Oakland</span>
-                                            <a href="properties-single.html" className="d-flex align-items-center justify-content-center btn-custom">
-                                                <span className="ion-ios-link"></span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-md-4">
-                                    <div className="property-wrap ">
-                                        <button href="properties-single.html" className="img" style={{ backgroundImage: `url(images/work-6.jpg)` }}></button>
-                                        <div className="text">
-                                            <p className="price"><span className="old-price">800,000</span><span className="orig-price">$3,050<small>/mo</small></span></p>
-                                            <ul className="property_list">
-                                                <li><span className="flaticon-bed"></span>3</li>
-                                                <li><span className="flaticon-bathtub"></span>2</li>
-                                                <li><span className="flaticon-floor-plan"></span>1,878 sqft</li>
-                                            </ul>
-                                            <h3><a href="properties-single.html">The Blue Sky Home</a></h3>
-                                            <span className="location">Oakland</span>
-                                            <a href="properties-single.html" className="d-flex align-items-center justify-content-center btn-custom">
-                                                <span className="ion-ios-link"></span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="col-md-4">
-                                    <div className="property-wrap ">
-                                        <button href="properties-single.html" className="img" style={{ backgroundImage: `url(images/work-7.jpg)` }}></button>
-                                        <div className="text">
-                                            <p className="price"><span className="old-price">800,000</span><span className="orig-price">$3,050<small>/mo</small></span></p>
-                                            <ul className="property_list">
-                                                <li><span className="flaticon-bed"></span>3</li>
-                                                <li><span className="flaticon-bathtub"></span>2</li>
-                                                <li><span className="flaticon-floor-plan"></span>1,878 sqft</li>
-                                            </ul>
-                                            <h3><a href="properties-single.html">The Blue Sky Home</a></h3>
-                                            <span className="location">Oakland</span>
-                                            <a href="properties-single.html" className="d-flex align-items-center justify-content-center btn-custom">
-                                                <span className="ion-ios-link"></span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-md-4">
-                                    <div className="property-wrap ">
-                                        <button href="properties-single.html" className="img" style={{ backgroundImage: `url(images/work-5.jpg)` }}></button>
-                                        <div className="text">
-                                            <p className="price"><span className="old-price">800,000</span><span className="orig-price">$3,050<small>/mo</small></span></p>
-                                            <ul className="property_list">
-                                                <li><span className="flaticon-bed"></span>3</li>
-                                                <li><span className="flaticon-bathtub"></span>2</li>
-                                                <li><span className="flaticon-floor-plan"></span>1,878 sqft</li>
-                                            </ul>
-                                            <h3><a href="properties-single.html">The Blue Sky Home</a></h3>
-                                            <span className="location">Oakland</span>
-                                            <a href="properties-single.html" className="d-flex align-items-center justify-content-center btn-custom">
-                                                <span className="ion-ios-link"></span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-md-4">
-                                    <div className="property-wrap ">
-                                        <button href="properties-single.html" className="img" style={{ backgroundImage: `url(images/work-6.jpg)` }}></button>
-                                        <div className="text">
-                                            <p className="price"><span className="old-price">800,000</span><span className="orig-price">$3,050<small>/mo</small></span></p>
-                                            <ul className="property_list">
-                                                <li><span className="flaticon-bed"></span>3</li>
-                                                <li><span className="flaticon-bathtub"></span>2</li>
-                                                <li><span className="flaticon-floor-plan"></span>1,878 sqft</li>
-                                            </ul>
-                                            <h3><a href="properties-single.html">The Blue Sky Home</a></h3>
-                                            <span className="location">Oakland</span>
-                                            <a href="properties-single.html" className="d-flex align-items-center justify-content-center btn-custom">
-                                                <span className="ion-ios-link"></span>
-                                            </a>
-                                        </div>
-                                    </div>
+                                    <div>Chỉ cần bạn nhập điểm đi, điểm đến và thời gian, hệ thống sẽ tự động lên lịch trình theo sở thích của bạn trong vòng 30s.</div>
                                 </div>
                             </div>
-                            <div className="row mt-5">
-                                <div className="col text-center">
-                                    <div className="block-27">
-                                        <ul>
-                                            <li><a href="#/home">&lt;</a></li>
-                                            <li className="active"><span>1</span></li>
-                                            <li><a href="#/home">2</a></li>
-                                            <li><a href="#/home">3</a></li>
-                                            <li><a href="#/home">4</a></li>
-                                            <li><a href="#/home">5</a></li>
-                                            <li><a href="#/home">&gt;</a></li>
-                                        </ul>
+                            <div className='col-md-6' style={{ float: 'right', display: 'flex', alignItems: 'center' }}>
+                                <div>
+                                    <div style={{ paddingLeft: 563 }}><p className='step'>2</p></div>
+                                    <div className='text-title' style={{ textAlign: 'right' }}>
+                                        Dự trù được chi phí hành trình
                                     </div>
+                                    <div style={{ textAlign: 'right' }}>
+                                        Hệ thống có thể tính toán và liệt kê ra bảng chi phí bao gồm chỗ ở, thăm quan, ăn uống,
+                                        di chuyển,…cho chuyến đi của bạn. Bạn cũng có thể thêm, xoá, sửa các chi phí trong chuyến đi theo ý muốn.
+                                        </div>
+                                </div>
+                            </div>
+                            <div className='col-md-6'>
+                                <img className="img" src={"../images/laptop.png"} />
+                            </div>
+                            <div className='col-md-6'>
+                                <img className="img" src={"../images/laptop.png"} />
+                            </div>
+                            <div className='col-md-6' style={{ float: 'left', display: 'flex', alignItems: 'center' }}>
+                                <div>
+                                    <p className='step'>3</p>
+                                    <div className='text-title'>
+                                        Lên lịch trình tối ưu
+                                    </div>
+                                    <div>
+                                        Hệ thống sẽ tính toán giúp bạn lên một lịch trình tối ưu nhất về mặt thời cũng như di chuyển từ điểm này sang điểm khác một cách hợp lý nhất. Bạn cũng có thể chỉnh sửa, ghi chú lại những cảm nhận trong chuyến hành trình.Có thể chia sẻ, mời bạn bè tham gia vào lịch trình bạn tạo
+                                        </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
-                {/*end Service */}
-                <section className="ftco-section ftco-degree-bg services-section img mx-md-5"
-                    style={{ backgroundImage: `url(images/bg_2.jpg)` }}>
-                    <div className="overlay"></div>
-                    <div className="container">
-                        <div className="row justify-content-start mb-5">
-                            <div className="col-md-6 text-center heading-section heading-section-white ">
-                                <span className="subheading">Work flow</span>
-                                <h2 className="mb-3">How it works</h2>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-md-6">
-                                <div className="row">
-                                    <div className="col-md-12 col-lg-6 d-flex align-self-stretch ">
-                                        <div className="media block-6 services services-2">
-                                            <div className="media-body py-md-4 text-center">
-                                                <div className="icon mb-3 d-flex align-items-center justify-content-center"><span>01</span></div>
-                                                <h3>Evaluate Property</h3>
-                                                <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-md-12 col-lg-6 d-flex align-self-stretch ">
-                                        <div className="media block-6 services services-2">
-                                            <div className="media-body py-md-4 text-center">
-                                                <div className="icon mb-3 d-flex align-items-center justify-content-center"><span>02</span></div>
-                                                <h3>Meet Your Agent</h3>
-                                                <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-md-12 col-lg-6 d-flex align-self-stretch ">
-                                        <div className="media block-6 services services-2">
-                                            <div className="media-body py-md-4 text-center">
-                                                <div className="icon mb-3 d-flex align-items-center justify-content-center"><span>03</span></div>
-                                                <h3>Close the Deal</h3>
-                                                <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-md-12 col-lg-6 d-flex align-self-stretch ">
-                                        <div className="media block-6 services services-2">
-                                            <div className="media-body py-md-4 text-center">
-                                                <div className="icon mb-3 d-flex align-items-center justify-content-center"><span>04</span></div>
-                                                <h3>Have Your Property</h3>
-                                                <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <section className="ftco-section ftco-no-pb">
-                    <div className="container">
-                        <div className="row no-gutters">
-                            <div className="col-md-6 p-md-5 img img-2 d-flex justify-content-center align-items-center"
-                                style={{ backgroundImage: `url(images/about.jpg)` }}>
-                            </div>
-                            <div className="col-md-6 wrap-about py-md-5 ">
-                                <div className="heading-section p-md-5">
-                                    <h2 className="mb-4">We Put People First.</h2>
-                                    <p>A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a
-              paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
-                                    <p>On her way she met a copy. The copy warned the Little Blind Text, that where it came from it would have
-                                      been rewritten a thousand times and everything that was left from its origin would be the word "and" and
-                                      the Little Blind Text should turn around and return to its own, safe country. But nothing the copy said
-                                      could convince her and so it didn’t take long until a few insidious Copy Writers ambushed her, made her
-              drunk with Longe and Parole and dragged her into their agency, where they abused her for their.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
             </div>
         )
     }
