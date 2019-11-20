@@ -40,7 +40,7 @@ router.post('/destination/avatar', upload.single('avatar'), DestinationValidate.
 // insert image
 router.post('/destination/insert-image', upload.single('images'), DestinationValidate.insertInput, DestinationController.insertImage);
 // update image
-router.post('/destination/update-image', upload.array('images', 12), DestinationValidate.updateImage, DestinationController.updateImage);
+router.post('/destination/update-images', upload.array('images', 12), DestinationValidate.updateImage, DestinationController.updateImage);
 
 // GET
 // get list destination

@@ -35,10 +35,14 @@ const upload = multer({
 router.post('/place', PlaceValidate.createPlaceInput, PlaceValidate.reduceInput, PlaceController.create);
 // create rating and comment in place
 router.post('/place/rate-comment', PlaceValidate.createRaComInput, PlaceValidate.reduceInput, PlaceController.createRaCom);
-// insert image
+// insert single image
 router.post('/place/insert-image', upload.single('images'), PlaceValidate.insertInput, PlaceController.insertImage);
-// update image
-router.post('/place/update-image', upload.array('images', 12), PlaceValidate.updateImage, PlaceController.updateImage);
+// insert multi images
+router.post('/place/insert-images', upload.array('images', 12), PlaceValidate.insertMulti, PlaceController.insertMulti);
+// update single image
+router.post('/place/update-image', upload.single('images'), PlaceValidate.updateSingle, PlaceController.updateSingle);
+// update multi images
+router.post('/place/update-images', upload.array('images', 12), PlaceValidate.updateImage, PlaceController.updateImage);
 
 // GET
 // get list place

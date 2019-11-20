@@ -125,6 +125,25 @@ const updateImage = async (placeId, data) => {
     if (result.n === result.nModified) return true;
     return false;
 };
+const updateSingle = async (placeId, oldImage, data) => {
+    const result = await PlaceSchema.updateOne({
+        _id: placeId,
+        isDeleted: false,
+        images: oldImage
+    },
+    { $set: { 'images.$': data } });
+    if (result.n === result.nModified) return true;
+    return false;
+};
+const insertMulti = async (placeId, data) => {
+    const result = await PlaceSchema.updateOne({
+        _id: placeId,
+        isDeleted: false
+    },
+    { $push: { images: data } });
+    if (result.n === result.nModified) return true;
+    return false;
+};
 export default {
     isExistPlace,
     create,
@@ -141,5 +160,7 @@ export default {
     countRating,
     sumRating,
     insertImage,
-    updateImage
+    updateImage,
+    updateSingle,
+    insertMulti
 };

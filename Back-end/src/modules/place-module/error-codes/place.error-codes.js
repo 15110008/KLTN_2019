@@ -82,3 +82,26 @@ export const UpdateImageErrors = {
     UPDATE_FAILURE: 'UPDATE_FAILURE',
     GET_FAIL: 'GET_FAIL'
 };
+export const UpdateSingleImageErrors = {
+    NO_TOKEN: 'NO_TOKEN',
+    NO_PLACE_ID: 'NO_PLACE_ID',
+    NO_IMAGE: 'NO_IMAGE',
+    NO_OLD_IMAGE: 'NO_OLD_IMAGE',
+    AUTH_FAIL: 'AUTH_FAIL',
+    NO_RIGHT: 'NO_RIGHT',
+    PLACE_NEVER_EXIST: 'PLACE_NEVER_EXIST',
+    SAME_IMAGE: 'SAME_IMAGE',
+    UPDATE_FAILURE: 'UPDATE_FAILURE',
+    GET_FAIL: 'GET_FAIL'
+};
+export const InsertMultiImageErrors = {
+    NO_TOKEN: 'NO_TOKEN',
+    NO_PLACE_ID: 'NO_PLACE_ID',
+    NO_IMAGE: 'NO_IMAGE',
+    AUTH_FAIL: 'AUTH_FAIL',
+    NO_RIGHT: 'NO_RIGHT',
+    PLACE_NEVER_EXIST: 'PLACE_NEVER_EXIST',
+    SAME_IMAGE: 'SAME_IMAGE',
+    UPDATE_FAILURE: 'UPDATE_FAILURE',
+    GET_FAIL: 'GET_FAIL'
+};

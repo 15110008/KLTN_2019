@@ -7,7 +7,9 @@ import {
     UpdatePlaceErrors,
     DeletePlaceErrors,
     InsertImageErrors,
-    UpdateImageErrors
+    UpdateImageErrors,
+    UpdateSingleImageErrors,
+    InsertMultiImageErrors
 } from '../error-codes/place.error-codes';
 
 const createPlaceInput = (req, res, next) => {
@@ -164,11 +166,38 @@ const insertInput = (req, res, next) => {
 const updateImage = (req, res, next) => {
     const { jwt } = req.headers;
     const placeId = req.body;
-    const images = req.files;
+    // const images = req.files;
     try {
         if (!jwt) throw UpdateImageErrors.NO_TOKEN;
         if (!placeId) throw UpdateImageErrors.NO_PLACE_ID;
-        if (!images) throw UpdateImageErrors.NO_IMAGE;
+        // if (!images) throw UpdateImageErrors.NO_IMAGE;
+        return next();
+    } catch (error) {
+        return res.onError(new ValidationError(error));
+    }
+};
+const updateSingle = (req, res, next) => {
+    const { jwt } = req.headers;
+    const { placeId, oldImage } = req.body;
+    const images = req.file.path;
+    try {
+        if (!jwt) throw UpdateSingleImageErrors.NO_TOKEN;
+        if (!placeId) throw UpdateSingleImageErrors.NO_PLACE_ID;
+        if (!oldImage) throw UpdateSingleImageErrors.NO_OLD_IMAGE;
+        if (!images) throw UpdateSingleImageErrors.NO_IMAGE;
+        return next();
+    } catch (error) {
+        return res.onError(new ValidationError(error));
+    }
+};
+const insertMulti = (req, res, next) => {
+    const { jwt } = req.headers;
+    const { placeId } = req.body;
+    const images = req.files;
+    try {
+        if (!jwt) throw InsertMultiImageErrors.NO_TOKEN;
+        if (!placeId) throw InsertMultiImageErrors.NO_PLACE_ID;
+        if (!images) throw InsertMultiImageErrors.NO_IMAGE;
         return next();
     } catch (error) {
         return res.onError(new ValidationError(error));
@@ -183,5 +212,7 @@ export default {
     reduceInput,
     deletePlaceInput,
     insertInput,
-    updateImage
+    updateImage,
+    updateSingle,
+    insertMulti
 };

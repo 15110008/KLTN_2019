@@ -50,6 +50,7 @@ const uploadImage = async (req, res) => {
     const { jwt } = req.headers;
     const avatar = req.file.path;
     req.body = { avatar };
+    console.log(req.body)
     try {
         const authenData = VerifyToken(jwt);
         if (!jwt) throw new NotImplementError(UploadImageErrors.AUTH_FAIL);

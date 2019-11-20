@@ -15,7 +15,9 @@ import {
     UpdatePlaceErrors,
     DeletePlaceErrors,
     InsertImageErrors,
-    UpdateImageErrors
+    UpdateImageErrors,
+    UpdateSingleImageErrors,
+    InsertMultiImageErrors
 } from '../error-codes/place.error-codes';
 
 const create = async (req, res) => {
@@ -269,6 +271,59 @@ const updateImage = async (req, res) => {
         return res.onError(error);
     }
 };
+const updateSingle = async (req, res) => {
+    const { jwt } = req.headers;
+    const { placeId, oldImage } = req.body;
+    const images = req.file.path;
+    req.body = { oldImage, images };
+    try {
+        const authenData = VerifyToken(jwt);
+        if (!jwt) throw new NotImplementError(UpdateSingleImageErrors.AUTH_FAIL);
+        if (authenData.role !== AccountRole.MANAGER) throw new Unauthorized(UpdateSingleImageErrors.NO_RIGHT);
+        const place = await PlaceRepository.getPlace(placeId);
+        if (!place) throw new NotFoundError(UpdateSingleImageErrors.PLACE_NEVER_EXIST);
+        const arrays = place.images;
+        const array = arrays.map(async (arr) => {
+            if (arr === req.body.images) throw new AlreadyExistError(UpdateSingleImageErrors.SAME_IMAGE);
+        });
+        await Promise.all(array);
+        const upload = await PlaceRepository.updateSingle(placeId, req.body.oldImage, req.body.images);
+        if (!upload) throw new NotImplementError(UpdateSingleImageErrors.UPDATE_FAILURE);
+        const result = await PlaceRepository.getPlace(placeId);
+        if (!result) throw new NotImplementError(UpdateSingleImageErrors.GET_FAIL);
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
+const insertMulti = async (req, res) => {
+    const { jwt } = req.headers;
+    const { placeId } = req.body;
+    const images = req.files;
+    const image = images.map((i) => {
+        return i.path;
+    });
+    await Promise.all(image);
+    try {
+        const authenData = VerifyToken(jwt);
+        if (!jwt) throw new NotImplementError(InsertMultiImageErrors.AUTH_FAIL);
+        if (authenData.role !== AccountRole.MANAGER) throw new Unauthorized(InsertMultiImageErrors.NO_RIGHT);
+        const place = await PlaceRepository.getPlace(placeId);
+        if (!place) throw new NotFoundError(InsertMultiImageErrors.PLACE_NEVER_EXIST);
+        // const arrays = place.images;
+        // const array = arrays.map(async (arr) => {
+        //     if (arr === req.body.images) throw new AlreadyExistError(InsertMultiImageErrors.SAME_IMAGE);
+        // });
+        // await Promise.all(array);
+        const upload = await PlaceRepository.insertMulti(placeId, image);
+        if (!upload) throw new NotImplementError(InsertMultiImageErrors.UPDATE_FAILURE);
+        const result = await PlaceRepository.getPlace(placeId);
+        if (!result) throw new NotImplementError(InsertMultiImageErrors.GET_FAIL);
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
 export default {
     create,
     createRaCom,
@@ -278,5 +333,7 @@ export default {
     updatePlace,
     deletePlace,
     insertImage,
-    updateImage
+    updateImage,
+    updateSingle,
+    insertMulti
 };
