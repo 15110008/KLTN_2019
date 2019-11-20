@@ -243,21 +243,24 @@ const insertImage = async (req, res) => {
 };
 const updateImage = async (req, res) => {
     const { jwt } = req.headers;
-    const { placeId, string } = req.body;
-    const images = req.file.path;
-    req.body = { string, images };
+    const { placeId } = req.body;
+    const images = req.files;
+    const image = images.map((i) => {
+        return i.path;
+    });
+    await Promise.all(image);
     try {
         const authenData = VerifyToken(jwt);
         if (!jwt) throw new NotImplementError(UpdateImageErrors.AUTH_FAIL);
         if (authenData.role !== AccountRole.MANAGER) throw new Unauthorized(UpdateImageErrors.NO_RIGHT);
         const place = await PlaceRepository.getPlace(placeId);
         if (!place) throw new NotFoundError(UpdateImageErrors.PLACE_NEVER_EXIST);
-        const arrays = place.images;
-        const array = arrays.map(async (arr) => {
-            if (arr === req.body.images) throw new AlreadyExistError(UpdateImageErrors.SAME_IMAGE);
-        });
-        await Promise.all(array);
-        const upload = await PlaceRepository.updateImage(placeId, req.body.string, req.body.images);
+        // const arrays = place.images;
+        // const array = arrays.map(async (arr) => {
+        //     if (arr === req.body.images) throw new AlreadyExistError(UpdateImageErrors.SAME_IMAGE);
+        // });
+        // await Promise.all(array);
+        const upload = await PlaceRepository.updateImage(placeId, image);
         if (!upload) throw new NotImplementError(UpdateImageErrors.UPDATE_FAILURE);
         const result = await PlaceRepository.getPlace(placeId);
         if (!result) throw new NotImplementError(UpdateImageErrors.GET_FAIL);

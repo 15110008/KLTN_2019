@@ -116,13 +116,12 @@ const insertImage = async (placeId, data) => {
     if (result.n === result.nModified) return true;
     return false;
 };
-const updateImage = async (placeId, string, data) => {
+const updateImage = async (placeId, data) => {
     const result = await PlaceSchema.updateOne({
         _id: placeId,
-        isDeleted: false,
-        images: string
+        isDeleted: false
     },
-    { $set: { 'images.$': data } });
+    { images: data });
     if (result.n === result.nModified) return true;
     return false;
 };

@@ -151,12 +151,14 @@ const insertInput = (req, res, next) => {
 const updateImage = (req, res, next) => {
     const { jwt } = req.headers;
     const destinationId = req.body;
-    const string = req.body;
-    const images = req.file.path;
+    const images = req.files;
+    // const i = req.file.path;
+    // console.log(images);
+    // console.log(i);
     try {
         if (!jwt) throw UpdateImageErrors.NO_TOKEN;
         if (!destinationId) throw UpdateImageErrors.NO_DESTINATION_ID;
-        if (!string) throw UpdateImageErrors.NO_STRING;
+        // if (!string) throw UpdateImageErrors.NO_STRING;
         if (!images) throw UpdateImageErrors.NO_IMAGE;
         return next();
     } catch (error) {

@@ -78,13 +78,12 @@ const insertImage = async (destinationId, data) => {
     if (result.n === result.nModified) return true;
     return false;
 };
-const updateImage = async (destinationId, string, data) => {
+const updateImage = async (destinationId, data) => {
     const result = await DestinationSchema.updateOne({
         _id: destinationId,
         isDeleted: false,
-        images: string
     },
-    { $set: { 'images.$': data } });
+    { images: data });
     if (result.n === result.nModified) return true;
     return false;
 };

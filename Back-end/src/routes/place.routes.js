@@ -38,7 +38,7 @@ router.post('/place/rate-comment', PlaceValidate.createRaComInput, PlaceValidate
 // insert image
 router.post('/place/insert-image', upload.single('images'), PlaceValidate.insertInput, PlaceController.insertImage);
 // update image
-router.post('/place/update-image', upload.single('images'), PlaceValidate.updateImage, PlaceController.updateImage);
+router.post('/place/update-image', upload.array('images', 12), PlaceValidate.updateImage, PlaceController.updateImage);
 
 // GET
 // get list place

@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
     },
     filename(req, file, cb) {
         cb(null, file.originalname);
-    }
+    },
 });
 const fileFilter = (req, file, cb) => {
     // reject a file
@@ -30,7 +30,6 @@ const upload = multer({
     fileFilter
   });
 
-
 // POST
 // Create destination
 router.post('/destination', DestinationValidate.createDestinationInput, DestinationController.create);
@@ -41,7 +40,7 @@ router.post('/destination/avatar', upload.single('avatar'), DestinationValidate.
 // insert image
 router.post('/destination/insert-image', upload.single('images'), DestinationValidate.insertInput, DestinationController.insertImage);
 // update image
-router.post('/destination/update-image', upload.single('images'), DestinationValidate.updateImage, DestinationController.updateImage);
+router.post('/destination/update-image', upload.array('images', 12), DestinationValidate.updateImage, DestinationController.updateImage);
 
 // GET
 // get list destination
