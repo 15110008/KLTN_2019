@@ -62,6 +62,7 @@ export default class Place extends Component {
       title: 'Mô tả',
       key: 'description',
       dataIndex: 'description',
+      width: 400
     },
     {
       title: 'Action',
@@ -95,6 +96,12 @@ export default class Place extends Component {
     Axios.get('http://localhost:3000/v1/place')
       .then((response) => {
         if (response.data.success) {
+          response.data.data.map((x, index) => {
+            x.description = _.truncate(x.description, {
+              'length': 500,
+              'separator': /,? +/
+            })
+          })
           this.setState({
             data: response.data.data
           })

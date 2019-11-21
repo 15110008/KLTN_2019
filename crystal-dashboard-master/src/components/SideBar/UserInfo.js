@@ -30,9 +30,7 @@ class UserInfo extends Component {
         </div>
         <Collapse in={isShowingUserMenu}>
           <ul className="nav user-nav">
-            <li><a href="#">My Profile</a></li>
-            <li><a href="#">Edit Profile</a></li>
-            <li><a href="#">Settings</a></li>
+            <li onClick={() => this.props.logOut()}><a href="#">Đăng xuất</a></li>
           </ul>
         </Collapse>
       </div>

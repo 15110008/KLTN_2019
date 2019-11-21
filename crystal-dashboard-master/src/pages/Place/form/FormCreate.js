@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom';
-import { Form, Input, Modal, Col, Select } from 'antd';
+import { Form, Input, Button, Icon, Select, Upload } from 'antd';
 import axios from 'axios'
 import ComboField from '../../../components/base/ComboField';
 
@@ -78,6 +78,11 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
 
         }
         render() {
+            const props = {
+                action: 'http://localhost:3000/v1/destination/insert-image',
+                listType: 'picture',
+                onPreview: this.handlePreview
+            };
             const { formLayout } = this.state;
             const formItemLayout =
                 formLayout === 'horizontal'
@@ -105,6 +110,15 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                     </Form.Item>
                     <Form.Item {...formItemLayout} label="Loại hình du lịch">
                         {getFieldDecorator('category')(<ComboField options={this.optionCategory} />)}
+                    </Form.Item>
+                    <Form.Item {...formItemLayout} label="Hình ảnh">
+                        {getFieldDecorator('images')(
+                            <Upload {...props} customRequest={this.request}>
+                                <Button>
+                                    <Icon type="upload" /> Tải hình ảnh
+                                </Button>
+                            </Upload>
+                        )}
                     </Form.Item>
                     <Form.Item {...formItemLayout} label="Giá cả">
                         {getFieldDecorator('price')(<Input type='number' />)}

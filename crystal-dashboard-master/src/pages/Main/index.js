@@ -41,6 +41,14 @@ class Main extends Component {
     }
   }
 
+  logOut() {
+    localStorage.clear();
+    this.setState({
+      visible: true,
+      render: false
+    })
+  }
+
   addModalClose = () => {
     this.setState({ visible: false, render: true })
   }
@@ -65,7 +73,7 @@ class Main extends Component {
           })}>
             <div className="wrapper">
               {/* <div className="close-layer" onClick={hideMobileMenu}></div> */}
-              <SideBar />
+              <SideBar logOut={() => this.logOut()} />
 
               <div className="main-panel">
                 <Header />

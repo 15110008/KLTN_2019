@@ -233,7 +233,7 @@ const updateImage = async (req, res) => {
     const { jwt } = req.headers;
     const { destinationId } = req.body;
     const images = req.files;
-    console.log(req.files)
+    console.log(req.files);
     const image = images.map((i) => {
         return i.path;
     });
@@ -249,12 +249,12 @@ const updateImage = async (req, res) => {
         //     if (arr === req.body.images) throw new AlreadyExistError(UpdateImageErrors.SAME_IMAGE);
         // });
         // await Promise.all(array);
-        const names = images.map( (i) => {
+        const names = images.map((i) => {
             const name = i.filename;
             const url = 'localhost:3000/uploads';
-            const y = { name, url }
+            const y = { name, url };
             return y;
-        })
+        });
         await Promise.all(names);
         console.log(names);
         const upload = await DestinationRepository.updateImage(destinationId, image);
