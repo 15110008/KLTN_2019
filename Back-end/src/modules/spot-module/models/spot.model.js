@@ -3,11 +3,8 @@ import mongoose, {
 } from 'mongoose';
 
 const SpotSchema = new Schema({
-    placeId1: {
-        type: String,
-    },
-    placeId2: {
-        type: String
+    spotId: {
+        type: [String],
     },
     length: {
         type: Number,
