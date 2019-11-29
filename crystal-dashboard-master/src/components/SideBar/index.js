@@ -29,7 +29,7 @@ class SideBar extends Component {
         </div>
 
         <div className="sidebar-wrapper">
-          <UserInfo />
+          <UserInfo logOut={() => this.props.logOut()} />
           <div className="line"></div>
           <Nav />
         </div>

@@ -1,13 +1,15 @@
-import { Button, Form, Icon, Input, Upload } from 'antd';
+import { Button, Form, Icon, Input, Upload, Modal } from 'antd';
 import React, { Component } from 'react';
 import axios from 'axios'
+import _ from 'lodash'
 
 
 export default class FormEdit extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            destinationOption: []
+            destinationOption: [],
+            fileList: []
         };
 
     }
@@ -16,10 +18,39 @@ export default class FormEdit extends Component {
         await this.loadData(this.props.id)
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.id != this.props.id) {
-            this.loadData(nextProps.id)
-        }
+    async componentWillReceiveProps(nextProps) {
+        this.setState({
+            fileList: []
+        })
+        await axios.get('http://localhost:3000/v1/destination/' + nextProps.id)
+            .then((res) => {
+                if (res.data.success) {
+                    const data = res.data.result
+                    const listImage = []
+                    if (_.isEmpty(data.images)) {
+                        this.formRef.setFields({
+                            images: {
+                                value: []
+                            }
+                        })
+                    } else {
+                        data.images.map((x, index) => {
+                            listImage.push({
+                                thumbUrl: 'http://localhost:3000/' + x,
+                                status: 'done',
+                                name: x.split('\\')[1] ? x.split('\\')[1] : x.split('/')[1],
+                                uid: 'image_' + index
+                            })
+                        })
+                    }
+                    this.setState({
+                        fileList: listImage
+                    })
+                    this.formRef.setFieldsValue(data);
+                }
+            }).catch((error) => {
+                console.log("TCL: FormEdit -> componentWillReceiveProps -> error", error)
+            })
     }
 
     async loadData(id) {
@@ -28,9 +59,31 @@ export default class FormEdit extends Component {
             .then((res) => {
                 if (res.data.success) {
                     const data = res.data.result
+                    const listImage = []
+                    if (_.isEmpty(data.images)) {
+                        this.formRef.setFields({
+                            images: {
+                                value: []
+                            }
+                        })
+                    } else {
+                        data.images.map((x, index) => {
+                            listImage.push({
+                                thumbUrl: 'http://localhost:3000/' + x,
+                                status: 'done',
+                                name: x.split('\\')[1],
+                                uid: 'image_' + index
+                            })
+                        })
+                    }
+                    console.log("TCL: FormEdit -> loadData -> listImage", listImage)
+                    this.setState({
+                        fileList: listImage
+                    })
                     this.formRef.setFieldsValue(data);
                 }
             }).catch((error) => {
+                console.log("TCL: FormEdit -> loadData -> error", error)
             })
     }
 
@@ -44,6 +97,7 @@ export default class FormEdit extends Component {
                     onCancel={this.handleCancel}
                     onCreate={this.handleCreate}
                     readOnly={this.props.readOnly}
+                    fileList={this.state.fileList}
                 />
             </div> : ''
         );
@@ -58,17 +112,20 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
             super(props);
             this.state = {
                 formLayout: 'horizontal',
-                destinationOption: []
+                destinationOption: [],
+                fileList: this.props.fileList,
+                previewVisible: false,
+                previewImage: '',
             };
         }
 
         handlePreview = async file => {
-            if (!file.url && !file.preview) {
+            if (!file.thumbUrl && !file.preview) {
                 file.preview = await this.getBase64(file.originFileObj);
             }
 
             this.setState({
-                previewImage: file.url || file.preview,
+                previewImage: file.thumbUrl || file.preview,
                 previewVisible: true,
             });
         };
@@ -82,14 +139,44 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
             });
         }
 
+        componentWillReceiveProps(nextProps) {
+            const data = nextProps.form.getFieldsValue()
+            if (_.isEmpty(data.images)) {
+                this.setState({
+                    fileList: []
+                })
+            } else {
+                this.setState({
+                    fileList: nextProps.fileList
+                })
+            }
+        }
+
+        handleCancel = () => this.setState({ previewVisible: false });
 
         render() {
+            const { formLayout, fileList, previewImage, previewVisible } = this.state;
             const props = {
-                action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
                 listType: 'picture',
-                onPreview: this.handlePreview
+                onPreview: this.handlePreview,
+                onRemove: file => {
+                    this.setState(state => {
+                        const index = state.fileList.indexOf(file);
+                        const newFileList = state.fileList.slice();
+                        newFileList.splice(index, 1);
+                        return {
+                            fileList: newFileList,
+                        };
+                    });
+                },
+                beforeUpload: file => {
+                    this.setState(state => ({
+                        fileList: [...state.fileList, file],
+                    }));
+                    return false;
+                },
+                fileList,
             };
-            const { formLayout } = this.state;
             const formItemLayout =
                 formLayout === 'horizontal'
                     ? {
@@ -98,34 +185,41 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                     }
                     : null;
             const { visible, onCancel, onCreate, form } = this.props;
+
             const { getFieldDecorator } = form;
             return (
-                <Form layout={formLayout} labelAlign="left">
-                    <Form.Item {...formItemLayout} label="Tên điểm đến" >
-                        {getFieldDecorator('name', {
-                            rules: [{ required: true, message: 'Bạn phải nhập tên đia điểm' }],
-                        })(<Input readOnly={this.props.readOnly} />)}
-                    </Form.Item>
-                    <Form.Item {...formItemLayout} label="Kinh độ">
-                        {getFieldDecorator('longitude')(<Input readOnly={this.props.readOnly} />)}
-                    </Form.Item>
-                    <Form.Item {...formItemLayout} label="Vĩ độ">
-                        {getFieldDecorator('latitude')(<Input readOnly={this.props.readOnly} />)}
-                    </Form.Item>
-                    <Form.Item {...formItemLayout} label="Hình ảnh">
-                        {getFieldDecorator('images')(
-                            <Upload {...props}>
-                                <Button>
-                                    <Icon type="upload" /> Tải hình ảnh
+                <div>
+                    <Form layout={formLayout} labelAlign="left">
+                        <Form.Item {...formItemLayout} label="Tên điểm đến" >
+                            {getFieldDecorator('name', {
+                                rules: [{ required: true, message: 'Bạn phải nhập tên đia điểm' }],
+                            })(<Input readOnly={this.props.readOnly} />)}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label="Kinh độ">
+                            {getFieldDecorator('longitude')(<Input readOnly={this.props.readOnly} />)}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label="Vĩ độ">
+                            {getFieldDecorator('latitude')(<Input readOnly={this.props.readOnly} />)}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label="Hình ảnh">
+                            {getFieldDecorator('images')(
+                                <Upload multiple={true} {...props}>
+                                    <Button>
+                                        <Icon type="upload" /> Tải hình ảnh
                                 </Button>
-                            </Upload>
-                        )}
-                    </Form.Item>
-                    <Form.Item {...formItemLayout} label="Mô tả">
-                        {getFieldDecorator('description')(<TextArea rows={4} readOnly={this.props.readOnly} />)}
-                    </Form.Item>
-                </Form>
+                                </Upload>
+                            )}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label="Mô tả">
+                            {getFieldDecorator('description')(<TextArea rows={4} readOnly={this.props.readOnly} />)}
+                        </Form.Item>
+                    </Form>
+                    <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
+                        <img alt="example" style={{ width: '100%' }} src={previewImage} />
+                    </Modal>
+                </div>
             );
         }
     },
 );
+

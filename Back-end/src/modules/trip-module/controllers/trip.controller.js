@@ -101,7 +101,7 @@ const createTripDetail = async (req, res) => {
         for (let i = 0; i < listID.length - 1; i += 1) {
             liSpot.push([listID[i], listID[i + 1]]);
         }
-        //console.log(liSpot);
+        // console.log(liSpot);
         // tạo danh sách đường đi
 
         const listSpot = [];
@@ -185,7 +185,7 @@ const createTripDetail = async (req, res) => {
             tripId,
             destinationId
         });
-        if(!tripDetail) throw new NotImplementError(CreateTripDetailErrors.CREATE_FAILURE);
+        if (!tripDetail) throw new NotImplementError(CreateTripDetailErrors.CREATE_FAILURE);
         return res.onSuccess(tripDetail, OldList);
     } catch (error) {
         return res.onError(error);

@@ -12,7 +12,7 @@ const TripDetailSchema = new Schema({
     totalPlaces: {
         type: Number
     },
-    listPlaces:[{
+    listPlaces: [{
         id: String,
         name: String,
     }],

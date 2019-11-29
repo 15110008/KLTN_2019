@@ -84,6 +84,7 @@ export default class Destination extends Component {
       .then((response) => {
         if (response.data.success) {
           var maxLength = 30
+          let listImage = []
           const data = response.data.data
           data.map((x, index) => {
             x.description = _.truncate(x.description, {
@@ -91,10 +92,11 @@ export default class Destination extends Component {
               'separator': /,? +/
             })
             x.image = data[index].images[0]
+
           })
-          console.log("TCL: Destination -> loadData -> data", data)
+          console.log("TCL: Destination -> loadData -> listImage", listImage)
           this.setState({
-            data: response.data.data
+            data: response.data.data,
           })
         } else {
         }
@@ -174,49 +176,52 @@ export default class Destination extends Component {
     const token = localStorage.getItem('jwt')
     const params = {
       headers: {
-        jwt: token
+        jwt: token,
+        'Content-Type': 'multipart/form-data'
       },
+
     }
     var formData = new FormData();
-    const file = data.images.file
+    const file = data.images.fileList
     console.log("TCL: Destination -> onSaveEdit -> file", file)
-    formData.append('image', file)
+    file.map((x, index) => {
+      if (index == file.length - 1) {
+        formData.append('images', x.originFileObj)
+      } else {
+        formData.append('images', x)
+      }
+    })
     formData.append('destinationId', this.state.id)
-    // formData.append("image", );
-    this.formEditRef.formRef.validateFields(err => {
+    this.formEditRef.formRef.validateFields(async (err) => {
       if (!err) {
-        Axios({
-          url: 'http://localhost:3000/v1/destination/insert-image',
-          method: 'POST',
-          headers: {
-            jwt: token
-          },
-          data: formData
-        }).then((res) => {
-          console.log("TCL: Destination -> onSaveEdit -> res", res)
+        await Axios.post('http://localhost:3000/v1/destination/update-image', formData, params).then((res) => {
+          if (res.data.success) {
+            this.loadData()
+          }
+        }).catch((err) => {
         })
-        //   Axios.put('http://localhost:3000/v1/destination/' + this.state.id, data, params)
-        //     .then((res) => {
-        //       if (res.data.success) {
-        //         notification['success']({
-        //           message: 'Lưu thành công',
-        //           onClick: () => {
-        //             console.log('Notification Clicked!');
-        //           },
-        //         });
-        //         this.loadData()
-        //         this.setState({
-        //           formEdit: false
-        //         })
-        //       } else {
-        //         notification['error']({
-        //           message: res.data.message,
-        //           onClick: () => {
-        //             console.log('Notification Clicked!');
-        //           },
-        //         });
-        //       }
-        //     })
+        await Axios.put('http://localhost:3000/v1/destination/' + this.state.id, data, params)
+          .then((res) => {
+            if (res.data.success) {
+              notification['success']({
+                message: 'Lưu thành công',
+                onClick: () => {
+                  console.log('Notification Clicked!');
+                },
+              });
+              this.loadData()
+              this.setState({
+                formEdit: false
+              })
+            } else {
+              notification['error']({
+                message: res.data.message,
+                onClick: () => {
+                  console.log('Notification Clicked!');
+                },
+              });
+            }
+          })
       }
     });
   }
