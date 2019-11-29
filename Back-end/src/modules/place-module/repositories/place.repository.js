@@ -144,6 +144,14 @@ const insertMulti = async (placeId, data) => {
     if (result.n === result.nModified) return true;
     return false;
 };
+const getListWithHobbies = async (destinationId, hobbies) => {
+    const result = await PlaceSchema.find({
+        isDeleted: false,
+        destinationId,
+        category: [hobbies, '2']
+    });
+    return result;
+};
 export default {
     isExistPlace,
     create,
@@ -162,5 +170,6 @@ export default {
     insertImage,
     updateImage,
     updateSingle,
-    insertMulti
+    insertMulti,
+    getListWithHobbies
 };

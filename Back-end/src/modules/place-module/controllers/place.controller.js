@@ -315,11 +315,18 @@ const insertMulti = async (req, res) => {
         //     if (arr === req.body.images) throw new AlreadyExistError(InsertMultiImageErrors.SAME_IMAGE);
         // });
         // await Promise.all(array);
+        const names = images.map((i) => {
+            const name = i.filename;
+            const url = 'localhost:3000/uploads';
+            const y = { name, url };
+            return y;
+        });
+        await Promise.all(names);
         const upload = await PlaceRepository.insertMulti(placeId, image);
         if (!upload) throw new NotImplementError(InsertMultiImageErrors.UPDATE_FAILURE);
         const result = await PlaceRepository.getPlace(placeId);
         if (!result) throw new NotImplementError(InsertMultiImageErrors.GET_FAIL);
-        return res.onSuccess(result);
+        return res.onSuccess(names);
     } catch (error) {
         return res.onError(error);
     }
