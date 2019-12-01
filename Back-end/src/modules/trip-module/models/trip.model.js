@@ -16,6 +16,10 @@ const TripSchema = new Schema({
         type: Number,
         default: null
     },
+    public: {
+        type: Boolean,
+        default: false,
+    },
     isDeleted: {
         type: Boolean,
         default: false
@@ -25,6 +29,9 @@ const TripSchema = new Schema({
         required: true,
         ref: 'Destination'
     },
+    accountId: {
+        type: String
+    }
 });
 
 export default mongoose.model('Trip', TripSchema);
