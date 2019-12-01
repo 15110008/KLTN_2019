@@ -4,10 +4,10 @@ import mongoose, {
 
 const TripDetailSchema = new Schema({
     date: {
-        type: Number,
+        type: String,
     },
     day: {
-        type: String,
+        type: Number,
     },
     totalPlaces: {
         type: Number
