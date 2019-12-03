@@ -1,7 +1,7 @@
 import TripSchema from '../models/trip.model';
 import TripDetailSchema from '../models/tripDetail.model';
 
-//Trip
+// Trip
 const createTrip = async (data) => {
     const result = await TripSchema.create(data);
     return result;
@@ -17,7 +17,7 @@ const getTripPublic = async () => {
 const getTripUnPublic = async (accountId) => {
     const result = await TripSchema.find({ accountId, isDeleted: false });
     return result;
-}
+};
 const shareTrip = async (tripId) => {
     const result = await TripSchema.updateOne({
         _id: tripId,
@@ -25,10 +25,10 @@ const shareTrip = async (tripId) => {
     },
     { public: true });
     return result;
-}
+};
 
 
-//TripDetail
+// TripDetail
 const createTripDetail = async (data) => {
     const result = await TripDetailSchema.create(data);
     return result;

@@ -18,16 +18,16 @@ export const CreateTripDetailErrors = {
 export const GetTripDetailErrors = {
     GET_TRIP_FAILURE: 'GET_TRIP_FAILURE',
     GET_TRIP_DETAIL_FAILURE: 'GET_TRIP_DETAIL_FAILURE'
-}
+};
 export const GetTripPublicErrors = {
     GET_TRIP_FAIL: 'GET_TRIP_FAIL',
-}
+};
 export const GetTripUnPublicErrors = {
     AUTH_FAIL: 'AUTH_FAIL',
     GET_TRIP_FAILURE: 'GET_TRIP_FAILURE'
-}
+};
 export const ShareTripErrors = {
     AUTH_FAIL: 'AUTH_FAIL',
     UPDATE_FAILURE: 'UPDATE_FAILURE',
     GET_FAILURE: 'GET_FAILURE'
-}
+};

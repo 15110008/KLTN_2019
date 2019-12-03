@@ -71,8 +71,9 @@ const createTripDetail = async (req, res) => {
         await Promise.all(listName);
         // lấy danh sách địa điểm đầy đủ trừ danh sách địa điểm đã đi ở ngày trước
         // lấy danh sách trong db trừ danh sách input
+
         const subList = listName.filter(i => !oldList.includes(i));
-        // console.log(subList);
+        //console.log(subList);
 
         // lấy ra các địa điểm trong danh sách đã được trừ
         const liNa = [];
@@ -86,7 +87,7 @@ const createTripDetail = async (req, res) => {
         // tổng số địa điểm trong 1 ngày
         const totalPlaces = listPlaces.length;
         // cập nhật danh sách oldList
-        const OldList = oldList.concat(listPlaces);
+        // const OldList = oldList.concat(listPlaces);
         // console.log(OldList);
         // // danh sách tên các địa điểm trong ngày
         // const listPlaces = listIdName.map((liN) => {
@@ -174,7 +175,7 @@ const createTripDetail = async (req, res) => {
                 spotTime,
                 stayTime
             };
-           listSpot.push(b);
+            listSpot.push(b);
         }
         // console.log(day);
         // console.log(date);
@@ -191,7 +192,7 @@ const createTripDetail = async (req, res) => {
             destinationId
         });
         if (!tripDetail) throw new NotImplementError(CreateTripDetailErrors.CREATE_FAILURE);
-        return res.onSuccess(tripDetail, OldList);
+        return res.onSuccess(tripDetail, listPlaces);
     } catch (error) {
         return res.onError(error);
     }
@@ -199,7 +200,7 @@ const createTripDetail = async (req, res) => {
 const getTripPublic = async (req, res) => {
     try {
         const trip = await TripRepository.getTripPublic();
-        if(!trip) throw new NotImplementError(GetTripPublicErrors.GET_TRIP_FAIL);
+        if (!trip) throw new NotImplementError(GetTripPublicErrors.GET_TRIP_FAIL);
         const result = trip.map((tr) => {
             const tripInfo = {};
             tripInfo._id = tr._id;
@@ -220,10 +221,10 @@ const getTripUnPublic = async (req, res) => {
     const { jwt } = req.headers;
     try {
         const authenData = VerifyToken(jwt);
-        if(!authenData) throw new NotImplementError(GetTripUnPublicErrors.AUTH_FAIL);
+        if (!authenData) throw new NotImplementError(GetTripUnPublicErrors.AUTH_FAIL);
         const { accountId } = authenData;
         const trip = await TripRepository.getTripUnPublic(accountId);
-        if(!trip) throw new NotFoundError(GetTripUnPublicErrors.GET_TRIP_FAILURE);
+        if (!trip) throw new NotFoundError(GetTripUnPublicErrors.GET_TRIP_FAILURE);
         const result = trip.map((tr) => {
             const tripInfo = {};
             tripInfo._id = tr._id;
@@ -244,9 +245,9 @@ const getTripDetail = async (req, res) => {
     const tripId = req.params.id;
     try {
         const Trip = await TripRepository.getTripById(tripId);
-        if(!Trip) throw new NotFoundError(GetTripDetailErrors.GET_TRIP_FAILURE);
+        if (!Trip) throw new NotFoundError(GetTripDetailErrors.GET_TRIP_FAILURE);
         const tripDetail = await TripRepository.getTripDetail(tripId);
-        if(!tripDetail) throw new NotFoundError(GetTripDetailErrors.GET_TRIP_DETAIL_FAILURE);
+        if (!tripDetail) throw new NotFoundError(GetTripDetailErrors.GET_TRIP_DETAIL_FAILURE);
         const result = tripDetail.map((trip) => {
             const tripDetailInfo = {};
             tripDetailInfo._id = trip._id;
@@ -272,10 +273,10 @@ const shareTrip = async (req, res) => {
         // const authenData = VerifyToken(jwt);
         // if(!authenData) throw new NotImplementError(ShareTripErrors.AUTH_FAIL);
         const result = await TripRepository.shareTrip(tripId);
-        if(!result) throw new NotImplementError(ShareTripErrors.UPDATE_FAILURE);
+        if (!result) throw new NotImplementError(ShareTripErrors.UPDATE_FAILURE);
         const trip = await TripRepository.getTripById(tripId);
-        if(!trip) throw new NotFoundError(ShareTripErrors.GET_FAILURE);
-        return res.onSuccess(trip)
+        if (!trip) throw new NotFoundError(ShareTripErrors.GET_FAILURE);
+        return res.onSuccess(trip);
     } catch (error) {
         return res.onError(error);
     }

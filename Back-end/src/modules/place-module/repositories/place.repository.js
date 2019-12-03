@@ -171,5 +171,5 @@ export default {
     updateImage,
     updateSingle,
     insertMulti,
-    getListWithHobbies
+    getListWithHobbies,
 };
