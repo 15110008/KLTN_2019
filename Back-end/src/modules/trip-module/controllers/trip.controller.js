@@ -1,5 +1,5 @@
 // import { rootCertificates } from 'tls';
-import _ from 'lodash';
+// import _ from 'lodash';
 import { VerifyToken } from '../../../utils/jwt.util';
 import NotImplementError from '../../../errors-handle/not-implemented.errors';
 import DestinationRepository from '../../destination-module/repositories/destination.repository';
@@ -70,32 +70,59 @@ const createTripDetail = async (req, res) => {
             return { id, name };
         });
 
-        let _listName = []
-        listName.map(x => {
-            _listName.push(x.id)
-        })
-        let _oldList = []
-        if (!_.isEmpty(oldList)) {
-            oldList.map(x => {
-                _oldList.push(x.id)
-            })
-        }
+        // const _listName = [];
+        // listName.map((x) => {
+        //     _listName.push(x.id);
+        // });
+        // const _oldList = [];
+        // if (!_.isEmpty(oldList)) {
+        //     oldList.map((x) => {
+        //         _oldList.push(x.id);
+        //     });
+        // }
         await Promise.all(listName);
         // lấy danh sách địa điểm đầy đủ trừ danh sách địa điểm đã đi ở ngày trước
         // lấy danh sách trong db trừ danh sách input
-        // const subList = listName.filter(i => !oldList.includes(i.id));
-        const _subList = _.difference(_listName, _oldList);
-        const subList = []
-        _subList.map(x => {
-            listName.map(y => {
-                if (x == y.id) {
+        const oldList1 = oldList.map((old) => {
+            const { id } = old;
+            return id;
+        });
+        await Promise.all(oldList1);
+        // console.log(oldList1);
+        const listName1 = listName.map((lis) => {
+            const { id } = lis;
+            return id;
+        });
+        await Promise.all(listName1);
+        // console.log(listName1);
+        const subList1 = listName1.filter(y => !oldList1.includes(y));
+        // console.log(subList1);
+        const subList = [];
+        subList1.map((x) => {
+            listName.map((y) => {
+                if (x === y.id) {
                     subList.push({
                         id: y.id,
                         name: y.name
-                    })
+                    });
                 }
-            })
-        })
+                return y;
+            });
+            return x;
+        });
+        // console.log(subList);
+        // const _subList = _.difference(_listName, _oldList);
+        // const subList = [];
+        // _subList.map((x) => {
+        //     listName.map((y) => {
+        //         if (x === y.id) {
+        //             subList.push({
+        //                 id: y.id,
+        //                 name: y.name
+        //             });
+        //         }
+        //     });
+        // });
 
         // console.log(subList);
 
