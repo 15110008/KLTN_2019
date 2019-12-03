@@ -1,4 +1,5 @@
 // import { rootCertificates } from 'tls';
+import _ from 'lodash';
 import { VerifyToken } from '../../../utils/jwt.util';
 import NotImplementError from '../../../errors-handle/not-implemented.errors';
 import DestinationRepository from '../../destination-module/repositories/destination.repository';
@@ -68,12 +69,35 @@ const createTripDetail = async (req, res) => {
             const { name } = li;
             return { id, name };
         });
+
+        let _listName = []
+        listName.map(x => {
+            _listName.push(x.id)
+        })
+        let _oldList = []
+        if (!_.isEmpty(oldList)) {
+            oldList.map(x => {
+                _oldList.push(x.id)
+            })
+        }
         await Promise.all(listName);
         // lấy danh sách địa điểm đầy đủ trừ danh sách địa điểm đã đi ở ngày trước
         // lấy danh sách trong db trừ danh sách input
+        // const subList = listName.filter(i => !oldList.includes(i.id));
+        const _subList = _.difference(_listName, _oldList);
+        const subList = []
+        _subList.map(x => {
+            listName.map(y => {
+                if (x == y.id) {
+                    subList.push({
+                        id: y.id,
+                        name: y.name
+                    })
+                }
+            })
+        })
 
-        const subList = listName.filter(i => !oldList.includes(i));
-        //console.log(subList);
+        // console.log(subList);
 
         // lấy ra các địa điểm trong danh sách đã được trừ
         const liNa = [];
