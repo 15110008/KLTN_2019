@@ -11,7 +11,11 @@ import TripRepository from '../repositories/trip.repository';
 
 import {
     CreateTripErrors,
-    CreateTripDetailErrors
+    CreateTripDetailErrors,
+    GetTripPublicErrors,
+    GetTripDetailErrors,
+    GetTripUnPublicErrors,
+    ShareTripErrors
 } from '../error-codes/trip.error-codes';
 
 const createTrip = async (req, res) => {
@@ -22,10 +26,10 @@ const createTrip = async (req, res) => {
         totalDate,
         destinationId
     } = req.body;
-    console.log(req.body);
     try {
         const authenData = VerifyToken(jwt);
         if (!authenData) throw new NotImplementError(CreateTripErrors.AUTH_FAIL);
+        const { accountId } = authenData;
         const isExisted = await DestinationRepository.getDestination(destinationId);
         if (!isExisted) throw new AlreadyExistError(CreateTripErrors.DESTINATION_NEVER_EXIST);
         const name = 'Lịch trình ' + totalDate + ' ngày từ ' + fromDes + ' đến ' + toDes;
@@ -33,7 +37,8 @@ const createTrip = async (req, res) => {
         const trip = await TripRepository.createTrip({
             name,
             totalDate,
-            destinationId
+            destinationId,
+            accountId
         });
         if (!trip) throw new NotImplementError(CreateTripErrors.CREATE_FAIL);
         return res.onSuccess(trip);
@@ -216,9 +221,57 @@ const createTripDetail = async (req, res) => {
         return res.onError(error);
     }
 };
-const getTripDetail = async (req, res) => {
+const getTripPublic = async (req, res) => {
     try {
-        const tripDetail = await TripRepository.getTripDetail();
+        const trip = await TripRepository.getTripPublic();
+        if(!trip) throw new NotImplementError(GetTripPublicErrors.GET_TRIP_FAIL);
+        const result = trip.map((tr) => {
+            const tripInfo = {};
+            tripInfo._id = tr._id;
+            tripInfo.name = tr.name;
+            tripInfo.totalDate = tr.totalDate;
+            tripInfo.destinationId = tr.destinationId;
+            tripInfo.accountId = tr.accountId;
+            tripInfo.rate = tr.rate;
+            return tripInfo;
+        });
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
+
+const getTripUnPublic = async (req, res) => {
+    const { jwt } = req.headers;
+    try {
+        const authenData = VerifyToken(jwt);
+        if(!authenData) throw new NotImplementError(GetTripUnPublicErrors.AUTH_FAIL);
+        const { accountId } = authenData;
+        const trip = await TripRepository.getTripUnPublic(accountId);
+        if(!trip) throw new NotFoundError(GetTripUnPublicErrors.GET_TRIP_FAILURE);
+        const result = trip.map((tr) => {
+            const tripInfo = {};
+            tripInfo._id = tr._id;
+            tripInfo.name = tr.name;
+            tripInfo.totalDate = tr.totalDate;
+            tripInfo.destinationId = tr.destinationId;
+            tripInfo.accountId = tr.accountId;
+            tripInfo.rate = tr.rate;
+            return tripInfo;
+        });
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
+
+const getTripDetail = async (req, res) => {
+    const tripId = req.params.id;
+    try {
+        const Trip = await TripRepository.getTripById(tripId);
+        if(!Trip) throw new NotFoundError(GetTripDetailErrors.GET_TRIP_FAILURE);
+        const tripDetail = await TripRepository.getTripDetail(tripId);
+        if(!tripDetail) throw new NotFoundError(GetTripDetailErrors.GET_TRIP_DETAIL_FAILURE);
         const result = tripDetail.map((trip) => {
             const tripDetailInfo = {};
             tripDetailInfo._id = trip._id;
@@ -231,18 +284,33 @@ const getTripDetail = async (req, res) => {
             tripDetailInfo.tripId = trip.tripId;
             return tripDetailInfo;
         });
-        return res.send({
-            data: result,
-            success: 'ok'
-        });
+        return res.onSuccess(Trip, result);
     } catch (error) {
         return res.onError(error);
     }
 };
 
-// k thay van de gi sao k thay bi gi ta thua tét tiep vai lan coi
+const shareTrip = async (req, res) => {
+    // const { jwt } = req.headers;
+    const tripId = req.params.id;
+    try {
+        // const authenData = VerifyToken(jwt);
+        // if(!authenData) throw new NotImplementError(ShareTripErrors.AUTH_FAIL);
+        const result = await TripRepository.shareTrip(tripId);
+        if(!result) throw new NotImplementError(ShareTripErrors.UPDATE_FAILURE);
+        const trip = await TripRepository.getTripById(tripId);
+        if(!trip) throw new NotFoundError(ShareTripErrors.GET_FAILURE);
+        return res.onSuccess(trip)
+    } catch (error) {
+        return res.onError(error);
+    }
+};
+
 export default {
     createTrip,
+    getTripPublic,
+    getTripUnPublic,
     createTripDetail,
-    getTripDetail
+    getTripDetail,
+    shareTrip
 };
