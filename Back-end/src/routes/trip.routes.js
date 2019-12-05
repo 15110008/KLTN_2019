@@ -23,7 +23,8 @@ router.get('/trip/:id', TripController.getTripDetail);
 // PUT
 // Người dùng share lịch trình mình đã tạo
 router.put('/trip/:id', TripController.shareTrip);
-
+// Update tripDetail
+router.put('/trip/Detail/:id', TripController.updateTripDetail);
 
 // DELETE
 

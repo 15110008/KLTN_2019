@@ -15,7 +15,8 @@ import {
     GetTripPublicErrors,
     GetTripDetailErrors,
     GetTripUnPublicErrors,
-    ShareTripErrors
+    ShareTripErrors,
+    UpdateTripDetailErrors
 } from '../error-codes/trip.error-codes';
 
 const createTrip = async (req, res) => {
@@ -134,9 +135,11 @@ const createTripDetail = async (req, res) => {
         });
         await Promise.all(liName);
         const x = liName[0];
-        const listPlaces = x.filter((item, index) => x.indexOf(item) === index); // danh sách kết quả của ngày đang tạo
+        const listPl = x.filter((item, index) => x.indexOf(item) === index); // danh sách kết quả của ngày đang tạo
+
+
         // tổng số địa điểm trong 1 ngày
-        const totalPlaces = listPlaces.length;
+        const totalPlaces = listPl.length;
         // cập nhật danh sách oldList
         // const OldList = oldList.concat(listPlaces);
         // console.log(OldList);
@@ -147,11 +150,22 @@ const createTripDetail = async (req, res) => {
         // });
         // await Promise.all(listPlaces);
         // danh sách id các địa điểm trong ngày
-        const listID = listPlaces.map((liID) => {
+        const listID = listPl.map((liID) => {
             const { id } = liID;
             return id;
         });
         await Promise.all(listID);
+        console.log(listID)
+        const listIm = listID.map(async (Id) => {
+            const im = await PlaceRepository.getPlace(Id);
+            const { id } = im;
+            const { name } = im;
+            const { images } = im;
+            const image = images[0];
+            return { id, name, image };
+        });
+        const listPlaces = await Promise.all(listIm);
+        console.log(listPlaces) 
         // console.log(listID);
         // danh sách các cặp địa điểm trong ngày
         const liSpot = [];
@@ -165,6 +179,7 @@ const createTripDetail = async (req, res) => {
         let Time = 510;
         let spotTime = 0;
         let stayTime = 0;
+        let display = 0;
         // let index = 0;
         // const a = liSpot.map(async (sp) => {
         //     const spot = await SpotRepository.getSpot(sp);
@@ -219,7 +234,9 @@ const createTripDetail = async (req, res) => {
             } else {
                 stayTime = 100;
             }
+            display += 1;
             const b = {
+                display,
                 startTime,
                 spotId,
                 length,
@@ -243,7 +260,7 @@ const createTripDetail = async (req, res) => {
             destinationId
         });
         if (!tripDetail) throw new NotImplementError(CreateTripDetailErrors.CREATE_FAILURE);
-        return res.onSuccess(tripDetail, listPlaces);
+        return res.onSuccess(tripDetail, listPl);
     } catch (error) {
         return res.onError(error);
     }
@@ -297,7 +314,7 @@ const getTripDetail = async (req, res) => {
     try {
         const Trip = await TripRepository.getTripById(tripId);
         if (!Trip) throw new NotFoundError(GetTripDetailErrors.GET_TRIP_FAILURE);
-        const tripDetail = await TripRepository.getTripDetail(tripId);
+        const tripDetail = await TripRepository.getTripsDetail(tripId);
         if (!tripDetail) throw new NotFoundError(GetTripDetailErrors.GET_TRIP_DETAIL_FAILURE);
         const result = tripDetail.map((trip) => {
             const tripDetailInfo = {};
@@ -333,11 +350,73 @@ const shareTrip = async (req, res) => {
     }
 };
 
+const updateTripDetail = async (req, res) => {
+    const tripDetailId = req.params.id;
+    const { listPlaces } = req.body;
+    try {
+        const tripDetail = await TripRepository.getTripDetail(tripDetailId);
+        if (!tripDetail) throw new NotFoundError(UpdateTripDetailErrors.TRIP_DETAIL_NEVER_EXIST);
+        // tổng số địa điểm
+        const totalPlaces = listPlaces.length;
+        const listID = listPlaces.map((liID) => {
+            const { id } = liID;
+            return id;
+        });
+        await Promise.all(listID);
+        // console.log(listID);
+        // danh sách các cặp địa điểm trong ngày
+        const liSpot = [];
+        for (let i = 0; i < listID.length - 1; i += 1) {
+            liSpot.push([listID[i], listID[i + 1]]);
+        }
+        // console.log(liSpot);
+        // tạo danh sách đường đi
+
+        const listSpot = [];
+        let Time = 510;
+        let spotTime = 0;
+        let stayTime = 0;
+        for (let i = 0; i < liSpot.length; i += 1) {
+            Time = Time + spotTime + stayTime;
+            const hours = Math.floor(Time / 60);
+            const minutes = Time % 60;
+            const startTime = hours + ':' + minutes;
+            const spot = SpotRepository.getSpot(liSpot[i]);
+            if (!spot) throw new NotFoundError(UpdateTripDetailErrors.GET_SPOT_FAIL);
+            const spotId = liSpot[i];
+            // console.log(spotId);
+            const { length } = spot;
+            const { time } = spot;
+            spotTime = time;
+            if (spotTime < 30) {
+                stayTime = 120;
+            } else {
+                stayTime = 100;
+            }
+            const b = {
+                startTime,
+                spotId,
+                length,
+                spotTime,
+                stayTime
+            };
+            listSpot.push(b);
+        }
+        console.log(listPlaces);
+        console.log(totalPlaces);
+        console.log(listSpot);
+        return res.onSuccess(totalPlaces);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
+
 export default {
     createTrip,
     getTripPublic,
     getTripUnPublic,
     createTripDetail,
     getTripDetail,
-    shareTrip
+    shareTrip,
+    updateTripDetail
 };
