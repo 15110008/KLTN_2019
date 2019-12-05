@@ -155,7 +155,7 @@ const createTripDetail = async (req, res) => {
             return id;
         });
         await Promise.all(listID);
-        console.log(listID)
+        console.log(listID);
         const listIm = listID.map(async (Id) => {
             const im = await PlaceRepository.getPlace(Id);
             const { id } = im;
@@ -165,7 +165,7 @@ const createTripDetail = async (req, res) => {
             return { id, name, image };
         });
         const listPlaces = await Promise.all(listIm);
-        console.log(listPlaces) 
+        console.log(listPlaces);
         // console.log(listID);
         // danh sách các cặp địa điểm trong ngày
         const liSpot = [];
@@ -352,59 +352,16 @@ const shareTrip = async (req, res) => {
 
 const updateTripDetail = async (req, res) => {
     const tripDetailId = req.params.id;
-    const { listPlaces } = req.body;
+    const { listPlaces } = req.body; // chỉ gồm 2 thuộc tính là { id, name };
     try {
         const tripDetail = await TripRepository.getTripDetail(tripDetailId);
         if (!tripDetail) throw new NotFoundError(UpdateTripDetailErrors.TRIP_DETAIL_NEVER_EXIST);
         // tổng số địa điểm
         const totalPlaces = listPlaces.length;
-        const listID = listPlaces.map((liID) => {
-            const { id } = liID;
-            return id;
-        });
-        await Promise.all(listID);
-        // console.log(listID);
-        // danh sách các cặp địa điểm trong ngày
-        const liSpot = [];
-        for (let i = 0; i < listID.length - 1; i += 1) {
-            liSpot.push([listID[i], listID[i + 1]]);
-        }
-        // console.log(liSpot);
-        // tạo danh sách đường đi
+        // update totalPlaces trong trip detail
+        const update = await TripRepository.updateTotalPlaces(tripDetailId);
+        if (!update) throw new NotImplementError(UpdateTripDetailErrors.UPDATE_TOTAL_PLACES_FAILURE);
 
-        const listSpot = [];
-        let Time = 510;
-        let spotTime = 0;
-        let stayTime = 0;
-        for (let i = 0; i < liSpot.length; i += 1) {
-            Time = Time + spotTime + stayTime;
-            const hours = Math.floor(Time / 60);
-            const minutes = Time % 60;
-            const startTime = hours + ':' + minutes;
-            const spot = SpotRepository.getSpot(liSpot[i]);
-            if (!spot) throw new NotFoundError(UpdateTripDetailErrors.GET_SPOT_FAIL);
-            const spotId = liSpot[i];
-            // console.log(spotId);
-            const { length } = spot;
-            const { time } = spot;
-            spotTime = time;
-            if (spotTime < 30) {
-                stayTime = 120;
-            } else {
-                stayTime = 100;
-            }
-            const b = {
-                startTime,
-                spotId,
-                length,
-                spotTime,
-                stayTime
-            };
-            listSpot.push(b);
-        }
-        console.log(listPlaces);
-        console.log(totalPlaces);
-        console.log(listSpot);
         return res.onSuccess(totalPlaces);
     } catch (error) {
         return res.onError(error);

@@ -15,7 +15,10 @@ const TripDetailSchema = new Schema({
     listPlaces: [{
         id: String,
         name: String,
-        image: String
+        image: {
+            type: String,
+            default: null,
+        }
     }],
     listSpot: [{
         display: Number,
