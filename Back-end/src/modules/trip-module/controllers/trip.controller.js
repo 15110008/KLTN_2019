@@ -207,7 +207,7 @@ const createTripDetail = async (req, res) => {
             const hours = Math.floor(Time / 60);
             const minutes = Time % 60;
             const startTime = hours + ':' + minutes;
-            const spot = await SpotRepository.getSpot(liSpot[i]);
+            const spot = SpotRepository.getSpot(liSpot[i]);
             if (!spot) throw new NotFoundError(CreateTripDetailErrors.GET_SPOT_FAIL);
             const spotId = liSpot[i];
             // console.log(spotId);

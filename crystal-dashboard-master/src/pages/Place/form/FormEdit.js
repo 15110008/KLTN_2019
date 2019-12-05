@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom';
-import { Form, Input, Modal, Col, Select } from 'antd';
+import { Form, Input, Button, Icon, Select, Upload } from 'antd';
 import axios from 'axios'
 import ComboField from '../../../components/base/ComboField';
+import _ from 'lodash'
 
 const { Option } = Select;
 
@@ -10,7 +11,8 @@ export default class FormEdit extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            destinationOption: []
+            destinationOption: [],
+            fileList: []
         };
 
     }
@@ -20,10 +22,41 @@ export default class FormEdit extends Component {
         await this.loadData(this.props.id)
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.id != this.props.id) {
-            this.loadData(nextProps.id)
-        }
+    async componentWillReceiveProps(prevProps) {
+        this.setState({
+            fileList: []
+        })
+        await axios.get('http://localhost:3000/v1/place/' + prevProps.id)
+            .then((res) => {
+                if (res.data.success) {
+                    const data = res.data.result
+                    const listImage = []
+                    data.category = parseInt(data.category)
+                    if (_.isEmpty(data.images)) {
+                        this.formRef.setFields({
+                            images: {
+                                value: []
+                            }
+                        })
+                    } else {
+                        data.images.map((x, index) => {
+                            listImage.push({
+                                thumbUrl: 'http://localhost:3000/' + x,
+                                status: 'done',
+                                name: x.split('\\')[1] ? x.split('\\')[1] : x.split('/')[1],
+                                uid: 'image_' + index
+                            })
+                        })
+                    }
+                    this.setState({
+                        valueCategory: parseInt(data.category),
+                        fileList: listImage,
+                        valueDestinationId: data.destinationId
+                    })
+                    this.formRef.setFieldsValue(data);
+                }
+            }).catch((error) => {
+            })
     }
 
     async loadComboBox() {
@@ -52,12 +85,30 @@ export default class FormEdit extends Component {
             .then((res) => {
                 if (res.data.success) {
                     const data = res.data.result
+                    const listImage = []
                     data.category = parseInt(data.category)
-                    this.formRef.setFieldsValue(data);
+                    if (_.isEmpty(data.images)) {
+                        this.formRef.setFields({
+                            images: {
+                                value: []
+                            }
+                        })
+                    } else {
+                        data.images.map((x, index) => {
+                            listImage.push({
+                                thumbUrl: 'http://localhost:3000/' + x,
+                                status: 'done',
+                                name: x.split('\\')[1] ? x.split('\\')[1] : x.split('/')[1],
+                                uid: 'image_' + index
+                            })
+                        })
+                    }
                     this.setState({
                         valueCategory: parseInt(data.category),
+                        fileList: listImage,
                         valueDestinationId: data.destinationId
                     })
+                    this.formRef.setFieldsValue(data);
                 }
             }).catch((error) => {
             })
@@ -76,6 +127,7 @@ export default class FormEdit extends Component {
                     destinationOption={this.state.destinationOption}
                     valueCategory={this.state.valueCategory}
                     valueDestinationId={this.state.valueDestinationId}
+                    fileList={this.state.fileList}
                 />
             </div> : ''
         );
@@ -90,7 +142,12 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
             super(props);
             this.state = {
                 formLayout: 'horizontal',
-                destinationOption: []
+                destinationOption: [],
+                fileList: this.props.fileList,
+                previewVisible: false,
+                previewImage: '',
+                removed: false
+
             };
             this.optionCategory = [
                 { value: 1, label: 'Du lịch văn hóa' },
@@ -100,8 +157,68 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
             ]
         }
 
+        handlePreview = async file => {
+            if (!file.thumbUrl && !file.preview) {
+                file.preview = await this.getBase64(file.originFileObj);
+            }
+
+            this.setState({
+                previewImage: file.thumbUrl || file.preview,
+                previewVisible: true,
+            });
+        };
+
+        getBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        componentWillReceiveProps(prevProps) {
+            const data = prevProps.form.getFieldsValue()
+            if (!this.state.removed) {
+                if (_.isEmpty(data.images)) {
+                    this.setState({
+                        fileList: []
+                    })
+                } else {
+                    this.setState({
+                        fileList: !_.isEmpty(prevProps.fileList) ? prevProps.fileList : data.images.fileList
+                    })
+                }
+            }
+
+        }
+
+        handleCancel = () => this.setState({ previewVisible: false });
+
         render() {
-            const { formLayout } = this.state;
+            const { formLayout, fileList, previewImage, previewVisible } = this.state;
+            const props = {
+                listType: 'picture',
+                onPreview: this.handlePreview,
+                onRemove: file => {
+                    this.setState(state => {
+                        const index = state.fileList.indexOf(file);
+                        const newFileList = state.fileList.slice();
+                        newFileList.splice(index, 1);
+                        return {
+                            fileList: newFileList,
+                            removed: true
+                        };
+                    });
+                },
+                beforeUpload: file => {
+                    this.setState(state => ({
+                        fileList: [...state.fileList, file],
+                    }));
+                    return false;
+                },
+                fileList,
+            };
             const formItemLayout =
                 formLayout === 'horizontal'
                     ? {
@@ -110,7 +227,9 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                     }
                     : null;
             const { visible, onCancel, onCreate, form } = this.props;
+
             const { getFieldDecorator } = form;
+
             return (
                 <Form layout={formLayout} labelAlign="left">
                     <Form.Item {...formItemLayout} label="Tên địa điểm" >
@@ -151,6 +270,15 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                     </Form.Item>
                     <Form.Item {...formItemLayout} label="Vĩ độ">
                         {getFieldDecorator('latitude')(<Input readOnly={this.props.readOnly} />)}
+                    </Form.Item>
+                    <Form.Item {...formItemLayout} label="Hình ảnh">
+                        {getFieldDecorator('images')(
+                            <Upload ref={c => this.imageRef = c} multiple={true} {...props}>
+                                <Button>
+                                    <Icon type="upload" /> Tải hình ảnh
+                                </Button>
+                            </Upload>
+                        )}
                     </Form.Item>
                     <Form.Item {...formItemLayout} label="Mô tả">
                         {getFieldDecorator('description')(<TextArea rows={4} readOnly={this.props.readOnly} />)}

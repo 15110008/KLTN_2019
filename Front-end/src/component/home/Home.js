@@ -1,13 +1,11 @@
-import React, { Component } from 'react';
-import ListDestination from './detination/ListDestination';
-import ListTrip from './trip/ListTrip';
-import TopArea from './topArea'
+import React, { Component } from 'react'
+import Trip from '../trip/Trip'
+import Destination from '../detination/Destination'
 
-export default class Body extends Component {
+export default class Home extends Component {
     render() {
         return (
             <div>
-                <TopArea />
                 <section className="ftco-section ftco-no-pb">
                     <div className="container">
                         <div className="row justify-content-center">
@@ -57,10 +55,10 @@ export default class Body extends Component {
                     </div>
                 </section>
                 <section className="ftco-section goto-here">
-                    <ListTrip />
+                    <Trip />
                 </section>
                 <section className="ftco-section goto-here">
-                    <ListDestination />
+                    <Destination />
                 </section>
                 {/*end Service */}
                 <section className="ftco-section ftco-degree-bg services-section img mx-md-5">
