@@ -31,3 +31,12 @@ export const ShareTripErrors = {
     UPDATE_FAILURE: 'UPDATE_FAILURE',
     GET_FAILURE: 'GET_FAILURE'
 };
+export const UpdateTripDetailErrors = {
+    TRIP_DETAIL_NEVER_EXIST: 'TRIP_DETAIL_NEVER_EXIST',
+    UPDATE_TOTAL_PLACES_FAILURE: 'UPDATE_TOTAL_PLACES_FAILURE',
+    GET_SPOT_FAILURE: 'GET_SPOT_FAILURE'
+};
+export const UpdateListSpotErrors = {
+    TRIP_DETAIL_NEVER_EXIST: 'TRIP_DETAIL_NEVER_EXIST',
+    
+}

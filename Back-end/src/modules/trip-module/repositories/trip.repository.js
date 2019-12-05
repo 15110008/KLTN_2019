@@ -33,11 +33,37 @@ const createTripDetail = async (data) => {
     const result = await TripDetailSchema.create(data);
     return result;
 };
-const getTripDetail = async (tripId) => {
+// get danh sách trip detail của 1 cái trip
+const getTripsDetail = async (tripId) => {
     const result = await TripDetailSchema.find({ tripId, isDeleted: false });
     return result;
 };
-
+// get 1 trip detail
+const getTripDetail = async (tripDetailId) => {
+    const result = await TripDetailSchema.findOne({
+        _id: tripDetailId,
+        isDeleted: false
+    });
+    return result;
+};
+//update totalPlaces in trip detail
+const updateTotalPlaces = async (tripDetailId, data) => {
+    const result = await TripDetailSchema.updateOne({
+        _id: tripDetailId,
+        isDeleted: false
+    },
+    { ...data });
+    return result;
+};
+//update listSpot
+const updateListSpot = async (tripDetailId, data) => {
+    result = await TripDetailSchema.updateOne({
+        _id: tripDetailId,
+        isDeleted: false
+    },
+    { ...data });
+    return result;
+};
 export default {
     createTrip,
     getTripById,
@@ -45,5 +71,8 @@ export default {
     getTripUnPublic,
     shareTrip,
     createTripDetail,
-    getTripDetail
+    getTripsDetail,
+    getTripDetail,
+    updateTotalPlaces,
+    updateListSpot
 };

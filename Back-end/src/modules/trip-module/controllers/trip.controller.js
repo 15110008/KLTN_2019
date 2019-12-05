@@ -15,7 +15,9 @@ import {
     GetTripPublicErrors,
     GetTripDetailErrors,
     GetTripUnPublicErrors,
-    ShareTripErrors
+    ShareTripErrors,
+    UpdateTripDetailErrors,
+    UpdateListSpotErrors
 } from '../error-codes/trip.error-codes';
 
 const createTrip = async (req, res) => {
@@ -134,9 +136,11 @@ const createTripDetail = async (req, res) => {
         });
         await Promise.all(liName);
         const x = liName[0];
-        const listPlaces = x.filter((item, index) => x.indexOf(item) === index); // danh sách kết quả của ngày đang tạo
+        const listPl = x.filter((item, index) => x.indexOf(item) === index); // danh sách kết quả của ngày đang tạo
+
+
         // tổng số địa điểm trong 1 ngày
-        const totalPlaces = listPlaces.length;
+        const totalPlaces = listPl.length;
         // cập nhật danh sách oldList
         // const OldList = oldList.concat(listPlaces);
         // console.log(OldList);
@@ -147,11 +151,22 @@ const createTripDetail = async (req, res) => {
         // });
         // await Promise.all(listPlaces);
         // danh sách id các địa điểm trong ngày
-        const listID = listPlaces.map((liID) => {
+        const listID = listPl.map((liID) => {
             const { id } = liID;
             return id;
         });
         await Promise.all(listID);
+        console.log(listID);
+        const listIm = listID.map(async (Id) => {
+            const im = await PlaceRepository.getPlace(Id);
+            const { id } = im;
+            const { name } = im;
+            const { images } = im;
+            const image = images[0];
+            return { id, name, image };
+        });
+        const listPlaces = await Promise.all(listIm);
+        console.log(listPlaces);
         // console.log(listID);
         // danh sách các cặp địa điểm trong ngày
         const liSpot = [];
@@ -165,6 +180,7 @@ const createTripDetail = async (req, res) => {
         let Time = 510;
         let spotTime = 0;
         let stayTime = 0;
+        let display = 0;
         // let index = 0;
         // const a = liSpot.map(async (sp) => {
         //     const spot = await SpotRepository.getSpot(sp);
@@ -192,7 +208,9 @@ const createTripDetail = async (req, res) => {
         //     const minutes = Time % 60;
         //     const startTime = hours + ':' + minutes;
         //     // console.log(startTime);
+        //     display += 1;
         //     return {
+        //         display,
         //         startTime,
         //         spotId,
         //         length,
@@ -219,7 +237,9 @@ const createTripDetail = async (req, res) => {
             } else {
                 stayTime = 100;
             }
+            display += 1;
             const b = {
+                display,
                 startTime,
                 spotId,
                 length,
@@ -243,7 +263,7 @@ const createTripDetail = async (req, res) => {
             destinationId
         });
         if (!tripDetail) throw new NotImplementError(CreateTripDetailErrors.CREATE_FAILURE);
-        return res.onSuccess(tripDetail, listPlaces);
+        return res.onSuccess(tripDetail, listPl);
     } catch (error) {
         return res.onError(error);
     }
@@ -297,7 +317,7 @@ const getTripDetail = async (req, res) => {
     try {
         const Trip = await TripRepository.getTripById(tripId);
         if (!Trip) throw new NotFoundError(GetTripDetailErrors.GET_TRIP_FAILURE);
-        const tripDetail = await TripRepository.getTripDetail(tripId);
+        const tripDetail = await TripRepository.getTripsDetail(tripId);
         if (!tripDetail) throw new NotFoundError(GetTripDetailErrors.GET_TRIP_DETAIL_FAILURE);
         const result = tripDetail.map((trip) => {
             const tripDetailInfo = {};
@@ -333,11 +353,67 @@ const shareTrip = async (req, res) => {
     }
 };
 
+const updateTripDetail = async (req, res) => {
+    const tripDetailId = req.params.id;
+    const { listPlaces } = req.body; // chỉ gồm 2 thuộc tính là { id, name };
+    try {
+        const tripDetail = await TripRepository.getTripDetail(tripDetailId);
+        if (!tripDetail) throw new NotFoundError(UpdateTripDetailErrors.TRIP_DETAIL_NEVER_EXIST);
+        // tổng số địa điểm
+        const totalPlaces = listPlaces.length;
+        // update totalPlaces trong trip detail
+        const update = await TripRepository.updateTotalPlaces(tripDetailId, totalPlaces);
+        if (!update) throw new NotImplementError(UpdateTripDetailErrors.UPDATE_TOTAL_PLACES_FAILURE);
+        //lọc id ra 
+        const listID = listPlaces.map((liID) => {
+            const { id } = liID;
+            return id;
+        });
+        await Promise.all(listID);
+        //tạo mảng chứa từng cặp id ứng với spotId trong bảng spot
+        const liSpot = [];
+        for (let i = 0; i < listID.length - 1; i += 1) {
+            liSpot.push([listID[i], listID[i + 1]]);
+        }
+        //lấy thời gian di chuyển từ bảng spot
+        const rs = liSpot.map(async (spotId) => {
+            // console.log(spotId)
+            const spot = await SpotRepository.getSpot(spotId);
+            if (!spot) throw new NotImplementError(UpdateTripDetailErrors.GET_SPOT_FAILURE);
+            const { length } = spot;
+            const { time } = spot;
+            const spotTime = time;
+            return { length, spotTime };
+        });
+        const result = await Promise.all(rs);
+        // console.log(listPlaces);
+        // console.log(result);
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
+const updateListSpot = async (req, res) => {
+    const tripDetailId = req.params.id;
+    const { listSpot } = req.body;
+    try {
+        const tripDetail = await TripRepository.getTripDetail(tripDetailId);
+        if (!tripDetail) throw new NotFoundError(UpdateListSpotErrors.TRIP_DETAIL_NEVER_EXIST);
+        const update = await TripRepository.updateListSpot(tripDetailId, listSpot);
+        if(!update) throw new NotImplementError(UpdateListSpotErrors.UPDATE_FAILURE);
+        const result = await TripRepository.getTripDetail(tripDetailId);
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+}
 export default {
     createTrip,
     getTripPublic,
     getTripUnPublic,
     createTripDetail,
     getTripDetail,
-    shareTrip
+    shareTrip,
+    updateTripDetail,
+    updateListSpot
 };
