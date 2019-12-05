@@ -23,8 +23,10 @@ router.get('/trip/:id', TripController.getTripDetail);
 // PUT
 // Người dùng share lịch trình mình đã tạo
 router.put('/trip/:id', TripController.shareTrip);
-// Update tripDetail
+// Update tripDetail with listPlaces (id, name) and response time (update totalPlaces)
 router.put('/trip/Detail/:id', TripController.updateTripDetail);
+//update tripDetail with listSpot (update listSpot)
+router.put('/trip/DetailSpot/:id', TripController.updateListSpot);
 
 // DELETE
 

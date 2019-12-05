@@ -16,7 +16,8 @@ import {
     GetTripDetailErrors,
     GetTripUnPublicErrors,
     ShareTripErrors,
-    UpdateTripDetailErrors
+    UpdateTripDetailErrors,
+    UpdateListSpotErrors
 } from '../error-codes/trip.error-codes';
 
 const createTrip = async (req, res) => {
@@ -207,7 +208,9 @@ const createTripDetail = async (req, res) => {
         //     const minutes = Time % 60;
         //     const startTime = hours + ':' + minutes;
         //     // console.log(startTime);
+        //     display += 1;
         //     return {
+        //         display,
         //         startTime,
         //         spotId,
         //         length,
@@ -359,15 +362,51 @@ const updateTripDetail = async (req, res) => {
         // tổng số địa điểm
         const totalPlaces = listPlaces.length;
         // update totalPlaces trong trip detail
-        const update = await TripRepository.updateTotalPlaces(tripDetailId);
+        const update = await TripRepository.updateTotalPlaces(tripDetailId, totalPlaces);
         if (!update) throw new NotImplementError(UpdateTripDetailErrors.UPDATE_TOTAL_PLACES_FAILURE);
-
-        return res.onSuccess(totalPlaces);
+        //lọc id ra 
+        const listID = listPlaces.map((liID) => {
+            const { id } = liID;
+            return id;
+        });
+        await Promise.all(listID);
+        //tạo mảng chứa từng cặp id ứng với spotId trong bảng spot
+        const liSpot = [];
+        for (let i = 0; i < listID.length - 1; i += 1) {
+            liSpot.push([listID[i], listID[i + 1]]);
+        }
+        //lấy thời gian di chuyển từ bảng spot
+        const rs = liSpot.map(async (spotId) => {
+            // console.log(spotId)
+            const spot = await SpotRepository.getSpot(spotId);
+            if (!spot) throw new NotImplementError(UpdateTripDetailErrors.GET_SPOT_FAILURE);
+            const { length } = spot;
+            const { time } = spot;
+            const spotTime = time;
+            return { length, spotTime };
+        });
+        const result = await Promise.all(rs);
+        // console.log(listPlaces);
+        // console.log(result);
+        return res.onSuccess(result);
     } catch (error) {
         return res.onError(error);
     }
 };
-
+const updateListSpot = async (req, res) => {
+    const tripDetailId = req.params.id;
+    const { listSpot } = req.body;
+    try {
+        const tripDetail = await TripRepository.getTripDetail(tripDetailId);
+        if (!tripDetail) throw new NotFoundError(UpdateListSpotErrors.TRIP_DETAIL_NEVER_EXIST);
+        const update = await TripRepository.updateListSpot(tripDetailId, listSpot);
+        if(!update) throw new NotImplementError(UpdateListSpotErrors.UPDATE_FAILURE);
+        const result = await TripRepository.getTripDetail(tripDetailId);
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+}
 export default {
     createTrip,
     getTripPublic,
@@ -375,5 +414,6 @@ export default {
     createTripDetail,
     getTripDetail,
     shareTrip,
-    updateTripDetail
+    updateTripDetail,
+    updateListSpot
 };

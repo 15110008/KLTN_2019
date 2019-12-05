@@ -46,7 +46,24 @@ const getTripDetail = async (tripDetailId) => {
     });
     return result;
 };
-
+//update totalPlaces in trip detail
+const updateTotalPlaces = async (tripDetailId, data) => {
+    const result = await TripDetailSchema.updateOne({
+        _id: tripDetailId,
+        isDeleted: false
+    },
+    { ...data });
+    return result;
+};
+//update listSpot
+const updateListSpot = async (tripDetailId, data) => {
+    result = await TripDetailSchema.updateOne({
+        _id: tripDetailId,
+        isDeleted: false
+    },
+    { ...data });
+    return result;
+};
 export default {
     createTrip,
     getTripById,
@@ -55,5 +72,7 @@ export default {
     shareTrip,
     createTripDetail,
     getTripsDetail,
-    getTripDetail
+    getTripDetail,
+    updateTotalPlaces,
+    updateListSpot
 };
