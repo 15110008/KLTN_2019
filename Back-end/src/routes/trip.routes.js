@@ -25,7 +25,7 @@ router.get('/trip/:id', TripController.getTripDetail);
 router.put('/trip/:id', TripController.shareTrip);
 // Update tripDetail with listPlaces (id, name) and response time (update totalPlaces)
 router.put('/trip/Detail/:id', TripController.updateTripDetail);
-//update tripDetail with listSpot (update listSpot)
+// update tripDetail with listSpot (update listSpot)
 router.put('/trip/DetailSpot/:id', TripController.updateListSpot);
 
 // DELETE

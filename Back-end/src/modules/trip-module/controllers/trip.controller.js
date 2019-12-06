@@ -225,7 +225,7 @@ const createTripDetail = async (req, res) => {
             const hours = Math.floor(Time / 60);
             const minutes = Time % 60;
             const startTime = hours + ':' + minutes;
-            const spot = await SpotRepository.getSpot(liSpot[i]);
+            const spot = SpotRepository.getSpot(liSpot[i]);
             if (!spot) throw new NotFoundError(CreateTripDetailErrors.GET_SPOT_FAIL);
             const spotId = liSpot[i];
             // console.log(spotId);
@@ -354,28 +354,28 @@ const shareTrip = async (req, res) => {
 };
 
 const updateTripDetail = async (req, res) => {
-    const tripDetailId = req.params.id;
+    // const tripDetailId = req.params.id;
     const { listPlaces } = req.body; // chỉ gồm 2 thuộc tính là { id, name };
     try {
-        const tripDetail = await TripRepository.getTripDetail(tripDetailId);
-        if (!tripDetail) throw new NotFoundError(UpdateTripDetailErrors.TRIP_DETAIL_NEVER_EXIST);
-        // tổng số địa điểm
-        const totalPlaces = listPlaces.length;
-        // update totalPlaces trong trip detail
-        const update = await TripRepository.updateTotalPlaces(tripDetailId, totalPlaces);
-        if (!update) throw new NotImplementError(UpdateTripDetailErrors.UPDATE_TOTAL_PLACES_FAILURE);
-        //lọc id ra 
+        // const tripDetail = await TripRepository.getTripDetail(tripDetailId);
+        // if (!tripDetail) throw new NotFoundError(UpdateTripDetailErrors.TRIP_DETAIL_NEVER_EXIST);
+        // // tổng số địa điểm
+        // const totalPlaces = listPlaces.length;
+        // // update totalPlaces trong trip detail
+        // const update = await TripRepository.updateTotalPlaces(tripDetailId, totalPlaces);
+        // if (!update) throw new NotImplementError(UpdateTripDetailErrors.UPDATE_TOTAL_PLACES_FAILURE);
+        // lọc id ra
         const listID = listPlaces.map((liID) => {
             const { id } = liID;
             return id;
         });
         await Promise.all(listID);
-        //tạo mảng chứa từng cặp id ứng với spotId trong bảng spot
+        // tạo mảng chứa từng cặp id ứng với spotId trong bảng spot
         const liSpot = [];
         for (let i = 0; i < listID.length - 1; i += 1) {
             liSpot.push([listID[i], listID[i + 1]]);
         }
-        //lấy thời gian di chuyển từ bảng spot
+        // lấy thời gian di chuyển từ bảng spot
         const rs = liSpot.map(async (spotId) => {
             // console.log(spotId)
             const spot = await SpotRepository.getSpot(spotId);
@@ -400,13 +400,13 @@ const updateListSpot = async (req, res) => {
         const tripDetail = await TripRepository.getTripDetail(tripDetailId);
         if (!tripDetail) throw new NotFoundError(UpdateListSpotErrors.TRIP_DETAIL_NEVER_EXIST);
         const update = await TripRepository.updateListSpot(tripDetailId, listSpot);
-        if(!update) throw new NotImplementError(UpdateListSpotErrors.UPDATE_FAILURE);
+        if (!update) throw new NotImplementError(UpdateListSpotErrors.UPDATE_FAILURE);
         const result = await TripRepository.getTripDetail(tripDetailId);
         return res.onSuccess(result);
     } catch (error) {
         return res.onError(error);
     }
-}
+};
 export default {
     createTrip,
     getTripPublic,

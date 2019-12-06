@@ -46,7 +46,7 @@ const getTripDetail = async (tripDetailId) => {
     });
     return result;
 };
-//update totalPlaces in trip detail
+// update totalPlaces in trip detail
 const updateTotalPlaces = async (tripDetailId, data) => {
     const result = await TripDetailSchema.updateOne({
         _id: tripDetailId,
@@ -55,9 +55,9 @@ const updateTotalPlaces = async (tripDetailId, data) => {
     { ...data });
     return result;
 };
-//update listSpot
+// update listSpot
 const updateListSpot = async (tripDetailId, data) => {
-    result = await TripDetailSchema.updateOne({
+    const result = await TripDetailSchema.updateOne({
         _id: tripDetailId,
         isDeleted: false
     },

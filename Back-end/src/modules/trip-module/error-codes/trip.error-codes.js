@@ -38,5 +38,5 @@ export const UpdateTripDetailErrors = {
 };
 export const UpdateListSpotErrors = {
     TRIP_DETAIL_NEVER_EXIST: 'TRIP_DETAIL_NEVER_EXIST',
-    
-}
+
+};
