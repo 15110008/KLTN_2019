@@ -225,7 +225,7 @@ const createTripDetail = async (req, res) => {
             const hours = Math.floor(Time / 60);
             const minutes = Time % 60;
             const startTime = hours + ':' + minutes;
-            const spot = await SpotRepository.getSpot(liSpot[i]);
+            const spot = SpotRepository.getSpot(liSpot[i]);
             if (!spot) throw new NotFoundError(CreateTripDetailErrors.GET_SPOT_FAIL);
             const spotId = liSpot[i];
             // console.log(spotId);
@@ -354,11 +354,11 @@ const shareTrip = async (req, res) => {
 };
 
 const updateTripDetail = async (req, res) => {
-    const tripDetailId = req.params.id;
+    //const tripDetailId = req.params.id;
     const { listPlaces } = req.body; // chỉ gồm 2 thuộc tính là { id, name };
     try {
-        const tripDetail = await TripRepository.getTripDetail(tripDetailId);
-        if (!tripDetail) throw new NotFoundError(UpdateTripDetailErrors.TRIP_DETAIL_NEVER_EXIST);
+        // const tripDetail = await TripRepository.getTripDetail(tripDetailId);
+        // if (!tripDetail) throw new NotFoundError(UpdateTripDetailErrors.TRIP_DETAIL_NEVER_EXIST);
         // // tổng số địa điểm
         // const totalPlaces = listPlaces.length;
         // // update totalPlaces trong trip detail

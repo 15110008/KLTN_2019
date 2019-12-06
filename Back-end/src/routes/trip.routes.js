@@ -27,7 +27,7 @@ router.put('/trip/:id', TripController.shareTrip);
 // update tripDetail with listSpot (update listSpot)
 router.put('/trip/DetailSpot/:id', TripController.updateListSpot);
 // get spot
-router.put('/trip/Detail/:id', TripController.updateTripDetail);
+router.post('/trip/Detail', TripController.updateTripDetail);
 
 // DELETE
 
