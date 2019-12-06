@@ -198,33 +198,86 @@ export default class Place extends Component {
   onSaveEdit() {
     const data = this.formEditRef.formRef.getFieldsValue()
     const token = localStorage.getItem('jwt')
+    const paramFile = {
+      headers: {
+        jwt: token,
+        'Content-Type': 'multipart/form-data'
+      },
+    }
     const params = {
       headers: { jwt: token },
     }
-    this.formEditRef.formRef.validateFields(err => {
+    var formData = new FormData();
+    const file = data.images.fileList
+    file && file.map((x, index) => {
+      if (x.originFileObj) {
+        formData.append('images', x.originFileObj)
+      } else {
+        formData.append('images', x)
+      }
+    })
+    formData.append('placeId', this.state.id)
+    this.formEditRef.formRef.validateFields(async (err) => {
       if (!err) {
-        Axios.put('http://localhost:3000/v1/place/' + this.state.id, data, params)
-          .then((res) => {
+        if (file) {
+          await Axios.post('http://localhost:3000/v1/place/update-images', formData, paramFile).then(async (res) => {
             if (res.data.success) {
-              notification['success']({
-                message: 'Lưu thành công',
-                onClick: () => {
-                  console.log('Notification Clicked!');
-                },
-              });
-              this.loadData()
-              this.setState({
-                formEdit: false
-              })
-            } else {
-              notification['error']({
-                message: res.data.message,
-                onClick: () => {
-                  console.log('Notification Clicked!');
-                },
-              });
+              await Axios.put('http://localhost:3000/v1/place/' + this.state.id, data, params)
+                .then((res) => {
+                  if (res.data.success) {
+                    notification['success']({
+                      message: 'Lưu thành công',
+                      onClick: () => {
+                        console.log('Notification Clicked!');
+                      },
+                    });
+                    this.loadData()
+                    this.setState({
+                      formEdit: false
+                    })
+                  } else {
+                    notification['error']({
+                      message: res.data.message,
+                      onClick: () => {
+                        console.log('Notification Clicked!');
+                      },
+                    });
+                  }
+                })
             }
+          }).catch((err) => {
+            notification['error']({
+              message: "Lỗi! vui lòng thử lại",
+              onClick: () => {
+                console.log('Notification Clicked!');
+              },
+            });
           })
+        }
+        else {
+          await Axios.put('http://localhost:3000/v1/place/' + this.state.id, data, params)
+            .then((res) => {
+              if (res.data.success) {
+                notification['success']({
+                  message: 'Lưu thành công',
+                  onClick: () => {
+                    console.log('Notification Clicked!');
+                  },
+                });
+                this.loadData()
+                this.setState({
+                  formEdit: false
+                })
+              } else {
+                notification['error']({
+                  message: res.data.message,
+                  onClick: () => {
+                    console.log('Notification Clicked!');
+                  },
+                });
+              }
+            })
+        }
       }
     });
   }

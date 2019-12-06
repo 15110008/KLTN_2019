@@ -35,12 +35,6 @@ export default class Destination extends Component {
       dataIndex: 'description',
     },
     {
-      title: 'Hình ảnh',
-      key: 'image',
-      width: 100,
-      dataIndex: 'image',
-    },
-    {
       title: 'Kinh độ',
       key: 'longitude',
       dataIndex: 'longitude',
@@ -94,14 +88,12 @@ export default class Destination extends Component {
             x.image = data[index].images[0]
 
           })
-          console.log("TCL: Destination -> loadData -> listImage", listImage)
           this.setState({
             data: response.data.data,
           })
         } else {
         }
       }).catch(error => {
-        console.log("TCL: destination -> loadData -> error", error)
       });
   }
 
@@ -129,7 +121,6 @@ export default class Destination extends Component {
           });
         }
       }).catch(error => {
-        console.log("TCL: formLogin -> onSubmit -> error", error)
       });
   }
 
@@ -137,81 +128,23 @@ export default class Destination extends Component {
     const token = localStorage.getItem('jwt')
 
     const data = this.formCreateRef.formRef.getFieldsValue()
-    console.log("TCL: destination -> onSaveCreate -> data", data)
     const params = {
       headers: { jwt: token },
     }
     this.formCreateRef.formRef.validateFields(err => {
       if (!err) {
-
-        // Axios.post('http://localhost:3000/v1/destination', data, params)
-        //   .then((res) => {
-        //     if (res.data.success) {
-        //       notification['success']({
-        //         message: 'Tạo mới thành công',
-        //         onClick: () => {
-        //           console.log('Notification Clicked!');
-        //         },
-        //       });
-        //       this.loadData()
-        //       this.setState({
-        //         formCreate: false
-        //       })
-        //     } else {
-        //       notification['error']({
-        //         message: res.data.message,
-        //         onClick: () => {
-        //           console.log('Notification Clicked!');
-        //         },
-        //       });
-        //     }
-        //   })
-      }
-    });
-  }
-
-  onSaveEdit() {
-    const data = this.formEditRef.formRef.getFieldsValue()
-    console.log("TCL: Destination -> onSaveEdit -> data", data)
-    const token = localStorage.getItem('jwt')
-    const params = {
-      headers: {
-        jwt: token,
-        'Content-Type': 'multipart/form-data'
-      },
-
-    }
-    var formData = new FormData();
-    const file = data.images.fileList
-    console.log("TCL: Destination -> onSaveEdit -> file", file)
-    file.map((x, index) => {
-      if (index == file.length - 1) {
-        formData.append('images', x.originFileObj)
-      } else {
-        formData.append('images', x)
-      }
-    })
-    formData.append('destinationId', this.state.id)
-    this.formEditRef.formRef.validateFields(async (err) => {
-      if (!err) {
-        await Axios.post('http://localhost:3000/v1/destination/update-image', formData, params).then((res) => {
-          if (res.data.success) {
-            this.loadData()
-          }
-        }).catch((err) => {
-        })
-        await Axios.put('http://localhost:3000/v1/destination/' + this.state.id, data, params)
+        Axios.post('http://localhost:3000/v1/destination', data, params)
           .then((res) => {
             if (res.data.success) {
               notification['success']({
-                message: 'Lưu thành công',
+                message: 'Tạo mới thành công',
                 onClick: () => {
                   console.log('Notification Clicked!');
                 },
               });
               this.loadData()
               this.setState({
-                formEdit: false
+                formCreate: false
               })
             } else {
               notification['error']({
@@ -222,6 +155,93 @@ export default class Destination extends Component {
               });
             }
           })
+      }
+    });
+  }
+
+  onSaveEdit() {
+    const data = this.formEditRef.formRef.getFieldsValue()
+    const token = localStorage.getItem('jwt')
+    const paramFile = {
+      headers: {
+        jwt: token,
+        'Content-Type': 'multipart/form-data'
+      },
+    }
+    const params = {
+      headers: { jwt: token },
+    }
+    var formData = new FormData();
+    const file = data.images.fileList
+    file && file.map((x, index) => {
+      if (x.originFileObj) {
+        formData.append('images', x.originFileObj)
+      } else {
+        formData.append('images', x)
+      }
+    })
+    formData.append('destinationId', this.state.id)
+    this.formEditRef.formRef.validateFields(async (err) => {
+      if (!err) {
+        if (file) {
+          await Axios.post('http://localhost:3000/v1/destination/update-images', formData, paramFile).then(async (res) => {
+            if (res.data.success) {
+              await Axios.put('http://localhost:3000/v1/destination/' + this.state.id, data, params)
+                .then((res) => {
+                  if (res.data.success) {
+                    notification['success']({
+                      message: 'Lưu thành công',
+                      onClick: () => {
+                        console.log('Notification Clicked!');
+                      },
+                    });
+                    this.loadData()
+                    this.setState({
+                      formEdit: false
+                    })
+                  } else {
+                    notification['error']({
+                      message: res.data.message,
+                      onClick: () => {
+                        console.log('Notification Clicked!');
+                      },
+                    });
+                  }
+                })
+            }
+          }).catch((err) => {
+            notification['error']({
+              message: "Lỗi! Vui lòng thử lại",
+              onClick: () => {
+                console.log('Notification Clicked!');
+              },
+            });
+          })
+        } else {
+          await Axios.put('http://localhost:3000/v1/destination/' + this.state.id, data, params)
+            .then((res) => {
+              if (res.data.success) {
+                notification['success']({
+                  message: 'Lưu thành công',
+                  onClick: () => {
+                    console.log('Notification Clicked!');
+                  },
+                });
+                this.loadData()
+                this.setState({
+                  formEdit: false
+                })
+              } else {
+                notification['error']({
+                  message: res.data.message,
+                  onClick: () => {
+                    console.log('Notification Clicked!');
+                  },
+                });
+              }
+            })
+        }
+
       }
     });
   }

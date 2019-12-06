@@ -71,7 +71,7 @@ export default class FormEdit extends Component {
                             listImage.push({
                                 thumbUrl: 'http://localhost:3000/' + x,
                                 status: 'done',
-                                name: x.split('\\')[1],
+                                name: x.split('\\')[1] ? x.split('\\')[1] : x.split('/')[1],
                                 uid: 'image_' + index
                             })
                         })
@@ -116,6 +116,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                 fileList: this.props.fileList,
                 previewVisible: false,
                 previewImage: '',
+                removed: false
             };
         }
 
@@ -141,14 +142,16 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
 
         componentWillReceiveProps(nextProps) {
             const data = nextProps.form.getFieldsValue()
-            if (_.isEmpty(data.images)) {
-                this.setState({
-                    fileList: []
-                })
-            } else {
-                this.setState({
-                    fileList: nextProps.fileList
-                })
+            if (!this.state.removed) {
+                if (_.isEmpty(data.images)) {
+                    this.setState({
+                        fileList: []
+                    })
+                } else {
+                    this.setState({
+                        fileList: nextProps.fileList
+                    })
+                }
             }
         }
 
@@ -166,6 +169,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                         newFileList.splice(index, 1);
                         return {
                             fileList: newFileList,
+                            removed: true
                         };
                     });
                 },

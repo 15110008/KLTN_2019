@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
-import Header from './Header'
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
+import Loading from './base/Loading'
 import Body from './Body'
 import Footer from './Footer'
-import Loading from './base/Loading'
+import Header from './Header'
+import CreateTrip from './trip/CreateTrip'
+import TripDetail from './trip/TripDetail'
+import Destination from './detination/Destination'
 
 export default class Main extends Component {
     constructor(props) {
@@ -31,7 +35,26 @@ export default class Main extends Component {
             return (
                 <div>
                     <Header onCloseLoading={() => this.onCloseLoading()} onOpenLoading={() => this.onOpenLoading()} />
-                    <Body />
+                    <Router>
+                        <div>
+                            <Switch>
+                                <Route exact path="/">
+                                    <Body />
+                                </Route>
+                                <Route path="/trip">
+                                    <CreateTrip />
+                                </Route>
+                                {/* <Route exact path="/trip-detail">
+                                    <TripDetail />
+                                </Route> */}
+                                <Route path="/trip-detail/:id"><TripDetail /></Route>
+                                <Route path="/destination/:id">< Destination /></Route>
+                                {/* <Route path="/dashboard">
+                                    <Dashboard />
+                                </Route> */}
+                            </Switch>
+                        </div>
+                    </Router >
                     <Footer />
                 </div>
             )

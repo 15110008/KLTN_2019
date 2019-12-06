@@ -176,7 +176,7 @@ export default class formLogin extends Component {
         }
         return (
             <div>
-                <div className='row'>
+                <div className='row  form-custom-input'>
                     <div className="col-md-6">
                         <h2> Đăng nhập</h2>
                         <span>Đăng nhập để theo dõi đơn hàng, lưu
