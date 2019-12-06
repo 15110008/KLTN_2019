@@ -19,14 +19,15 @@ router.get('/trip/Public', TripController.getTripPublic);
 router.get('/trip/UnPublic', TripController.getTripUnPublic);
 // Xem thông tin chi tiết của trip (gồm trip và tripDetail)
 router.get('/trip/:id', TripController.getTripDetail);
-// get spot
-router.post('/trip/Detail/:id', TripController.updateTripDetail);
+
 
 // PUT
 // Người dùng share lịch trình mình đã tạo
 router.put('/trip/:id', TripController.shareTrip);
 // update tripDetail with listSpot (update listSpot)
 router.put('/trip/DetailSpot/:id', TripController.updateListSpot);
+// get spot
+router.put('/trip/Detail/:id', TripController.updateTripDetail);
 
 // DELETE
 
