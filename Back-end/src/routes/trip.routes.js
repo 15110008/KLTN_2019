@@ -20,7 +20,7 @@ router.get('/trip/UnPublic', TripController.getTripUnPublic);
 // Xem thông tin chi tiết của trip (gồm trip và tripDetail)
 router.get('/trip/:id', TripController.getTripDetail);
 // get spot
-router.get('/trip/Detail', TripController.updateTripDetail);
+router.get('/trip/Detail/:id', TripController.updateTripDetail);
 
 // PUT
 // Người dùng share lịch trình mình đã tạo
