@@ -156,7 +156,7 @@ const createTripDetail = async (req, res) => {
             return id;
         });
         await Promise.all(listID);
-        console.log(listID);
+        //console.log(listID);
         const listIm = listID.map(async (Id) => {
             const im = await PlaceRepository.getPlace(Id);
             const { id } = im;
@@ -166,7 +166,7 @@ const createTripDetail = async (req, res) => {
             return { id, name, image };
         });
         const listPlaces = await Promise.all(listIm);
-        console.log(listPlaces);
+        //console.log(listPlaces);
         // console.log(listID);
         // danh sách các cặp địa điểm trong ngày
         const liSpot = [];
@@ -354,11 +354,11 @@ const shareTrip = async (req, res) => {
 };
 
 const updateTripDetail = async (req, res) => {
-    const tripDetailId = req.params.id;
+    // const tripDetailId = req.params.id;
     const { listPlaces } = req.body; // chỉ gồm 2 thuộc tính là { id, name };
     try {
-        const tripDetail = await TripRepository.getTripDetail(tripDetailId);
-        if (!tripDetail) throw new NotFoundError(UpdateTripDetailErrors.TRIP_DETAIL_NEVER_EXIST);
+        // const tripDetail = await TripRepository.getTripDetail(tripDetailId);
+        // if (!tripDetail) throw new NotFoundError(UpdateTripDetailErrors.TRIP_DETAIL_NEVER_EXIST);
         // // tổng số địa điểm
         // const totalPlaces = listPlaces.length;
         // // update totalPlaces trong trip detail
@@ -394,14 +394,38 @@ const updateTripDetail = async (req, res) => {
     }
 };
 const updateListSpot = async (req, res) => {
-    const tripDetailId = req.params.id;
-    const { listSpot } = req.body;
+    const tripID = req.params.id;
+    const { meta } = req.body;
     try {
-        const tripDetail = await TripRepository.getTripDetail(tripDetailId);
-        if (!tripDetail) throw new NotFoundError(UpdateListSpotErrors.TRIP_DETAIL_NEVER_EXIST);
-        const update = await TripRepository.updateListSpot(tripDetailId, listSpot);
-        if (!update) throw new NotImplementError(UpdateListSpotErrors.UPDATE_FAILURE);
-        const result = await TripRepository.getTripDetail(tripDetailId);
+        const trip = await TripRepository.getTripById(tripID);
+        if (!trip) throw new NotFoundError(UpdateListSpotErrors.TRIP_NEVER_EXIST);
+        const meta1 = meta.map(async (array) => {
+            const { _id } = array;
+            const {
+                date,
+                day,
+                totalPlaces,
+                listPlaces,
+                listSpot,
+                tripId,
+                destinationId
+            } = array;
+            console.log(_id);
+            const data = {
+                date,
+                day,
+                totalPlaces,
+                listPlaces,
+                listSpot,
+                tripId,
+                destinationId
+            };
+            console.log(data);
+            const update = await TripRepository.updateListSpot(_id, data);
+            return update;
+        });
+        await Promise.all(meta1);
+        const result = await TripRepository.getTripsDetail(tripID);
         return res.onSuccess(result);
     } catch (error) {
         return res.onError(error);
