@@ -1,10 +1,9 @@
+import { Card, Tooltip, Form, Input } from 'antd';
+import _ from 'lodash';
 import React from 'react';
-import PropTypes from 'prop-types';
-import { findDOMNode } from 'react-dom';
-import { Card } from 'antd'
-import { Draggable, Droppable } from 'react-beautiful-dnd'
-import styled from 'styled-components'
-import './style.scss'
+import { Draggable } from 'react-beautiful-dnd';
+import styled from 'styled-components';
+import './style.scss';
 
 const TaskList = styled.div`
   padding: 8px;
@@ -25,70 +24,26 @@ const Container = styled.div`
                 : 'white'};
 `
 
+const format = 'HH:mm';
 export default class CardSwap extends React.Component {
-    // render() {
-    //     const {
-    //         text,
-    //         isDragging,
-    //         connectDragSource,
-    //         connectDropTarget,
-    //         isBottomItem = false,
-    //         stayTime,
-    //         spotTime,
-    //         length
-    //     } = this.props;
-    //     const opacity = isDragging ? 0 : 1;
-    //     let hoursStay = null
-    //     let hoursSpot = null
-    //     let minutesStay = null
-    //     let minutesSpot = null
-    //     if (stayTime) {
-    //         hoursStay = Math.floor(stayTime / 60);
-    //         minutesStay = stayTime % 60;
-    //     }
-    //     if (spotTime) {
-    //         hoursSpot = Math.floor(spotTime / 60);
-    //         minutesSpot = spotTime % 60;
-    //     }
-    //     return (
-    //         connectDragSource &&
-    //         connectDropTarget &&
-    //         connectDragSource(
-    //             connectDropTarget(
-    //                 <div className='card-swap'>
-    //                     <Card
-    //                         style={{ height: 100 }}
-    //                         extra={
-    //                             <div>
-    //                                 <div style={{ marginTop: -20, fontSize: 19, fontWeight: 'bold', paddingBottom: 5 }}>{text}</div>
-    //                                 {!isBottomItem ? <span style={{ fontSize: 14, paddingTop: 10 }}>Thời gian lưu trú:
-    //                         <span className='spot-time'>{hoursStay != 0 && (hoursStay + ' giờ ')}{minutesStay + " phút"}</span>
-    //                                 </span> : ''}
-    //                             </div>}
-    //                         hoverable title={<img alt="example"
-    //                             style={{ width: 100, height: 100 }} src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />} >
 
-    //                     </Card>
-    //                     {!isBottomItem ? <div className='to-next-item'>
-    //                         <div className='travel-info'>
-    //                             <img src={"../../images/car.svg"} />
-    //                             <div>{length} km | {hoursSpot != 0 && (hoursSpot + ' giờ ')}{minutesSpot + " phút"}</div>
-    //                         </div>
-    //                     </div> : ''}
-    //                 </div>
-    //             ),
-    //         )
-    //     );
-    // }
+    onChange() {
+
+    }
 
     render() {
         const {
             text,
-
             isBottomItem = false,
             stayTime,
             spotTime,
-            length
+            length,
+            startTime,
+            image,
+            indexParent,
+            formItemLayout,
+            getFieldDecorator,
+            dataRemain
         } = this.props;
         let hoursStay = null
         let hoursSpot = null
@@ -102,57 +57,106 @@ export default class CardSwap extends React.Component {
             hoursSpot = Math.floor(spotTime / 60);
             minutesSpot = spotTime % 60;
         }
-        return (
-            <Droppable droppableId={this.props.id} type="TASK">
-                {(providedParent, snapshotParent) => (
-                    <TaskList
-                        ref={providedParent.innerRef}
-                        {...providedParent.droppableProps}
-                        isDraggingOver={snapshotParent.isDraggingOver}
-                    >
-                        {/* {this.props.tasks.map((task, index) => (
-                            <Task key={task.id} task={task} index={index} />
-                        ))}
-                        {provided.placeholder} */}
-                        <Draggable
-                            draggableId={this.props.id}
-                            index={this.props.index}
+
+        if (!dataRemain) {
+            return (
+                <Draggable
+                    draggableId={this.props.id}
+                    index={this.props.index}
+                >
+                    {(provided, snapshot) => (
+                        <Container
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            ref={provided.innerRef}
+                            isDragging={snapshot.isDragging}
                         >
-                            {(provided, snapshot) => (
-                                <Container
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                    ref={provided.innerRef}
-                                    isDragging={snapshot.isDragging}
-                                >
-                                    <div className='card-swap'>
-                                        <Card
-                                            style={{ height: 100 }}
-                                            extra={
-                                                <div>
-                                                    <div style={{ marginTop: -20, fontSize: 19, fontWeight: 'bold', paddingBottom: 5 }}>{text}</div>
-                                                    {!isBottomItem ? <span style={{ fontSize: 14, paddingTop: 10 }}>Thời gian lưu trú:
-                            <span className='spot-time'>{hoursStay != 0 && (hoursStay + ' giờ ')}{minutesStay + " phút"}</span>
-                                                    </span> : ''}
-                                                </div>}
-                                            hoverable title={<img alt="example"
-                                                style={{ width: 100, height: 100 }} src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />} >
+                            <div className='card-swap'>
+                                <Card
+                                    ref={c => this.cardRef = c}
+                                    style={{ height: 105, borderRadius: '5px', boxShadow: '0 3px 6px 0 rgba(0,0,0,0.16)' }}>
+                                    <span>
+                                        <img alt="picture"
+                                            style={{ width: 100, height: 105 }} src={image ? ("http://localhost:3000/" + image) : ''} />
+                                    </span>
 
-                                        </Card>
-                                        {!isBottomItem ? <div className='to-next-item'>
-                                            <div className='travel-info'>
-                                                <img src={"../../images/car.svg"} />
-                                                <div>{length} km | {hoursSpot != 0 && (hoursSpot + ' giờ ')}{minutesSpot + " phút"}</div>
+                                    <span >
+                                        <Tooltip placement="top" title={text}>
+                                            <div style={{ marginTop: -10, fontSize: 19, fontWeight: 'bold', paddingBottom: 5, position: 'absolute', top: 20, left: 115, }}>
+                                                {_.truncate(text, {
+                                                    'length': 20,
+                                                    'separator': " "
+                                                })}
                                             </div>
-                                        </div> : ''}
+                                        </Tooltip>
+                                        <span className='spot-time' style={{ paddingLeft: 'unset', position: 'absolute', top: 0, right: 5, fontSize: 12 }}>{startTime}</span>
+                                        {!isBottomItem ?
+                                            <div className='spot-time' style={{
+                                                position: 'absolute',
+                                                top: 50,
+                                                right: -88
+                                            }}>
+                                                <Form.Item {...formItemLayout} label='Thời gian lưu trú'>
+                                                    {getFieldDecorator(indexParent + '_' + this.props.index)(<Input readOnly={this.props.readOnly} />)}
+                                                </Form.Item>
+                                                <div style={{
+                                                    position: 'absolute',
+                                                    top: '8px',
+                                                    right: '100px'
+                                                }}>phút</div>
+                                            </div> : ''}
+                                    </span>
+                                </Card>
+                                {!isBottomItem ? <div className='to-next-item'>
+                                    <div className='travel-info'>
+                                        <img src={"../../images/car.svg"} />
+                                        <div>{length} km | {hoursSpot != 0 && (hoursSpot + ' giờ ')}{minutesSpot + " phút"}</div>
                                     </div>
-                                </Container>
-                            )}
-                        </Draggable>
-                    </TaskList>
-                )}
-
-            </Droppable>
-        )
+                                </div> : ''}
+                            </div>
+                        </Container>
+                    )}
+                </Draggable>
+            )
+        } else {
+            return (
+                <Draggable
+                    draggableId={this.props.id}
+                    index={this.props.index}
+                >
+                    {(provided, snapshot) => (
+                        <Container
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            ref={provided.innerRef}
+                            isDragging={snapshot.isDragging}
+                        >
+                            <div className='card-swap'>
+                                <Card
+                                    ref={c => this.cardRef = c}
+                                    style={{ height: 105, borderRadius: '5px', boxShadow: '0 3px 6px 0 rgba(0,0,0,0.16)', marginBottom: 15 }}>
+                                    <span>
+                                        <img alt="picture"
+                                            style={{ width: 100, height: 105 }} src={image ? ("http://localhost:3000/" + image) : ''} />
+                                    </span>
+                                    <span >
+                                        <Tooltip placement="top" title={text}>
+                                            <div style={{ marginTop: -10, fontSize: 19, fontWeight: 'bold', paddingBottom: 5, position: 'absolute', top: 20, left: 115, }}>
+                                                {_.truncate(text, {
+                                                    'length': 20,
+                                                    'separator': " "
+                                                })}
+                                            </div>
+                                        </Tooltip>
+                                    </span>
+                                </Card>
+                            </div>
+                        </Container>
+                    )}
+                </Draggable>
+            )
+        }
     }
 }
+
+

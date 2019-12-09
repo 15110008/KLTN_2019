@@ -1,12 +1,9 @@
-import React, { Component } from 'react'
-import { Form, Input, Icon, Button, Select, DatePicker, notification } from 'antd';
-import axios from 'axios'
-import './style.scss'
-import _ from 'lodash'
+import { Button, DatePicker, Form, notification, Select } from 'antd';
+import axios from 'axios';
+import _ from 'lodash';
 import moment from 'moment';
-import { resolveSoa } from 'dns';
-import TripDetail from './TripDetail'
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom"
+import React, { Component } from 'react';
+import './style.scss';
 
 
 const { Option } = Select;

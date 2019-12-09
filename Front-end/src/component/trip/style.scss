@@ -10,6 +10,10 @@
         padding-left: 0px;
     }
 
+    .ant-card-body {
+        padding: unset !important;
+    }
+
     .ant-card-head-title {
         padding: unset;
         flex: unset;
@@ -27,29 +31,8 @@
         padding-left: 5px;
     }
 
-    .to-next-item {
-        border-left: solid 2.5px #3897f1;
-        height: 70px;
-        margin-left: 10px;
-        position: relative;
-    }
-
-    .travel-info {
-        top: 0;
-        bottom: 0;
-        margin: auto;
-        height: 20px;
-        position: absolute;
-        margin-left: -10px;
-        display: flex;
-        align-items: center;
-        background-color: white;
-
-        img {
-            width: 17px;
-            height: 12px;
-            margin-right: 5px;
-        }
+    .ant-form-item {
+        margin-bottom: unset;
     }
 }
 
@@ -59,4 +42,33 @@
     padding: 8px;
     margin-bottom: 8px;
     transition: background-color 0.2s ease;
+}
+
+.to-next-item {
+    border-left: solid 2.5px #3897f1;
+    height: 70px;
+    margin-left: 10px;
+    position: relative;
+}
+
+.travel-info {
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    height: 20px;
+    position: absolute;
+    margin-left: -10px;
+    display: flex;
+    align-items: center;
+    background-color: white;
+
+    img {
+        width: 17px;
+        height: 12px;
+        margin-right: 5px;
+    }
+}
+
+.ant-time-picker-input {
+    height: 25px;
 }
