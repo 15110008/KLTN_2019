@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import CardSwap from './CardSwap'
-import update from 'immutability-helper'
-import HTML5Backend from "react-dnd-html5-backend";
-import { DndProvider } from "react-dnd";
+import CardSwap from './CardSwap_v2'
 import axios from 'axios';
 import { Tabs, Card } from 'antd';
+import { DragDropContext } from 'react-beautiful-dnd'
+
 
 const { TabPane } = Tabs;
 
@@ -17,11 +16,26 @@ export default class Trip extends Component {
         this.id = this.props.match.params && this.props.match.params.id
     }
 
-    moveCard = (dragIndex, hoverIndex) => {
-        console.log("TCL: Trip -> moveCard -> hoverIndex", hoverIndex)
+    onDragEnd = result => {
+        const { destination, source, draggableId, dragIndex, dropIndex } = result
+        console.log("TCL: Trip -> source", source)
+        console.log("TCL: Trip -> draggableId", draggableId)
+        console.log("TCL: Trip -> destination", destination)
+
+        if (!destination) {
+            return
+        }
+
+        if (
+            destination.droppableId === source.droppableId &&
+            destination.index === source.index
+        ) {
+            return
+        }
+
         const { data, allTrip } = this.state
-        const newDragIndex = dragIndex.split('_')
-        const newHoverIndex = hoverIndex.split('_')
+        const newDragIndex = source.index.split('_')
+        const newHoverIndex = destination.index.split('_')
         const dragIndexParent = newDragIndex[0]
         const dragIndexChild = newDragIndex[1]
         const hoverIndexParent = newHoverIndex[0]
@@ -29,6 +43,7 @@ export default class Trip extends Component {
         // const dragCard = allTrip[dragIndex]
 
         const dragCard = data[dragIndexParent].listPlaces[dragIndexChild]
+        console.log("TCL: Trip -> dragCard", dragCard)
 
         data[dragIndexParent].listPlaces.splice(dragIndexChild, 1)
         data[hoverIndexParent].listPlaces.splice(hoverIndexChild, 0, dragCard)
@@ -37,55 +52,11 @@ export default class Trip extends Component {
             data: data
         })
 
-        let listPlaces = []
-        const self = data[hoverIndexParent].listPlaces[parseInt(hoverIndexChild)]
-        const prev = data[hoverIndexParent].listPlaces[parseInt(hoverIndexChild) - 1]
-        const next = data[hoverIndexParent].listPlaces[parseInt(hoverIndexChild) + 1]
 
-        if (hoverIndexChild == 0) {
-            listPlaces.push({
-                id: self.id,
-                name: self.name
-            })
-            listPlaces.push({
-                id: next.id,
-                name: next.name
-            })
-        } else if (hoverIndexChild == data[hoverIndexParent].listPlaces.length) {
-            listPlaces.push({
-                id: self.id,
-                name: self.name
-            })
-            listPlaces.push({
-                id: prev.id,
-                name: prev.name
-            })
-        } else {
-            listPlaces.push({
-                id: prev.id,
-                name: prev.name
-            })
-            listPlaces.push({
-                id: self.id,
-                name: self.name
-            })
-            listPlaces.push({
-                id: next.id,
-                name: next.name
-            })
-        }
-        const params = {
-            listPlaces
-        }
-        axios.post('http://localhost:3000/v1/trip/Detail', params)
-            .then((res) => {
-                if (res.data.success) {
+        // Moving from one list to another
 
-                }
-            }).catch((err) => {
-                console.log("TCL: Trip -> moveCard -> err", err)
-            })
     }
+
     componentDidMount() {
         this.loadData(this.id)
     }
@@ -106,6 +77,7 @@ export default class Trip extends Component {
                             })
                         })
                     })
+                    console.log("TCL: Trip -> loadData -> data", data)
                     this.setState({
                         data: data,
                         allTrip: allTrip
@@ -124,10 +96,10 @@ export default class Trip extends Component {
             }}>
                 <div style={{ paddingTop: 100, paddingBottom: 50 }}>
                     <div style={{ padding: `0px 50px` }}>
-                        <DndProvider backend={HTML5Backend}>
+                        <DragDropContext onDragEnd={this.onDragEnd}>
                             <div className='row' >
                                 {data.map((x, dragIndexParent) => {
-                                    return <div className='col-md-4' style={{ paddingTop: 30 }}>
+                                    return <div style={{ paddingTop: 30 }}>
                                         <h3>Ngày {x.day} ({x.date})</h3>
                                         {x.listPlaces.map((place, index) => {
                                             if (index == x.listPlaces.length - 1) {
@@ -138,7 +110,6 @@ export default class Trip extends Component {
                                                     image={place.image}
                                                     isBottomItem={true}
                                                     text={place.name}
-                                                    moveCard={this.moveCard}
                                                 />
                                             } else {
                                                 return <CardSwap
@@ -150,14 +121,13 @@ export default class Trip extends Component {
                                                     text={place.name}
                                                     length={x.listSpot[index] && x.listSpot[index].length}
                                                     spotTime={x.listSpot[index] && x.listSpot[index].spotTime}
-                                                    moveCard={this.moveCard}
                                                 />
                                             }
                                         })}
                                     </div>
                                 })}
                             </div>
-                        </DndProvider>
+                        </DragDropContext>
                     </div>
                 </div>
             </div>
