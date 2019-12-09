@@ -17,7 +17,8 @@ import {
     InsertImageErrors,
     UpdateImageErrors,
     UpdateSingleImageErrors,
-    InsertMultiImageErrors
+    InsertMultiImageErrors,
+    GetPlacesOfDesErrors
 } from '../error-codes/place.error-codes';
 
 const create = async (req, res) => {
@@ -119,6 +120,7 @@ const getPlaces = async (req, res) => {
             const placeInfo = {};
             placeInfo._id = place._id;
             placeInfo.name = place.name;
+            placeInfo.rate = place.rate;
             placeInfo.category = place.category;
             placeInfo.location = place.location;
             placeInfo.phone = place.phone;
@@ -146,6 +148,7 @@ const getPlace = async (req, res) => {
         return res.onSuccess({
             _id: place._id,
             name: place.name,
+            rate: place.rate,
             category: place.category,
             location: place.location,
             phone: place.phone,
@@ -331,6 +334,33 @@ const insertMulti = async (req, res) => {
         return res.onError(error);
     }
 };
+const getPlacesOfDes = async (req, res) => {
+    const destinationId = req.params.id;
+    try {
+        const places = await PlaceRepository.getPlacesOfDes(destinationId);
+        if (!places) throw new NotFoundError(GetPlacesOfDesErrors.GET_FAILURE);
+        const result = places.map((place) => {
+            const placeInfo = {};
+            placeInfo._id = place._id;
+            placeInfo.name = place.name;
+            placeInfo.rate = place.rate;
+            placeInfo.category = place.category;
+            placeInfo.location = place.location;
+            placeInfo.phone = place.phone;
+            placeInfo.description = place.description;
+            placeInfo.price = place.price;
+            placeInfo.images = place.images;
+            placeInfo.longitude = place.longitude;
+            placeInfo.latitude = place.latitude;
+            placeInfo.destinationId = place.destinationId;
+            return placeInfo;
+        });
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
+
 export default {
     create,
     createRaCom,
@@ -342,5 +372,6 @@ export default {
     insertImage,
     updateImage,
     updateSingle,
-    insertMulti
+    insertMulti,
+    getPlacesOfDes
 };

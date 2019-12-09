@@ -51,6 +51,8 @@ router.get('/place', PlaceController.getPlaces);
 router.get('/place/:id', PlaceValidate.getPlaceInput, PlaceController.getPlace);
 // get rating and comment of place
 router.get('/place/comment/:id', PlaceValidate.getRateCommentInput, PlaceController.getComment);
+// get places of destination
+router.get('/place/destination/:id', PlaceController.getPlacesOfDes);
 
 // PUT
 router.put('/place/:id', PlaceValidate.updatePlaceInput, PlaceValidate.reduceInput, PlaceController.updatePlace);

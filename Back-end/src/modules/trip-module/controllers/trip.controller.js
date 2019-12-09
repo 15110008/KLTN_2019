@@ -156,7 +156,7 @@ const createTripDetail = async (req, res) => {
             return id;
         });
         await Promise.all(listID);
-        //console.log(listID);
+        // console.log(listID);
         const listIm = listID.map(async (Id) => {
             const im = await PlaceRepository.getPlace(Id);
             const { id } = im;
@@ -166,7 +166,7 @@ const createTripDetail = async (req, res) => {
             return { id, name, image };
         });
         const listPlaces = await Promise.all(listIm);
-        //console.log(listPlaces);
+        // console.log(listPlaces);
         // console.log(listID);
         // danh sách các cặp địa điểm trong ngày
         const liSpot = [];

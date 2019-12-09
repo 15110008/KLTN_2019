@@ -152,6 +152,13 @@ const getListWithHobbies = async (destinationId, hobbies) => {
     });
     return result;
 };
+const getPlacesOfDes = async (destinationId) => {
+    const result = await PlaceSchema.find({
+        isDeleted: false,
+        destinationId
+    });
+    return result;
+};
 export default {
     isExistPlace,
     create,
@@ -172,4 +179,5 @@ export default {
     updateSingle,
     insertMulti,
     getListWithHobbies,
+    getPlacesOfDes
 };
