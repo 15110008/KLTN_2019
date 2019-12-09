@@ -53,6 +53,10 @@ router.get('/place/:id', PlaceValidate.getPlaceInput, PlaceController.getPlace);
 router.get('/place/comment/:id', PlaceValidate.getRateCommentInput, PlaceController.getComment);
 // get places of destination
 router.get('/place/destination/:id', PlaceController.getPlacesOfDes);
+// get top places "tham quan"
+router.get('/place/thamquan/:id', PlaceController.getPlaces3);
+// get top places "ăn uống"
+router.get('/place/anuong/:id', PlaceController.getPlaces2);
 
 // PUT
 router.put('/place/:id', PlaceValidate.updatePlaceInput, PlaceValidate.reduceInput, PlaceController.updatePlace);

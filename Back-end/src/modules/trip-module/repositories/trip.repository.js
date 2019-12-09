@@ -26,6 +26,17 @@ const shareTrip = async (tripId) => {
     { public: true });
     return result;
 };
+const getAll = async () => {
+    const result = await TripSchema.find({ isDeleted: false });
+    return result;
+};
+// delete trip
+const deleteOne = async (tripId) => {
+    const result = await TripSchema.deleteOne({
+        _id: tripId,
+    });
+    return result;
+};
 
 
 // TripDetail
@@ -64,6 +75,19 @@ const updateListSpot = async (tripDetailId, data) => {
     { ...data });
     return result;
 };
+// delete trip detail
+const deleteDetail = async (tripId) => {
+    const result = await TripDetailSchema.deleteMany({
+        tripId
+    });
+    return result;
+};
+// get all trip detail, for check, not use
+const getAllTripDetail = async () => {
+    const result = await TripDetailSchema.find({ isDeleted: false });
+    return result;
+};
+
 export default {
     createTrip,
     getTripById,
@@ -74,5 +98,9 @@ export default {
     getTripsDetail,
     getTripDetail,
     updateTotalPlaces,
-    updateListSpot
+    updateListSpot,
+    getAll,
+    deleteOne,
+    deleteDetail,
+    getAllTripDetail
 };

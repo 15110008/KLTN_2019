@@ -18,7 +18,9 @@ import {
     UpdateImageErrors,
     UpdateSingleImageErrors,
     InsertMultiImageErrors,
-    GetPlacesOfDesErrors
+    GetPlacesOfDesErrors,
+    GetPlaces3Errors,
+    GetPlaces2Errors
 } from '../error-codes/place.error-codes';
 
 const create = async (req, res) => {
@@ -360,7 +362,58 @@ const getPlacesOfDes = async (req, res) => {
         return res.onError(error);
     }
 };
-
+const getPlaces3 = async (req, res) => {
+    const destinationId = req.params.id;
+    try {
+        const places3 = await PlaceRepository.getPlaces3(destinationId);
+        if (!places3) throw new NotFoundError(GetPlaces3Errors.GET_FAIL);
+        const result = places3.map((place) => {
+            const placeInfo = {};
+            placeInfo._id = place._id;
+            placeInfo.name = place.name;
+            placeInfo.rate = place.rate;
+            placeInfo.category = place.category;
+            placeInfo.location = place.location;
+            placeInfo.phone = place.phone;
+            placeInfo.description = place.description;
+            placeInfo.price = place.price;
+            placeInfo.images = place.images;
+            placeInfo.longitude = place.longitude;
+            placeInfo.latitude = place.latitude;
+            placeInfo.destinationId = place.destinationId;
+            return placeInfo;
+        });
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
+const getPlaces2 = async (req, res) => {
+    const destinationId = req.params.id;
+    try {
+        const places2 = await PlaceRepository.getPlaces2(destinationId);
+        if (!places2) throw new NotFoundError(GetPlaces2Errors.GET_FAIL);
+        const result = places2.map((place) => {
+            const placeInfo = {};
+            placeInfo._id = place._id;
+            placeInfo.name = place.name;
+            placeInfo.rate = place.rate;
+            placeInfo.category = place.category;
+            placeInfo.location = place.location;
+            placeInfo.phone = place.phone;
+            placeInfo.description = place.description;
+            placeInfo.price = place.price;
+            placeInfo.images = place.images;
+            placeInfo.longitude = place.longitude;
+            placeInfo.latitude = place.latitude;
+            placeInfo.destinationId = place.destinationId;
+            return placeInfo;
+        });
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
 export default {
     create,
     createRaCom,
@@ -373,5 +426,7 @@ export default {
     updateImage,
     updateSingle,
     insertMulti,
-    getPlacesOfDes
+    getPlacesOfDes,
+    getPlaces3,
+    getPlaces2
 };

@@ -17,7 +17,8 @@ import {
     GetTripUnPublicErrors,
     ShareTripErrors,
     UpdateTripDetailErrors,
-    UpdateListSpotErrors
+    UpdateListSpotErrors,
+    DeleteTripErrors
 } from '../error-codes/trip.error-codes';
 
 const createTrip = async (req, res) => {
@@ -431,6 +432,52 @@ const updateListSpot = async (req, res) => {
         return res.onError(error);
     }
 };
+// get all trip in db
+const getAllTrip = async (req, res) => {
+    try {
+        const trips = await TripRepository.getAll();
+        const result = trips.map((trip) => {
+            const tripInfo = {};
+            tripInfo._id = trip._id;
+            tripInfo.name = trip.name;
+            tripInfo.totalDate = trip.totalDate;
+            tripInfo.rate = trip.rate;
+            tripInfo.destinationId = trip.destinationId;
+            tripInfo.accountId = trip.accountId;
+            return tripInfo;
+        });
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
+const deleteOne = async (req, res) => {
+    const tripId = req.params.id;
+    try {
+        const result = await TripRepository.deleteOne(tripId);
+        if (!result) throw new NotImplementError(DeleteTripErrors.DELETE_TRIP_FAIL);
+        const dlTripDetail = await TripRepository.deleteDetail(tripId);
+        if (!dlTripDetail) throw new NotImplementError(DeleteTripErrors.DELETE_TRIP_DETAIL_FAIL);
+        return res.onSuccess(dlTripDetail);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
+const getAllTripDetail = async (req, res) => {
+    try {
+        const tripDetails = await TripRepository.getAllTripDetail();
+        const result = tripDetails.map((tripDetail) => {
+            const tripDetailInfo = {};
+            tripDetailInfo._id = tripDetail._id;
+            tripDetailInfo.date = tripDetail.date;
+            tripDetailInfo.day = tripDetail.day;
+            return tripDetailInfo;
+        });
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
 export default {
     createTrip,
     getTripPublic,
@@ -439,5 +486,8 @@ export default {
     getTripDetail,
     shareTrip,
     updateTripDetail,
-    updateListSpot
+    updateListSpot,
+    getAllTrip,
+    deleteOne,
+    getAllTripDetail
 };

@@ -108,3 +108,9 @@ export const InsertMultiImageErrors = {
 export const GetPlacesOfDesErrors = {
     GET_FAIL: 'GET_FAIL',
 };
+export const GetPlaces3Errors = {
+    GET_FAIL: 'GET_FAIL'
+};
+export const GetPlaces2Errors = {
+    GET_FAIL: 'GET_FAIL'
+};

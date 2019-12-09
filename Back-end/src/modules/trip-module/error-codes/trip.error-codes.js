@@ -40,3 +40,7 @@ export const UpdateListSpotErrors = {
     TRIP_DETAIL_NEVER_EXIST: 'TRIP_DETAIL_NEVER_EXIST',
 
 };
+export const DeleteTripErrors = {
+    DELETE_TRIP_FAIL: 'DELETE_TRIP_FAIL',
+    DELETE_TRIP_DETAIL_FAIL: 'DELETE_TRIP_DETAIL_FAIL'
+};

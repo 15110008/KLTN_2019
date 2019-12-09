@@ -20,6 +20,12 @@ router.get('/trip/UnPublic', TripController.getTripUnPublic);
 // Xem thông tin chi tiết của trip (gồm trip và tripDetail)
 router.get('/trip/:id', TripController.getTripDetail);
 
+// dùng để test và check kết quả k dùng cho view
+// get all trip in db (admin)
+router.get('/trip', TripController.getAllTrip);
+// get all trip detail in db (admin)
+router.get('/tripDetail', TripController.getAllTripDetail);
+
 
 // PUT
 // Người dùng share lịch trình mình đã tạo
@@ -30,6 +36,6 @@ router.put('/trip/DetailSpot/:id', TripController.updateListSpot);
 router.post('/trip/Detail', TripController.updateTripDetail);
 
 // DELETE
-
+router.delete('/trip/:id', TripController.deleteOne);
 
 export default router;
