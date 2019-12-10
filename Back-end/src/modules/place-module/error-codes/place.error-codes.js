@@ -114,3 +114,15 @@ export const GetPlaces3Errors = {
 export const GetPlaces2Errors = {
     GET_FAIL: 'GET_FAIL'
 };
+export const CreateRatingErrors = {
+    AUTH_FAIL: 'AUTH_FAIL',
+    ACCOUNT_NEVER_EXIST: 'ACCOUNT_NEVER_EXIST',
+    PLACE_NEVER_EXIST: 'PLACE_NEVER_EXIST',
+    CREATE_RATING_FAIL: 'CREATE_RATING_FAIL',
+    UPDATE_RATING_FAIL: 'UPDATE_RATING_FAIL',
+    UPDATE_RATE_FAIL: 'UPDATE_RATE_FAIL'
+};
+export const GetRateErrors = {
+    PLACE_NEVER_EXIST: 'PLACE_NEVER_EXIST',
+    GET_FAIL: 'GET_FAIL'
+};

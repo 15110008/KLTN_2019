@@ -1,5 +1,6 @@
 import TripSchema from '../models/trip.model';
 import TripDetailSchema from '../models/tripDetail.model';
+import TripAccountSchema from '../models/trip-account.model';
 
 // Trip
 const createTrip = async (data) => {
@@ -88,7 +89,90 @@ const getAllTripDetail = async () => {
     return result;
 };
 
+
+// Trip account
+const createCom = async (data) => {
+    const result = await TripAccountSchema.create(data);
+    return result;
+};
+const existed = async (tripId, accountId) => {
+    const result = await TripAccountSchema.findOne({
+        tripId,
+        accountId,
+        isDeleted: false
+    });
+    return result;
+};
+const createRating = async (data) => {
+    const result = await TripAccountSchema.create(data);
+    return result;
+};
+const updateRating = async (tripId, accountId, rating) => {
+    const result = await TripAccountSchema.updateOne({
+        tripId,
+        accountId,
+        isDeleted: false
+    },
+    { rating });
+    return result;
+};
+const sumRating = async () => {
+    const result = await TripAccountSchema.aggregate([
+        { $match: { rating: { $ne: null } } },
+        {
+ $group: {
+            _id: '$_id',
+            totalValue: {
+                $sum: '$rating'
+            }
+        }
+}
+    ]);
+    return result;
+};
+const countRating = async () => {
+    const result = await TripAccountSchema.find(
+        {
+            rating: { $ne: null },
+            isDeleted: false
+        }
+    ).count();
+    return result;
+};
+const updateRate = async (tripId, rate) => {
+    const result = await TripSchema.updateOne({
+        _id: tripId,
+        isDeleted: false
+    },
+    { rate });
+    return result;
+};
+const getComment = async (tripId) => {
+    const result = await TripAccountSchema.find({
+        tripId,
+        comment: { $ne: null },
+        isDeleted: false
+    }).populate({ path: 'accountId', select: 'name -_id' });
+    return result;
+};
+const getRate = async (tripId) => {
+    const result = await TripSchema.findOne({
+        _id: tripId,
+        isDeleted: false,
+        rate: { $ne: null }
+    });
+    return result;
+};
 export default {
+    getRate,
+    getComment,
+    updateRate,
+    countRating,
+    sumRating,
+    updateRating,
+    createRating,
+    existed,
+    createCom,
     createTrip,
     getTripById,
     getTripPublic,

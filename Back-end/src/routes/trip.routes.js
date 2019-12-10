@@ -10,6 +10,10 @@ const router = express.Router();
 router.post('/trip', TripValidate.createTripInput, TripController.createTrip);
 // Tạo tripDetail cho trip
 router.post('/tripDetail', TripController.createTripDetail);
+// Create comment for trip
+router.post('/trip/comment', TripController.createCom);
+// Create rating for trip
+router.post('/trip/rating', TripController.createRating);
 
 
 // GET
@@ -19,6 +23,10 @@ router.get('/trip/Public', TripController.getTripPublic);
 router.get('/trip/UnPublic', TripController.getTripUnPublic);
 // Xem thông tin chi tiết của trip (gồm trip và tripDetail)
 router.get('/trip/:id', TripController.getTripDetail);
+// Get comment trip
+router.get('/trip/comment/:id', TripController.getComment);
+// Get rate trip
+router.get('/trip/rate/:id', TripController.getRate);
 
 // dùng để test và check kết quả k dùng cho view
 // get all trip in db (admin)

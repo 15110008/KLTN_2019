@@ -17,15 +17,6 @@ const getPlace = async (placeId) => {
     const result = await PlaceSchema.findOne({ _id: placeId, isDeleted: false });
     return result;
 };
-const getComment = async (placeId) => {
-    const result = await PlaceAccountSchema.find(
-        {
-            placeId,
-            isDeleted: false
-        }
-    );
-    return result;
-};
 const updatePlace = async (placeId, data) => {
     const result = await PlaceSchema.updateOne({
         _id: placeId,
@@ -53,44 +44,11 @@ const existed = async (placeId, accountId) => {
     });
     return result;
 };
-const createRaCom = async (data) => {
+const createCom = async (data) => {
     const result = await PlaceAccountSchema.create(data);
     return result;
 };
-const updateRaCom = async (placeId, accountId, rating, comment) => {
-    const result = await PlaceAccountSchema.updateOne({
-        placeId,
-        accountId,
-        isDeleted: false
-    },
-    {
-        rating,
-        comment
-    });
-    return result;
-};
-const updateRa = async (placeId, accountId, rating) => {
-    const result = await PlaceAccountSchema.updateOne({
-        placeId,
-        accountId,
-        isDeleted: false
-    },
-    {
-        rating
-    });
-    return result;
-};
-const updateCom = async (placeId, accountId, comment) => {
-    const result = await PlaceAccountSchema.updateOne({
-        placeId,
-        accountId,
-        isDeleted: false
-    },
-    {
-        comment
-    });
-    return result;
-};
+
 const countRating = async () => {
     const result = await PlaceAccountSchema.find(
         {
@@ -103,7 +61,14 @@ const countRating = async () => {
 const sumRating = async () => {
     const result = await PlaceAccountSchema.aggregate([
         { $match: { rating: { $ne: null } } },
-        { $group: { $sum: '$rating' } }
+        {
+ $group: {
+            _id: '$_id',
+            totalValue: {
+                $sum: '$rating'
+            }
+        }
+}
     ]);
     return result;
 };
@@ -175,19 +140,57 @@ const getPlaces2 = async (destinationId) => {
     });
     return result;
 };
+const createRating = async (data) => {
+    const result = await PlaceAccountSchema.create(data);
+    return result;
+};
+const updateRating = async (placeId, accountId, rating) => {
+    const result = await PlaceAccountSchema.updateOne({
+        placeId,
+        accountId,
+        isDeleted: false
+    },
+    { rating });
+    return result;
+};
+const updateRate = async (placeId, rate) => {
+    const result = await PlaceSchema.updateOne({
+        _id: placeId,
+        isDeleted: false
+    },
+    { rate });
+    return result;
+};
+const getComment = async (placeId) => {
+    const result = await PlaceAccountSchema.find({
+        placeId,
+        comment: { $ne: null },
+        isDeleted: false
+    }).populate({ path: 'accountId', select: 'name -_id' });
+    return result;
+};
+const getRate = async (placeId) => {
+    const result = await PlaceSchema.findOne({
+        _id: placeId,
+        isDeleted: false,
+        rate: { $ne: null }
+    });
+    return result;
+};
 export default {
+    getRate,
+    updateRate,
+    getComment,
     isExistPlace,
     create,
+    createRating,
+    updateRating,
     getPlaces,
     getPlace,
-    getComment,
     updatePlace,
     deletePlace,
     existed,
-    createRaCom,
-    updateRaCom,
-    updateRa,
-    updateCom,
+    createCom,
     countRating,
     sumRating,
     insertImage,
