@@ -66,3 +66,7 @@ export const GetRateErrors = {
     TRIP_NEVER_EXIST: 'TRIP_NEVER_EXIST',
     GET_FAIL: 'GET_FAIL'
 };
+export const GetTripWithDesErrors = {
+    GET_TRIP_FAIL: 'GET_TRIP_FAIL',
+    
+}
