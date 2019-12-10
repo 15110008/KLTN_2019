@@ -220,7 +220,7 @@ const createTripDetail = async (req, res) => {
         //     };
         // });
         // const listSpot = await Promise.all(a);
-
+        /* eslint-disable no-await-in-loop */
         for (let i = 0; i < liSpot.length; i += 1) {
             Time = Time + spotTime + stayTime;
             const hours = Math.floor(Time / 60);
@@ -249,6 +249,7 @@ const createTripDetail = async (req, res) => {
             };
             listSpot.push(b);
         }
+        /* eslint-enable no-await-in-loop */
         // console.log(day);
         // console.log(date);
         // console.log(totalPlaces);
