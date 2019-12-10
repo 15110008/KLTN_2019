@@ -199,6 +199,12 @@ export default class Trip extends Component {
             })
     }
 
+    renderData() {
+        this.setState({
+            data: this.state.data
+        })
+    }
+
     componentDidMount() {
         this.loadData(this.id)
     }
@@ -301,6 +307,7 @@ export default class Trip extends Component {
                                 wrappedComponentRef={this.saveFormRef}
                                 data={data}
                                 dataRemain={dataRemain}
+                                renderData={() => this.renderData()}
                             />
 
                         </DragDropContext>
@@ -355,14 +362,14 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                             <div className='col-md-9' style={{ background: 'white', border: `1px solid lightgrey`, borderTopStyle: 'none', borderRightStyle: 'none' }}>
                                 <div className='row'>
                                     {this.props.data.map((x, dragIndexParent) => {
-                                        return <DroppableCard getFieldDecorator={getFieldDecorator} formItemLayout={formItemLayout} id={dragIndexParent + ""} x={x} />
+                                        return <DroppableCard renderData={() => this.props.renderData()} getFieldDecorator={getFieldDecorator} formItemLayout={formItemLayout} id={dragIndexParent + ""} x={x} />
                                     })}
                                 </div>
                             </div>
                             <div className='col-md-3' style={{ background: 'white', border: `1px solid lightgrey`, borderTopStyle: 'none', borderLeftStyle: 'none' }}>
                                 <div className='row' style={{ width: '110%' }}>
                                     {this.props.dataRemain.map((x, dragIndexParent) => {
-                                        return <DroppableCard dataRemain={true} id={dragIndexParent + "_remain"} x={x} />
+                                        return <DroppableCard renderData={() => this.props.renderData()} dataRemain={true} id={dragIndexParent + "_remain"} x={x} />
                                     })}
                                 </div>
                             </div>

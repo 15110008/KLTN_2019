@@ -46,6 +46,10 @@ export default class DroppableCard extends Component {
                                 >
 
                                     {x.listPlaces.map((place, index) => {
+                                        // let _startTime = null
+                                        // if (index != 0){
+                                        //     _startTime = x.listSpot[index - 1].startTime
+                                        // }
                                         if (index == x.listPlaces.length - 1) {
                                             return <CardSwap
                                                 ref={c => this.cardSwapRef = c}
@@ -55,6 +59,8 @@ export default class DroppableCard extends Component {
                                                 getFieldDecorator={getFieldDecorator}
                                                 formItemLayout={formItemLayout}
                                                 indexParent={this.props.id}
+                                                renderData={() => this.props.renderData()}
+                                                listSpot={x.listSpot}
                                                 image={place.image}
                                                 startTime={x.listSpot[index] && x.listSpot[index].startTime}
                                                 isBottomItem={true}
@@ -67,6 +73,8 @@ export default class DroppableCard extends Component {
                                                 key={place.id}
                                                 index={index}
                                                 id={place.id}
+                                                listSpot={x.listSpot}
+                                                renderData={() => this.props.renderData()}
                                                 indexParent={this.props.id}
                                                 image={place.image}
                                                 getFieldDecorator={getFieldDecorator}

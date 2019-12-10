@@ -4,6 +4,7 @@ import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import './style.scss';
+import { red } from 'ansi-colors';
 
 const TaskList = styled.div`
   padding: 8px;
@@ -27,7 +28,29 @@ const Container = styled.div`
 const format = 'HH:mm';
 export default class CardSwap extends React.Component {
 
-    onChange() {
+    onBlur() {
+        const { index, listSpot } = this.props
+        // const data = this.props.getDatafromInput()
+        const dataInput = this.inputRef.state.value
+        console.log("TCL: CardSwap -> onBlur -> dataInput", dataInput)
+        if (!_.isEmpty(dataInput)) {
+            debugger
+            const hourAndMinute = listSpot[index].startTime
+            let newTime = hourAndMinute.split(':')
+            let hour = parseInt(newTime[0]) * 60
+            let minute = parseInt(newTime[1])
+            let _newTime = hour + minute
+            if (index != listSpot.length - 1) {
+                let timeReverse = _newTime + parseInt(dataInput) + listSpot[index].spotTime
+                let hourReverse = Math.floor(timeReverse / 60)
+                let minuteReverse = timeReverse % 60;
+                if (minuteReverse < 10) {
+                    minuteReverse = "0" + minuteReverse
+                }
+                listSpot[index + 1].startTime = hourReverse + ':' + minuteReverse
+            }
+            this.props.renderData()
+        }
 
     }
 
@@ -82,22 +105,22 @@ export default class CardSwap extends React.Component {
 
                                     <span >
                                         <Tooltip placement="top" title={text}>
-                                            <div style={{ marginTop: -10, fontSize: 19, fontWeight: 'bold', paddingBottom: 5, position: 'absolute', top: 20, left: 115, }}>
+                                            <div style={{ marginTop: -10, fontSize: 19, fontWeight: 'bold', paddingBottom: 5, position: 'absolute', top: 30, left: 115, }}>
                                                 {_.truncate(text, {
                                                     'length': 20,
                                                     'separator': " "
                                                 })}
                                             </div>
                                         </Tooltip>
-                                        <span className='spot-time' style={{ paddingLeft: 'unset', position: 'absolute', top: 0, right: 5, fontSize: 12 }}>{startTime}</span>
+                                        <span className='spot-time' style={{ color: 'red', paddingLeft: 'unset', position: 'absolute', top: 0, right: 5, fontSize: 14 }}>{startTime}</span>
                                         {!isBottomItem ?
                                             <div className='spot-time' style={{
                                                 position: 'absolute',
                                                 top: 50,
                                                 right: -88
                                             }}>
-                                                <Form.Item {...formItemLayout} label='Thời gian lưu trú'>
-                                                    {getFieldDecorator(indexParent + '_' + this.props.index)(<Input readOnly={this.props.readOnly} />)}
+                                                <Form.Item  {...formItemLayout} label='Thời gian lưu trú'>
+                                                    {getFieldDecorator(indexParent + '_' + this.props.index)(<Input ref={c => this.inputRef = c} readOnly={this.props.readOnly} onBlur={() => this.onBlur()} />)}
                                                 </Form.Item>
                                                 <div style={{
                                                     position: 'absolute',

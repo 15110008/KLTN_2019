@@ -6,6 +6,7 @@ import Footer from './Footer'
 import Header from './Header'
 import CreateTrip from './trip/CreateTrip'
 import TripEdit from './trip/TripEdit'
+import TripDetail from './trip/TripDetail'
 import TripEdit_v2 from './trip/TripEdiit_v2'
 import Destination from './detination/Destination'
 
@@ -49,6 +50,7 @@ export default class Main extends Component {
                                     <TripEdit />
                                 </Route> */}
                                 <Route exact path="/trip-edit/:id" render={(props) => <TripEdit  {...props} />}></Route>
+                                <Route exact path="/trip-detail/:id" render={(props) => <TripDetail  {...props} />}></Route>
                                 <Route exact path="/trip-edit_v2/:id" render={(props) => <TripEdit_v2  {...props} />}></Route>
                                 <Route path="/destination/:id">< Destination /></Route>
                                 {/* <Route path="/dashboard">
