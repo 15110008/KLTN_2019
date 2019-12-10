@@ -21,7 +21,10 @@ export default class Trip extends Component {
 
     onDragEnd = result => {
         const { destination, source, draggableId } = result
-        const { data, allTrip } = this.state
+        console.log("TCL: Trip -> draggableId", draggableId)
+        console.log("TCL: Trip -> source", source)
+        console.log("TCL: Trip -> destination", destination)
+        const { data, allTrip, dataRemain } = this.state
         if (!destination) {
             return
         }
@@ -37,30 +40,65 @@ export default class Trip extends Component {
         const indexHover = destination.droppableId
         const dragIndexChild = source.index
         const hoverIndexChild = destination.index
-        const dragCard = data[indexParent].listPlaces[dragIndexChild]
-        if (indexParent != indexHover) {
-            if (dragIndexChild == data[indexParent].listPlaces.length - 1) {
-                data[indexParent].listSpot.splice(dragIndexChild - 1, 1)
-            } else {
-                data[indexParent].listSpot.splice(dragIndexChild, 1)
-            }
+        let dragCard = null
+        if (_.includes(indexParent, 'remain') && _.includes(indexHover, 'remain')) {
+            return
         }
+        if (_.includes(indexParent, 'remain')) {
+            dragCard = {
+                id: dataRemain[0].listPlaces[dragIndexChild]._id,
+                name: dataRemain[0].listPlaces[dragIndexChild].name,
+                image: dataRemain[0].listPlaces[dragIndexChild].images && dataRemain[0].listPlaces[dragIndexChild].images[0],
+            }
+            dataRemain[0].listPlaces.splice(dragIndexChild, 1)
+            data[indexHover].listPlaces.splice(hoverIndexChild, 0, dragCard)
+        } else if (_.includes(indexHover, 'remain')) {
+            dragCard = {
+                name: data[indexParent].listPlaces[dragIndexChild].name,
+                _id: data[indexParent].listPlaces[dragIndexChild].id,
+                images: [data[indexParent].listPlaces[dragIndexChild].image]
+            }
+            data[indexParent].listPlaces.splice(dragIndexChild, 1)
+            dataRemain[0].listPlaces.splice(hoverIndexChild, 0, dragCard)
+        } else {
+            dragCard = data[indexParent].listPlaces[dragIndexChild]
+            if (indexParent != indexHover) {
+                if (dragIndexChild == data[indexParent].listPlaces.length - 1) {
+                    data[indexParent].listSpot.splice(dragIndexChild - 1, 1)
+                } else {
+                    data[indexParent].listSpot.splice(dragIndexChild, 1)
+                }
+            }
 
-        data[indexParent].listPlaces.splice(dragIndexChild, 1)
-        data[indexHover].listPlaces.splice(hoverIndexChild, 0, dragCard)
-
-        if (indexParent != indexHover) {
+            data[indexParent].listPlaces.splice(dragIndexChild, 1)
+            data[indexHover].listPlaces.splice(hoverIndexChild, 0, dragCard)
+        }
+        if (_.includes(indexHover, 'remain')) {
             axios.post('http://localhost:3000/v1/trip/Detail', { listPlaces: data[indexParent].listPlaces })
                 .then((res) => {
                     if (res.data.success) {
                         const dataListSpot = res.data.result
                         dataListSpot.map((x, index) => {
-                            data[indexParent].listSpot[index].length = x.length
-                            data[indexParent].listSpot[index].spotTime = x.spotTime
+                            if (data[indexHover].listSpot[index]) {
+                                data[indexHover].listSpot[index].length = x.length
+                                data[indexHover].listSpot[index].spotTime = x.spotTime
+                            } else {
+                                data[indexHover].listSpot.push({
+                                    display: index,
+                                    length: x.length,
+                                    spotTime: x.spotTime,
+                                    startTime: null
+                                })
+                            }
                         })
                     }
                 }).catch((err) => {
+                }).finally(() => {
+                    this.setState({
+                        data: data
+                    })
                 })
+        } else if (_.includes(indexParent, 'remain')) {
             axios.post('http://localhost:3000/v1/trip/Detail', { listPlaces: data[indexHover].listPlaces })
                 .then((res) => {
                     if (res.data.success) {
@@ -86,23 +124,62 @@ export default class Trip extends Component {
                     })
                 })
         } else {
-            axios.post('http://localhost:3000/v1/trip/Detail', { listPlaces: data[indexParent].listPlaces })
-                .then((res) => {
-                    if (res.data.success) {
-                        const dataListSpot = res.data.result
-                        dataListSpot.map((x, index) => {
-                            data[indexParent].listSpot[index].length = x.length
-                            data[indexParent].listSpot[index].spotTime = x.spotTime
-                        })
-                    }
-                }).catch((err) => {
-                }).finally(() => {
-                    this.setState({
-                        data: data
+            if (indexParent != indexHover) {
+                axios.post('http://localhost:3000/v1/trip/Detail', { listPlaces: data[indexParent].listPlaces })
+                    .then((res) => {
+                        if (res.data.success) {
+                            const dataListSpot = res.data.result
+                            dataListSpot.map((x, index) => {
+                                data[indexParent].listSpot[index].length = x.length
+                                data[indexParent].listSpot[index].spotTime = x.spotTime
+                            })
+                        }
+                    }).catch((err) => {
                     })
-                })
+                axios.post('http://localhost:3000/v1/trip/Detail', { listPlaces: data[indexHover].listPlaces })
+                    .then((res) => {
+                        if (res.data.success) {
+                            const dataListSpot = res.data.result
+                            dataListSpot.map((x, index) => {
+                                if (data[indexHover].listSpot[index]) {
+                                    data[indexHover].listSpot[index].length = x.length
+                                    data[indexHover].listSpot[index].spotTime = x.spotTime
+                                } else {
+                                    data[indexHover].listSpot.push({
+                                        display: index,
+                                        length: x.length,
+                                        spotTime: x.spotTime,
+                                        startTime: null
+                                    })
+                                }
+                            })
+                        }
+                    }).catch((err) => {
+                    }).finally(() => {
+                        this.setState({
+                            data: data
+                        })
+                    })
+            } else {
+                axios.post('http://localhost:3000/v1/trip/Detail', { listPlaces: data[indexParent].listPlaces })
+                    .then((res) => {
+                        if (res.data.success) {
+                            const dataListSpot = res.data.result
+                            dataListSpot.map((x, index) => {
+                                data[indexParent].listSpot[index].length = x.length
+                                data[indexParent].listSpot[index].spotTime = x.spotTime
+                            })
+                        }
+                    }).catch((err) => {
+                    }).finally(() => {
+                        this.setState({
+                            data: data
+                        })
+                    })
+            }
         }
         console.log('this.state.data ->', data)
+        console.log("TCL: Trip -> dataRemain", dataRemain)
     }
 
     async onSave() {
@@ -259,8 +336,6 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
         }
 
         render() {
-            console.log("TCL: extends -> render -> this.props.dataRemain", this.props.dataRemain)
-
             const { formLayout } = this.state;
             const formItemLayout =
                 formLayout === 'horizontal'
@@ -287,7 +362,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                             <div className='col-md-3' style={{ background: 'white', border: `1px solid lightgrey`, borderTopStyle: 'none', borderLeftStyle: 'none' }}>
                                 <div className='row' style={{ width: '110%' }}>
                                     {this.props.dataRemain.map((x, dragIndexParent) => {
-                                        return <DroppableCard dataRemain={true} id={dragIndexParent + "_reamain"} x={x} />
+                                        return <DroppableCard dataRemain={true} id={dragIndexParent + "_remain"} x={x} />
                                     })}
                                 </div>
                             </div>
