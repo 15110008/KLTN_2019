@@ -33,8 +33,10 @@ const upload = multer({
 // POST
 // create place
 router.post('/place', PlaceValidate.createPlaceInput, PlaceValidate.reduceInput, PlaceController.create);
-// create rating and comment in place
-router.post('/place/rate-comment', PlaceValidate.createRaComInput, PlaceValidate.reduceInput, PlaceController.createRaCom);
+// create comment in place
+router.post('/place/comment', PlaceValidate.createComInput, PlaceController.createCom);
+// create rating in place
+router.post('/place/rating', PlaceController.createRating);
 // insert single image
 router.post('/place/insert-image', upload.single('images'), PlaceValidate.insertInput, PlaceController.insertImage);
 // insert multi images
@@ -49,8 +51,10 @@ router.post('/place/update-images', upload.array('images', 12), PlaceValidate.up
 router.get('/place', PlaceController.getPlaces);
 // get one place with id
 router.get('/place/:id', PlaceValidate.getPlaceInput, PlaceController.getPlace);
-// get rating and comment of place
+// get comment of place
 router.get('/place/comment/:id', PlaceValidate.getRateCommentInput, PlaceController.getComment);
+// get rate
+router.get('/place/rate/:id', PlaceController.getRate);
 // get places of destination
 router.get('/place/destination/:id', PlaceController.getPlacesOfDes);
 // get top places "tham quan"

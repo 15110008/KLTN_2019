@@ -8,7 +8,7 @@ import NotFoundError from '../../../errors-handle/not-found.errors';
 import PlaceRepository from '../../place-module/repositories/place.repository';
 import SpotRepository from '../../spot-module/repositories/spot.repository';
 import TripRepository from '../repositories/trip.repository';
-
+import AccountRepository from '../../account-module/repositories/account.repository';
 import {
     CreateTripErrors,
     CreateTripDetailErrors,
@@ -18,7 +18,11 @@ import {
     ShareTripErrors,
     UpdateTripDetailErrors,
     UpdateListSpotErrors,
-    DeleteTripErrors
+    DeleteTripErrors,
+    CreateCommentErrors,
+    CreateRatingErrors,
+    GetCommentErrors,
+    GetRateErrors
 } from '../error-codes/trip.error-codes';
 
 const createTrip = async (req, res) => {
@@ -479,8 +483,117 @@ const getAllTripDetail = async (req, res) => {
         return res.onError(error);
     }
 };
+const createCom = async (req, res) => {
+    const { jwt } = req.headers;
+    const {
+        tripId,
+        comment
+    } = req.body;
+    try {
+        const authenData = VerifyToken(jwt);
+        if (!authenData) throw new NotImplementError(CreateCommentErrors.AUTH_FAIL);
+        const { accountId } = authenData;
+        req.body = {
+            tripId,
+            accountId,
+            comment
+        };
+        const account = await AccountRepository.getAccountById(req.body.accountId);
+        if (!account) throw new NotFoundError(CreateCommentErrors.ACCOUNT_NEVER_EXIST);
+        const trip = await TripRepository.getTripById(tripId);
+        if (!trip) throw new NotFoundError(CreateCommentErrors.TRIP_NEVER_EXIST);
+        // const existed = await PlaceRepository.existed(placeId, accountId);
+        const result = await TripRepository.createCom(req.body);
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
+const createRating = async (req, res) => {
+    const { jwt } = req.headers;
+    const {
+        tripId,
+        rating
+    } = req.body;
+    try {
+        const authenData = VerifyToken(jwt);
+        if (!authenData) throw new NotImplementError(CreateRatingErrors.AUTH_FAIL);
+        const { accountId } = authenData;
+        req.body = {
+            tripId,
+            accountId,
+            rating
+        };
+        const account = await AccountRepository.getAccountById(req.body.accountId);
+        if (!account) throw new NotFoundError(CreateRatingErrors.ACCOUNT_NEVER_EXIST);
+        const trip = await TripRepository.getTripById(tripId);
+        if (!trip) throw new NotFoundError(CreateRatingErrors.TRIP_NEVER_EXIST);
+        const existed = await TripRepository.existed(req.body.placeId, req.body.accountId);
+        if (!existed) {
+            const result = await TripRepository.createRating(req.body);
+            if (!result) throw new NotImplementError(CreateRatingErrors.CREATE_RATING_FAIL);
+        } else {
+            const result = await TripRepository.updateRating(req.body.placeId, req.body.accountId, req.body.rating);
+            if (!result) throw new NotImplementError(CreateRatingErrors.UPDATE_RATING_FAIL);
+        }
+        const ra = await TripRepository.existed(req.body.placeId, req.body.accountId);
+        const sum = await TripRepository.sumRating();
+        /* eslint-enable no-await-in-loop */
+        const total = sum.map((su) => {
+            const { totalValue } = su;
+            return totalValue;
+        });
+        const sumRa = await Promise.all(total);
+        let sumRating = 0;
+        for (let i = 0; i < sumRa.length; i += 1) {
+            sumRating += sumRa[i];
+        }
+        /* eslint-enable no-await-in-loop */
+        const count = await TripRepository.countRating();
+        const rate = sumRating / count;
+        const update = await TripRepository.updateRate(tripId, rate);
+        if (!update) throw new NotImplementError(CreateRatingErrors.UPDATE_RATE_FAIL);
+        return res.onSuccess(ra, rate);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
+const getComment = async (req, res) => {
+    const tripId = req.params.id;
+    try {
+        const trip = await TripRepository.getTripById(tripId);
+        if (!trip) throw new NotFoundError(GetCommentErrors.TRIP_NEVER_EXIST);
+        const result = await TripRepository.getComment(tripId);
+        if (!result) throw new NotImplementError(GetCommentErrors.GET_FAIL);
+        return res.onSuccess({
+            accountId: result.accountId,
+            comment: result.comment,
+        });
+    } catch (error) {
+        return res.onError(error);
+    }
+};
+const getRate = async (req, res) => {
+    const tripId = req.params.id;
+    try {
+        const trip = await TripRepository.getTripById(tripId);
+        if (!trip) throw new NotFoundError(GetRateErrors.TRIP_NEVER_EXIST);
+        const result = await TripRepository.getRate(tripId);
+        if (!result) throw new NotImplementError(GetRateErrors.GET_FAIL);
+        return res.onSuccess({
+            name: result.name,
+            rate: result.rate,
+        });
+    } catch (error) {
+        return res.onError(error);
+    }
+};
 export default {
+    getRate,
+    getComment,
+    createRating,
     createTrip,
+    createCom,
     getTripPublic,
     getTripUnPublic,
     createTripDetail,

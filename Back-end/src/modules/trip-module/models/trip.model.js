@@ -30,7 +30,9 @@ const TripSchema = new Schema({
         ref: 'Destination'
     },
     accountId: {
-        type: String
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'Account'
     }
 });
 

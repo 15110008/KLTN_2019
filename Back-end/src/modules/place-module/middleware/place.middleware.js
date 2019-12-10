@@ -53,24 +53,16 @@ const createPlaceInput = (req, res, next) => {
         return res.onError(new ValidationError(error));
     }
 };
-const createRaComInput = (req, res, next) => {
+const createComInput = (req, res, next) => {
+    const { jwt } = req.headers;
     const {
-        jwt,
         placeId,
-        rating,
         comment
     } = req.body;
     try {
         if (!jwt) throw CreateRatingCommentErrors.NO_TOKEN;
-        // if(!accountId) throw CreateLikeCommentErrors.NO_ACCOUNT_ID;
         if (!placeId) throw CreateRatingCommentErrors.NO_PLACE_ID;
-        if (!rating || !comment) throw CreateRatingCommentErrors.NO_DATA;
-        req.body = {
-            jwt,
-            placeId,
-            rating,
-            comment
-        };
+        if (!comment) throw CreateRatingCommentErrors.NO_DATA;
         return next();
     } catch (error) {
         return res.onError(new ValidationError(error));
@@ -205,7 +197,7 @@ const insertMulti = (req, res, next) => {
 };
 export default {
     createPlaceInput,
-    createRaComInput,
+    createComInput,
     getPlaceInput,
     getRateCommentInput,
     updatePlaceInput,
