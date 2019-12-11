@@ -213,10 +213,10 @@ const updatePlace = async (req, res) => {
         const isExisted = await PlaceRepository.getPlace(placeId);
         if (!isExisted) throw new NotFoundError(UpdatePlaceErrors.PLACE_NEVER_EXIST);
         const update = await PlaceRepository.updatePlace(placeId, data);
-        if (!update) throw new NotImplementError(UpdatePlaceErrors.UPDATE_FAIL);
+        //if (!update) throw new NotImplementError(UpdatePlaceErrors.UPDATE_FAIL);
         const place = await PlaceRepository.getPlace(placeId);
         if (!place) throw new NotFoundError(UpdatePlaceErrors.GET_FAIL);
-        return res.onSuccess({
+        return res.onSuccess(update, {
             _id: place._id,
             name: place.name,
             category: place.category,
