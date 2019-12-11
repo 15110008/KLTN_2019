@@ -116,9 +116,9 @@ const updateRating = async (tripId, accountId, rating) => {
     { rating });
     return result;
 };
-const sumRating = async () => {
+const sumRating = async (tripId) => {
     const result = await TripAccountSchema.aggregate([
-        { $match: { rating: { $ne: null } } },
+        { $match: { _id: tripId, rating: { $ne: null } } },
         {
  $group: {
             _id: '$_id',
@@ -130,9 +130,10 @@ const sumRating = async () => {
     ]);
     return result;
 };
-const countRating = async () => {
+const countRating = async (tripId) => {
     const result = await TripAccountSchema.find(
         {
+            tripId,
             rating: { $ne: null },
             isDeleted: false
         }
@@ -169,7 +170,7 @@ const getTripDes = async (destinationId) => {
         isDeleted: false
     });
     return result;
-}
+};
 export default {
     getTripDes,
     getRate,

@@ -68,5 +68,5 @@ export const GetRateErrors = {
 };
 export const GetTripWithDesErrors = {
     GET_TRIP_FAIL: 'GET_TRIP_FAIL',
-    
-}
+
+};

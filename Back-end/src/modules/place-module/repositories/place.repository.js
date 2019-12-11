@@ -49,18 +49,19 @@ const createCom = async (data) => {
     return result;
 };
 
-const countRating = async () => {
+const countRating = async (placeId) => {
     const result = await PlaceAccountSchema.find(
         {
+            placeId,
             rating: { $ne: null },
             isDeleted: false
         }
     ).count();
     return result;
 };
-const sumRating = async () => {
+const sumRating = async (placeId) => {
     const result = await PlaceAccountSchema.aggregate([
-        { $match: { rating: { $ne: null } } },
+        { $match: { _id: placeId, rating: { $ne: null } } },
         {
  $group: {
             _id: '$_id',

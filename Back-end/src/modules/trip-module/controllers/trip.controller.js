@@ -326,6 +326,7 @@ const getTripDetail = async (req, res) => {
         if (!Trip) throw new NotFoundError(GetTripDetailErrors.GET_TRIP_FAILURE);
         const tripDetail = await TripRepository.getTripsDetail(tripId);
         if (!tripDetail) throw new NotFoundError(GetTripDetailErrors.GET_TRIP_DETAIL_FAILURE);
+        const count = await TripRepository.countRating(tripId);
         const result = tripDetail.map((trip) => {
             const tripDetailInfo = {};
             tripDetailInfo._id = trip._id;
@@ -338,7 +339,7 @@ const getTripDetail = async (req, res) => {
             tripDetailInfo.tripId = trip.tripId;
             return tripDetailInfo;
         });
-        return res.onSuccess(Trip, result);
+        return res.onSuccess(Trip, result, count);
     } catch (error) {
         return res.onError(error);
     }
@@ -538,7 +539,7 @@ const createRating = async (req, res) => {
             if (!result) throw new NotImplementError(CreateRatingErrors.UPDATE_RATING_FAIL);
         }
         const ra = await TripRepository.existed(req.body.placeId, req.body.accountId);
-        const sum = await TripRepository.sumRating();
+        const sum = await TripRepository.sumRating(tripId);
         /* eslint-enable no-await-in-loop */
         const total = sum.map((su) => {
             const { totalValue } = su;
@@ -550,7 +551,7 @@ const createRating = async (req, res) => {
             sumRating += sumRa[i];
         }
         /* eslint-enable no-await-in-loop */
-        const count = await TripRepository.countRating();
+        const count = await TripRepository.countRating(tripId);
         const rate = sumRating / count;
         const update = await TripRepository.updateRate(tripId, rate);
         if (!update) throw new NotImplementError(CreateRatingErrors.UPDATE_RATE_FAIL);
@@ -593,12 +594,12 @@ const getTripWithDes = async (req, res) => {
     const destinationId = req.params.id;
     try {
         const trip = await TripRepository.getTripDes(destinationId);
-        if(!trip) throw new NotFoundError(GetTripWithDesErrors.GET_TRIP_FAIL);
+        if (!trip) throw new NotFoundError(GetTripWithDesErrors.GET_TRIP_FAIL);
         return res.onSuccess(trip);
     } catch (error) {
         return res.onError(error);
     }
-}
+};
 export default {
     getTripWithDes,
     getRate,

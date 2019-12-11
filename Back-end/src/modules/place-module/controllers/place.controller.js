@@ -115,7 +115,7 @@ const createRating = async (req, res) => {
             if (!result) throw new NotImplementError(CreateRatingErrors.UPDATE_RATING_FAIL);
         }
         const ra = await PlaceRepository.existed(req.body.placeId, req.body.accountId);
-        const sum = await PlaceRepository.sumRating();
+        const sum = await PlaceRepository.sumRating(placeId);
         /* eslint-enable no-await-in-loop */
         const total = sum.map((su) => {
             const { totalValue } = su;
@@ -127,7 +127,7 @@ const createRating = async (req, res) => {
             sumRating += sumRa[i];
         }
         /* eslint-enable no-await-in-loop */
-        const count = await PlaceRepository.countRating();
+        const count = await PlaceRepository.countRating(placeId);
         const rate = sumRating / count;
         const update = await PlaceRepository.updateRate(placeId, rate);
         if (!update) throw new NotImplementError(CreateRatingErrors.UPDATE_RATE_FAIL);
@@ -169,6 +169,7 @@ const getPlace = async (req, res) => {
     try {
         const place = await PlaceRepository.getPlace(placeId);
         if (!place) throw new NotFoundError(GetPlaceErrors.GET_FAIL);
+        const count = await PlaceRepository.countRating(placeId);
         return res.onSuccess({
             _id: place._id,
             name: place.name,
@@ -182,7 +183,7 @@ const getPlace = async (req, res) => {
             longitude: place.longitude,
             latitude: place.latitude,
             destinationId: place.destinationId,
-        });
+        }, count);
     } catch (error) {
         return res.onError(error);
     }
@@ -213,7 +214,7 @@ const updatePlace = async (req, res) => {
         const isExisted = await PlaceRepository.getPlace(placeId);
         if (!isExisted) throw new NotFoundError(UpdatePlaceErrors.PLACE_NEVER_EXIST);
         const update = await PlaceRepository.updatePlace(placeId, data);
-        //if (!update) throw new NotImplementError(UpdatePlaceErrors.UPDATE_FAIL);
+        // if (!update) throw new NotImplementError(UpdatePlaceErrors.UPDATE_FAIL);
         const place = await PlaceRepository.getPlace(placeId);
         if (!place) throw new NotFoundError(UpdatePlaceErrors.GET_FAIL);
         return res.onSuccess(update, {
