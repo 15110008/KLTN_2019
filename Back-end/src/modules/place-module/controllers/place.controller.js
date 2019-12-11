@@ -178,6 +178,7 @@ const getPlace = async (req, res) => {
             phone: place.phone,
             description: place.description,
             price: place.price,
+            images: place.images,
             longitude: place.longitude,
             latitude: place.latitude,
             destinationId: place.destinationId,

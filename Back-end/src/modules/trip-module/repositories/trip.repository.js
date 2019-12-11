@@ -163,7 +163,15 @@ const getRate = async (tripId) => {
     });
     return result;
 };
+const getTripDes = async (destinationId) => {
+    const result = await TripSchema.findOne({
+        destinationId,
+        isDeleted: false
+    });
+    return result;
+}
 export default {
+    getTripDes,
     getRate,
     getComment,
     updateRate,

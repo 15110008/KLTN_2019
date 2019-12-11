@@ -22,7 +22,8 @@ import {
     CreateCommentErrors,
     CreateRatingErrors,
     GetCommentErrors,
-    GetRateErrors
+    GetRateErrors,
+    GetTripWithDesErrors
 } from '../error-codes/trip.error-codes';
 
 const createTrip = async (req, res) => {
@@ -588,7 +589,18 @@ const getRate = async (req, res) => {
         return res.onError(error);
     }
 };
+const getTripWithDes = async (req, res) => {
+    const destinationId = req.params.id;
+    try {
+        const trip = await TripRepository.getTripDes(destinationId);
+        if(!trip) throw new NotFoundError(GetTripWithDesErrors.GET_TRIP_FAIL);
+        return res.onSuccess(trip);
+    } catch (error) {
+        return res.onError(error);
+    }
+}
 export default {
+    getTripWithDes,
     getRate,
     getComment,
     createRating,
