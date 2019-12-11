@@ -11,12 +11,28 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 `
+
+const ContainerRemain = styled.div`
+  margin: 8px;
+  border: 1px solid black;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+`
 const Title = styled.h3`
   padding: 8px;
   font-size: 18px;
   font-weight: bold;
   color: #fff;
   background: #3897f1
+`
+
+const TitleRemain = styled.h3`
+  padding: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  background: black
 `
 
 const TaskList = styled.div`
@@ -28,6 +44,8 @@ const TaskList = styled.div`
   flex-grow: 1;
   min-height: 100px;
 `
+
+
 
 export default class DroppableCard extends Component {
     render() {
@@ -97,8 +115,8 @@ export default class DroppableCard extends Component {
             )
         } else {
             return <div className='col-md-12'>
-                <Container>
-                    <Title>Địa điểm khác</Title>
+                <ContainerRemain>
+                    <TitleRemain>Địa điểm khác</TitleRemain>
                     <Droppable droppableId={this.props.id} type="TASK">
                         {(providedParent, snapshotParent) => (
                             <TaskList
@@ -123,7 +141,7 @@ export default class DroppableCard extends Component {
                         )}
 
                     </Droppable>
-                </Container>
+                </ContainerRemain>
             </div>
         }
     }

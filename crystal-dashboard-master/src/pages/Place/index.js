@@ -197,6 +197,7 @@ export default class Place extends Component {
 
   onSaveEdit() {
     const data = this.formEditRef.formRef.getFieldsValue()
+
     const token = localStorage.getItem('jwt')
     const paramFile = {
       headers: {
@@ -217,6 +218,7 @@ export default class Place extends Component {
       }
     })
     formData.append('placeId', this.state.id)
+    delete data.images
     this.formEditRef.formRef.validateFields(async (err) => {
       if (!err) {
         if (file) {

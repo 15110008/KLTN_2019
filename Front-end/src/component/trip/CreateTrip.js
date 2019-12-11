@@ -298,11 +298,12 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                     return x.value == data.placeTo
                 })
                 const params = {
-                    totalDate: totalDate,
+                    totalDate: totalDate + 1,
                     destinationId: data.placeTo,
                     fromDes: data.placeFrom,
                     toDes: toDes.label,
                 }
+                console.log("TCL: extends -> onCreateTrip -> params", params)
                 const header = {
                     headers: { jwt: token },
                 }

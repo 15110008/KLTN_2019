@@ -32,7 +32,6 @@ export default class CardSwap extends React.Component {
         const { index, listSpot } = this.props
         // const data = this.props.getDatafromInput()
         const dataInput = this.inputRef.state.value
-        console.log("TCL: CardSwap -> onBlur -> dataInput", dataInput)
         if (!_.isEmpty(dataInput)) {
             debugger
             const hourAndMinute = listSpot[index].startTime
