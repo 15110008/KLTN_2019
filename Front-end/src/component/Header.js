@@ -26,7 +26,7 @@ export default class Header extends Component {
                 </Menu.Item>
                 <Menu.Item>
                     <div onClick={() => window.location.replace('http://localhost:3006/user')}>
-                        Lịch trình của tôi
+                        Trang cá nhân
                     </div>
                 </Menu.Item>
             </Menu>
@@ -56,10 +56,10 @@ export default class Header extends Component {
 
     user() {
         return <div style={{ padding: '8px' }}>
-            <Dropdown overlay={this.menu}>
+            <Dropdown overlay={this.menu} >
                 <div>
                     <i className="fa fa-user-circle-o" aria-hidden="true" style={{ padding: '8px' }}></i>
-                    {this.state.name === '' ? this.state.email : this.state.name}
+                    <span style={{ cursor: 'pointer' }}>{this.state.name === '' ? this.state.email : this.state.name}</span>
                     <Icon style={{
                         marginTop: '8px',
                         position: 'absolute',
@@ -113,12 +113,12 @@ export default class Header extends Component {
             <div>
                 <nav className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
                     <div className="container">
-                        {/* <a className="navbar-brand" href="#" onClick={() => {
+                        <a className="navbar-brand" href="#" style={{ marginBottom: 20 }} onClick={() => {
                             window.location.replace("http://localhost:3006")
-                        }}>Uptown</a> */}
-                        <img className="navbar-brand" href="#" onClick={() => {
+                        }}>MTrip</a>
+                        {/* <img onClick={() => {
                             window.location.href = "http://localhost:3006"
-                        }} />
+                        }} src={"../images/logo-travel4.svg"} style={{ width: 200, height: 200 }} /> */}
                         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                             <span className="oi oi-menu"></span> Menu
 	                </button>

@@ -41,8 +41,10 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                 if (!err) {
                     axios.post('http://localhost:3000/v1/account/login', data).then(response => {
                         if (response.data.success) {
-                            this.onClose()
-                            localStorage.setItem('jwt', response.data.result.jwt);
+                            if (response.data.meta.name == 'Admin') {
+                                this.onClose()
+                                localStorage.setItem('jwt', response.data.result.jwt);
+                            }
                         } else {
                             notification['error']({
                                 message: response.data.message,

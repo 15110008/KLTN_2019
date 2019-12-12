@@ -54,7 +54,7 @@ export default class Main extends Component {
                                 <Route exact path="/trip-detail/:id" render={(props) => <TripDetail  {...props} />}></Route>
                                 <Route exact path="/trip-edit_v2/:id" render={(props) => <TripEdit_v2  {...props} />}></Route>
                                 <Route path="/destination/:id">< Destination /></Route>
-                                <Route path="/trip">< User /></Route>
+                                <Route path="/user">< User /></Route>
                                 {/* <Route path="/dashboard">
                                     <Dashboard />
                                 </Route> */}

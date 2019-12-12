@@ -21,7 +21,8 @@ export default class formLogin extends Component {
             picture: '',
             password: '',
             phoneNumber: '',
-            password2: ''
+            password2: '',
+            login: 'Đăng nhập'
         }
         this.onSubmit = this.onSubmit.bind(this);
     }
@@ -135,7 +136,16 @@ export default class formLogin extends Component {
     }
 
     callback(key) {
-        console.log(key);
+        console.log("TCL: formLogin -> callback -> key", key)
+        if (key == 1) {
+            this.setState({
+                login: 'Đăng nhập'
+            })
+        } else {
+            this.setState({
+                login: 'Tạo tài khoản'
+            })
+        }
     }
 
     handleSubmit = e => {
@@ -178,15 +188,12 @@ export default class formLogin extends Component {
             <div>
                 <div className='row  form-custom-input'>
                     <div className="col-md-6">
-                        <h2> Đăng nhập</h2>
-                        <span>Đăng nhập để theo dõi đơn hàng, lưu
-                            danh sách sản phẩm yêu thích, nhận
-                            nhiều ưu đãi hấp dẫn.
-                        </span>
+                        <h2> {this.state.login}</h2>
+                        <img style={{ width: '100%', height: '87%' }} src={"../../images/graphic-map.png"} />
                         <div className='background-login-form'></div>
                     </div>
                     <div className="col-md-6">
-                        <Tabs defaultActiveKey="1" onChange={this.callback}>
+                        <Tabs defaultActiveKey="1" onChange={(val) => this.callback(val)}>
                             <TabPane tab="Đăng nhập" key="1">
                                 <input placeholder="Email" type="text" required="" value={this.state.email} onChange={(e) => this.onChange(e, 'email')} />
                                 <input placeholder="Mật khẩu" type="password" required="" value={this.state.password} onChange={(e) => this.onChange(e, 'password')} />
@@ -200,7 +207,7 @@ export default class formLogin extends Component {
                                     </div>
                                 </div>
                             </TabPane>
-                            <TabPane tab="Tạo tài khoản" key="2">
+                            <TabPane tab="Tạo tài khoản" key="2" onChange={(val) => this.callback(val)}>
                                 <input placeholder="Tên" type="text" required="" value={this.state.name} onChange={(e) => this.onChange(e, 'name')} />
                                 <input placeholder="SĐT" type="text" required="" value={this.state.phoneNumber} onChange={(e) => this.onChange(e, 'phoneNumber')} />
                                 <input placeholder="Email" type="text" required="" value={this.state.email} onChange={(e) => this.onChange(e, 'email')} />

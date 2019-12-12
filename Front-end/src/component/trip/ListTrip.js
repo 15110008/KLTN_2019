@@ -1,9 +1,28 @@
 import React, { Component } from 'react'
+import axios from 'axios'
 
 export default class Trip extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: []
+        }
+    }
+
 
     componentDidMount() {
+        axios.get('http://localhost:3000/v1//trip/Public')
+            .then((res) => {
+                if (res.data.success) {
+                    const data = res.data.result
+                    this.setState({
+                        data: data
+                    })
 
+                }
+            }).catch((err) => {
+                console.log("TCL: Trip -> componentDidMount -> err", err)
+            })
     }
 
     render() {
