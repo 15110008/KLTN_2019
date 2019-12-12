@@ -111,7 +111,7 @@ const countRating5 = async (placeId) => {
 };
 const sumRating = async (placeId) => {
     const result = await PlaceAccountSchema.aggregate([
-        { $match: { _id: placeId, rating: { $ne: null } } },
+        { $match: { placeId: placeId, rating: { $ne: null } } },
         {
  $group: {
             _id: '$_id',

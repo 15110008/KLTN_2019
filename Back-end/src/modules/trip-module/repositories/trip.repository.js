@@ -118,7 +118,7 @@ const updateRating = async (tripId, accountId, rating) => {
 };
 const sumRating = async (tripId) => {
     const result = await TripAccountSchema.aggregate([
-        { $match: { _id: tripId, rating: { $ne: null } } },
+        { $match: { tripId: tripId, rating: { $ne: null } } },
         {
  $group: {
             _id: '$_id',
