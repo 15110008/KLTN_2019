@@ -140,6 +140,56 @@ const countRating = async (tripId) => {
     ).count();
     return result;
 };
+const countRating1 = async (tripId) => {
+    const result = await TripAccountSchema.find(
+        {
+            tripId,
+            rating: '1',
+            isDeleted: false
+        }
+    ).count();
+    return result;
+};
+const countRating2 = async (tripId) => {
+    const result = await TripAccountSchema.find(
+        {
+            tripId,
+            rating: '2',
+            isDeleted: false
+        }
+    ).count();
+    return result;
+};
+const countRating3 = async (tripId) => {
+    const result = await TripAccountSchema.find(
+        {
+            tripId,
+            rating: '3',
+            isDeleted: false
+        }
+    ).count();
+    return result;
+};
+const countRating4 = async (tripId) => {
+    const result = await TripAccountSchema.find(
+        {
+            tripId,
+            rating: '4',
+            isDeleted: false
+        }
+    ).count();
+    return result;
+};
+const countRating5 = async (tripId) => {
+    const result = await TripAccountSchema.find(
+        {
+            tripId,
+            rating: '5',
+            isDeleted: false
+        }
+    ).count();
+    return result;
+};
 const updateRate = async (tripId, rate) => {
     const result = await TripSchema.updateOne({
         _id: tripId,
@@ -177,6 +227,11 @@ export default {
     getComment,
     updateRate,
     countRating,
+    countRating1,
+    countRating2,
+    countRating3,
+    countRating4,
+    countRating5,
     sumRating,
     updateRating,
     createRating,

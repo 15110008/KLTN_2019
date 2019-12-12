@@ -327,6 +327,19 @@ const getTripDetail = async (req, res) => {
         const tripDetail = await TripRepository.getTripsDetail(tripId);
         if (!tripDetail) throw new NotFoundError(GetTripDetailErrors.GET_TRIP_DETAIL_FAILURE);
         const count = await TripRepository.countRating(tripId);
+        const count1 = await TripRepository.countRating1(tripId);
+        const count2 = await TripRepository.countRating2(tripId);
+        const count3 = await TripRepository.countRating3(tripId);
+        const count4 = await TripRepository.countRating4(tripId);
+        const count5 = await TripRepository.countRating5(tripId);
+        const rs = {
+            count,
+            count1,
+            count2,
+            count3,
+            count4,
+            count5
+        }
         const result = tripDetail.map((trip) => {
             const tripDetailInfo = {};
             tripDetailInfo._id = trip._id;
@@ -339,7 +352,7 @@ const getTripDetail = async (req, res) => {
             tripDetailInfo.tripId = trip.tripId;
             return tripDetailInfo;
         });
-        return res.onSuccess(Trip, result, count);
+        return res.onSuccess(Trip, result, rs);
     } catch (error) {
         return res.onError(error);
     }
@@ -418,7 +431,7 @@ const updateListSpot = async (req, res) => {
                 tripId,
                 destinationId
             } = array;
-            console.log(_id);
+            //console.log(_id);
             const data = {
                 date,
                 day,
@@ -428,7 +441,7 @@ const updateListSpot = async (req, res) => {
                 tripId,
                 destinationId
             };
-            console.log(data);
+            //console.log(data);
             const update = await TripRepository.updateListSpot(_id, data);
             return update;
         });

@@ -59,6 +59,56 @@ const countRating = async (placeId) => {
     ).count();
     return result;
 };
+const countRating1 = async (placeId) => {
+    const result = await PlaceAccountSchema.find(
+        {
+            placeId,
+            rating: '1',
+            isDeleted: false
+        }
+    ).count();
+    return result;
+};
+const countRating2 = async (placeId) => {
+    const result = await PlaceAccountSchema.find(
+        {
+            placeId,
+            rating: '2',
+            isDeleted: false
+        }
+    ).count();
+    return result;
+};
+const countRating3 = async (placeId) => {
+    const result = await PlaceAccountSchema.find(
+        {
+            placeId,
+            rating: '3',
+            isDeleted: false
+        }
+    ).count();
+    return result;
+};
+const countRating4 = async (placeId) => {
+    const result = await PlaceAccountSchema.find(
+        {
+            placeId,
+            rating: '4',
+            isDeleted: false
+        }
+    ).count();
+    return result;
+};
+const countRating5 = async (placeId) => {
+    const result = await PlaceAccountSchema.find(
+        {
+            placeId,
+            rating: '5',
+            isDeleted: false
+        }
+    ).count();
+    return result;
+};
 const sumRating = async (placeId) => {
     const result = await PlaceAccountSchema.aggregate([
         { $match: { _id: placeId, rating: { $ne: null } } },
@@ -193,6 +243,11 @@ export default {
     existed,
     createCom,
     countRating,
+    countRating1,
+    countRating2,
+    countRating3,
+    countRating4,
+    countRating5,
     sumRating,
     insertImage,
     updateImage,

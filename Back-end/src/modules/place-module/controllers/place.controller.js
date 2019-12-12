@@ -170,6 +170,19 @@ const getPlace = async (req, res) => {
         const place = await PlaceRepository.getPlace(placeId);
         if (!place) throw new NotFoundError(GetPlaceErrors.GET_FAIL);
         const count = await PlaceRepository.countRating(placeId);
+        const count1 = await PlaceRepository.countRating1(placeId);
+        const count2 = await PlaceRepository.countRating2(placeId);
+        const count3 = await PlaceRepository.countRating3(placeId);
+        const count4 = await PlaceRepository.countRating4(placeId);
+        const count5 = await PlaceRepository.countRating5(placeId);
+        const result = {
+            count,
+            count1,
+            count2,
+            count3,
+            count4,
+            count5
+        };
         return res.onSuccess({
             _id: place._id,
             name: place.name,
@@ -183,7 +196,7 @@ const getPlace = async (req, res) => {
             longitude: place.longitude,
             latitude: place.latitude,
             destinationId: place.destinationId,
-        }, count);
+        }, result);
     } catch (error) {
         return res.onError(error);
     }
