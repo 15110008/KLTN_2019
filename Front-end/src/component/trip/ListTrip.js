@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
 
 export default class Trip extends Component {
+
+    componentDidMount() {
+
+    }
+
     render() {
         return (
             <div>

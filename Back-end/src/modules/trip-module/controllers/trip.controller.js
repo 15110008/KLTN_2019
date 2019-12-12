@@ -339,7 +339,7 @@ const getTripDetail = async (req, res) => {
             count3,
             count4,
             count5
-        }
+        };
         const result = tripDetail.map((trip) => {
             const tripDetailInfo = {};
             tripDetailInfo._id = trip._id;
@@ -431,7 +431,7 @@ const updateListSpot = async (req, res) => {
                 tripId,
                 destinationId
             } = array;
-            //console.log(_id);
+            // console.log(_id);
             const data = {
                 date,
                 day,
@@ -441,7 +441,7 @@ const updateListSpot = async (req, res) => {
                 tripId,
                 destinationId
             };
-            //console.log(data);
+            // console.log(data);
             const update = await TripRepository.updateListSpot(_id, data);
             return update;
         });

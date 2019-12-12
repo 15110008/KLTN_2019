@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Axios from 'axios'
+import { history } from "react-router";
 
 export default class ListDestination extends Component {
     constructor(props) {
@@ -25,7 +26,7 @@ export default class ListDestination extends Component {
     }
 
     onClick(id) {
-        window.location.replace("http://localhost:3006/destination/" + id)
+        window.location.href = "http://localhost:3006/destination/" + id
     }
 
     render() {

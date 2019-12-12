@@ -253,7 +253,7 @@ export default class CreateTrip extends Component {
 
     render() {
         return (
-            <div style={{ paddingTop: 100 }}>
+            <div style={{ paddingTop: 100 }} className='trip'>
                 <div className='container create-trip'>
                     <div className="row block-9 justify-content-center mb-5">
                         <div className="col-md-9 mb-md-5">

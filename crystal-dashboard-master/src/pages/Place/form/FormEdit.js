@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom';
-import { Form, Input, Button, Icon, Select, Upload } from 'antd';
+import { Form, Input, Button, Icon, Select, Upload, Modal } from 'antd';
 import axios from 'axios'
 import ComboField from '../../../components/base/ComboField';
 import _ from 'lodash'
@@ -231,59 +231,64 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
             const { getFieldDecorator } = form;
 
             return (
-                <Form layout={formLayout} labelAlign="left">
-                    <Form.Item {...formItemLayout} label="Tên địa điểm" >
-                        {getFieldDecorator('name', {
-                            rules: [{ required: true, message: 'Bạn phải nhập tên đia điểm' }],
-                        })(<Input readOnly={this.props.readOnly} />)}
-                    </Form.Item>
-                    <Form.Item {...formItemLayout} label="Điểm đến" >
-                        {getFieldDecorator('destinationId', {
-                            rules: [{ required: true, message: 'Bạn phải chọn điểm đến' }],
-                            initialValue: this.props.valueDestinationId
-                        })(<Select readOnly={this.props.readOnly} onChange={this.props.onChange}>
-                            {this.props.destinationOption && this.props.destinationOption.map((x, index) => {
-                                return <Option key={index} value={x.value}>{x.label}</Option>
-                            })}
-                        </Select>)}
-                    </Form.Item>
-                    <Form.Item {...formItemLayout} label="Địa chỉ">
-                        {getFieldDecorator('location')(<Input readOnly={this.props.readOnly} />)}
-                    </Form.Item>
-                    <Form.Item {...formItemLayout} label="Loại hình du lịch">
-                        {getFieldDecorator('category', {
-                            initialValue: this.props.valueCategory
-                        })(<Select readOnly={this.props.readOnly} onChange={this.props.onChange}>
-                            {this.optionCategory && this.optionCategory.map((x, index) => {
-                                return <Option key={index} value={x.value}>{x.label}</Option>
-                            })}
-                        </Select>)}
-                    </Form.Item>
-                    <Form.Item {...formItemLayout} label="Giá cả">
-                        {getFieldDecorator('price')(<Input readOnly={this.props.readOnly} type='number' />)}
-                    </Form.Item>
-                    <Form.Item {...formItemLayout} label="Số điện thoại">
-                        {getFieldDecorator('phone')(<Input readOnly={this.props.readOnly} />)}
-                    </Form.Item>
-                    <Form.Item {...formItemLayout} label="Kinh độ">
-                        {getFieldDecorator('longitude')(<Input readOnly={this.props.readOnly} />)}
-                    </Form.Item>
-                    <Form.Item {...formItemLayout} label="Vĩ độ">
-                        {getFieldDecorator('latitude')(<Input readOnly={this.props.readOnly} />)}
-                    </Form.Item>
-                    <Form.Item {...formItemLayout} label="Hình ảnh">
-                        {getFieldDecorator('images')(
-                            <Upload ref={c => this.imageRef = c} multiple={true} {...props}>
-                                <Button>
-                                    <Icon type="upload" /> Tải hình ảnh
+                <div>
+                    <Form layout={formLayout} labelAlign="left">
+                        <Form.Item {...formItemLayout} label="Tên địa điểm" >
+                            {getFieldDecorator('name', {
+                                rules: [{ required: true, message: 'Bạn phải nhập tên đia điểm' }],
+                            })(<Input readOnly={this.props.readOnly} />)}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label="Điểm đến" >
+                            {getFieldDecorator('destinationId', {
+                                rules: [{ required: true, message: 'Bạn phải chọn điểm đến' }],
+                                initialValue: this.props.valueDestinationId
+                            })(<Select readOnly={this.props.readOnly} onChange={this.props.onChange}>
+                                {this.props.destinationOption && this.props.destinationOption.map((x, index) => {
+                                    return <Option key={index} value={x.value}>{x.label}</Option>
+                                })}
+                            </Select>)}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label="Địa chỉ">
+                            {getFieldDecorator('location')(<Input readOnly={this.props.readOnly} />)}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label="Loại hình du lịch">
+                            {getFieldDecorator('category', {
+                                initialValue: this.props.valueCategory
+                            })(<Select readOnly={this.props.readOnly} onChange={this.props.onChange}>
+                                {this.optionCategory && this.optionCategory.map((x, index) => {
+                                    return <Option key={index} value={x.value}>{x.label}</Option>
+                                })}
+                            </Select>)}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label="Giá cả">
+                            {getFieldDecorator('price')(<Input readOnly={this.props.readOnly} type='number' />)}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label="Số điện thoại">
+                            {getFieldDecorator('phone')(<Input readOnly={this.props.readOnly} />)}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label="Kinh độ">
+                            {getFieldDecorator('longitude')(<Input readOnly={this.props.readOnly} />)}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label="Vĩ độ">
+                            {getFieldDecorator('latitude')(<Input readOnly={this.props.readOnly} />)}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label="Hình ảnh">
+                            {getFieldDecorator('images')(
+                                <Upload ref={c => this.imageRef = c} multiple={true} {...props}>
+                                    <Button>
+                                        <Icon type="upload" /> Tải hình ảnh
                                 </Button>
-                            </Upload>
-                        )}
-                    </Form.Item>
-                    <Form.Item {...formItemLayout} label="Mô tả">
-                        {getFieldDecorator('description')(<TextArea rows={4} readOnly={this.props.readOnly} />)}
-                    </Form.Item>
-                </Form>
+                                </Upload>
+                            )}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label="Mô tả">
+                            {getFieldDecorator('description')(<TextArea rows={4} readOnly={this.props.readOnly} />)}
+                        </Form.Item>
+                    </Form>
+                    <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
+                        <img alt="example" style={{ width: '100%' }} src={previewImage} />
+                    </Modal>
+                </div>
             );
         }
     },

@@ -121,7 +121,7 @@ export default class Trip extends Component {
         return (
             <div style={{
                 background: 'rgba(0, 0, 0, 0.02)'
-            }}>
+            }} className='trip'>
                 <div style={{ paddingTop: 100, paddingBottom: 50 }}>
                     <div style={{ padding: `0px 50px` }}>
                         <DndProvider backend={HTML5Backend}>

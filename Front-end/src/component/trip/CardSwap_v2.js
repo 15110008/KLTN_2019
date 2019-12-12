@@ -93,48 +93,50 @@ export default class CardSwap extends React.Component {
                             ref={provided.innerRef}
                             isDragging={snapshot.isDragging}
                         >
-                            <div className='card-swap'>
-                                <Card
-                                    ref={c => this.cardRef = c}
-                                    style={{ height: 105, borderRadius: '5px', boxShadow: '0 3px 6px 0 rgba(0,0,0,0.16)' }}>
-                                    <span>
-                                        <img alt="picture"
-                                            style={{ width: 100, height: 105 }} src={image ? ("http://localhost:3000/" + image) : ''} />
-                                    </span>
+                            <div className='trip'>
+                                <div className='card-swap'>
+                                    <Card
+                                        ref={c => this.cardRef = c}
+                                        style={{ height: 105, borderRadius: '5px', boxShadow: '0 3px 6px 0 rgba(0,0,0,0.16)' }}>
+                                        <span>
+                                            <img alt="picture"
+                                                style={{ width: 100, height: 105 }} src={image ? ("http://localhost:3000/" + image) : ''} />
+                                        </span>
 
-                                    <span >
-                                        <Tooltip placement="top" title={text}>
-                                            <div style={{ marginTop: -10, fontSize: 19, fontWeight: 'bold', paddingBottom: 5, position: 'absolute', top: 30, left: 115, }}>
-                                                {_.truncate(text, {
-                                                    'length': 20,
-                                                    'separator': " "
-                                                })}
-                                            </div>
-                                        </Tooltip>
-                                        <span className='spot-time' style={{ color: 'red', paddingLeft: 'unset', position: 'absolute', top: 0, right: 5, fontSize: 14 }}>{startTime}</span>
-                                        {!isBottomItem ?
-                                            <div className='spot-time' style={{
-                                                position: 'absolute',
-                                                top: 50,
-                                                right: -88
-                                            }}>
-                                                <Form.Item  {...formItemLayout} label='Thời gian lưu trú'>
-                                                    {getFieldDecorator(indexParent + '_' + this.props.index)(<Input ref={c => this.inputRef = c} readOnly={this.props.readOnly} onBlur={() => this.onBlur()} />)}
-                                                </Form.Item>
-                                                <div style={{
+                                        <span >
+                                            <Tooltip placement="top" title={text}>
+                                                <div style={{ marginTop: -10, fontSize: 19, fontWeight: 'bold', paddingBottom: 5, position: 'absolute', top: 30, left: 115, }}>
+                                                    {_.truncate(text, {
+                                                        'length': 20,
+                                                        'separator': " "
+                                                    })}
+                                                </div>
+                                            </Tooltip>
+                                            <span className='spot-time' style={{ color: 'red', paddingLeft: 'unset', position: 'absolute', top: 0, right: 5, fontSize: 14 }}>{startTime}</span>
+                                            {!isBottomItem ?
+                                                <div className='spot-time' style={{
                                                     position: 'absolute',
-                                                    top: '8px',
-                                                    right: '100px'
-                                                }}>phút</div>
-                                            </div> : ''}
-                                    </span>
-                                </Card>
-                                {!isBottomItem ? <div className='to-next-item'>
-                                    <div className='travel-info'>
-                                        <img src={"../../images/car.svg"} />
-                                        <div>{length} km | {hoursSpot != 0 && (hoursSpot + ' giờ ')}{minutesSpot + " phút"}</div>
-                                    </div>
-                                </div> : ''}
+                                                    top: 50,
+                                                    right: -88
+                                                }}>
+                                                    <Form.Item  {...formItemLayout} label='Thời gian lưu trú'>
+                                                        {getFieldDecorator(indexParent + '_' + this.props.index)(<Input ref={c => this.inputRef = c} readOnly={this.props.readOnly} onBlur={() => this.onBlur()} />)}
+                                                    </Form.Item>
+                                                    <div style={{
+                                                        position: 'absolute',
+                                                        top: '8px',
+                                                        right: '100px'
+                                                    }}>phút</div>
+                                                </div> : ''}
+                                        </span>
+                                    </Card>
+                                    {!isBottomItem ? <div className='to-next-item'>
+                                        <div className='travel-info'>
+                                            <img src={"../../images/car.svg"} />
+                                            <div>{length} km | {hoursSpot != 0 && (hoursSpot + ' giờ ')}{minutesSpot + " phút"}</div>
+                                        </div>
+                                    </div> : ''}
+                                </div>
                             </div>
                         </Container>
                     )}
