@@ -91,7 +91,7 @@ const createRating = async (req, res) => {
     const { jwt } = req.headers;
     const {
         placeId,
-        rating
+        rates
     } = req.body;
     try {
         const authenData = VerifyToken(jwt);
@@ -100,7 +100,7 @@ const createRating = async (req, res) => {
         req.body = {
             placeId,
             accountId,
-            rating
+            rates
         };
         const account = await AccountRepository.getAccountById(req.body.accountId);
         if (!account) throw new NotFoundError(CreateRatingErrors.ACCOUNT_NEVER_EXIST);
@@ -111,23 +111,23 @@ const createRating = async (req, res) => {
             const result = await PlaceRepository.createRating(req.body);
             if (!result) throw new NotImplementError(CreateRatingErrors.CREATE_RATING_FAIL);
         } else {
-            const result = await PlaceRepository.updateRating(req.body.placeId, req.body.accountId, req.body.rating);
+            const result = await PlaceRepository.updateRating(req.body.placeId, req.body.accountId, req.body.rates);
             if (!result) throw new NotImplementError(CreateRatingErrors.UPDATE_RATING_FAIL);
         }
         const ra = await PlaceRepository.existed(req.body.placeId, req.body.accountId);
-        const sum = await PlaceRepository.sumRating(placeId);
         /* eslint-enable no-await-in-loop */
+        const sum = await PlaceRepository.getNotNull(placeId);
         const total = sum.map((su) => {
-            const { totalValue } = su;
-            return totalValue;
+            const { rating } = su;
+            return rating;
         });
         const sumRa = await Promise.all(total);
         let sumRating = 0;
         for (let i = 0; i < sumRa.length; i += 1) {
             sumRating += sumRa[i];
         }
-        /* eslint-enable no-await-in-loop */
         const count = await PlaceRepository.countRating(placeId);
+        /* eslint-enable no-await-in-loop */
         const rate = sumRating / count;
         const update = await PlaceRepository.updateRate(placeId, rate);
         if (!update) throw new NotImplementError(CreateRatingErrors.UPDATE_RATE_FAIL);
@@ -140,11 +140,14 @@ const getPlaces = async (req, res) => {
     try {
         const places = await PlaceRepository.getPlaces();
         if (!places) throw new NotFoundError(GetPlacesErrors.GET_FAIL);
-        const result = places.map((place) => {
+        const result1 = places.map(async (place) => {
+            const { _id } = place
+            const count = await PlaceRepository.countRating(_id);
             const placeInfo = {};
             placeInfo._id = place._id;
             placeInfo.name = place.name;
             placeInfo.rate = place.rate;
+            placeInfo.count = count;
             placeInfo.category = place.category;
             placeInfo.location = place.location;
             placeInfo.phone = place.phone;
@@ -156,10 +159,8 @@ const getPlaces = async (req, res) => {
             placeInfo.destinationId = place.destinationId;
             return placeInfo;
         });
-        return res.send({
-            data: result,
-            success: 'ok'
-        });
+        const result = await Promise.all(result1);
+        return res.onSuccess(result);
     } catch (error) {
         return res.onError(error);
     }
@@ -208,10 +209,7 @@ const getComment = async (req, res) => {
         if (!place) throw new NotFoundError(GetRateCommentErrors.PLACE_NEVER_EXIST);
         const result = await PlaceRepository.getComment(placeId);
         if (!result) throw new NotImplementError(GetRateCommentErrors.GET_FAIL);
-        return res.onSuccess({
-            accountId: result.accountId,
-            comment: result.comment,
-        });
+        return res.onSuccess(result);
     } catch (error) {
         return res.onError(error);
     }

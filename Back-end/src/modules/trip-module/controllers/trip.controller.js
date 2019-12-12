@@ -339,7 +339,7 @@ const getTripDetail = async (req, res) => {
             count3,
             count4,
             count5
-        }
+        };
         const result = tripDetail.map((trip) => {
             const tripDetailInfo = {};
             tripDetailInfo._id = trip._id;
@@ -431,7 +431,7 @@ const updateListSpot = async (req, res) => {
                 tripId,
                 destinationId
             } = array;
-            //console.log(_id);
+            // console.log(_id);
             const data = {
                 date,
                 day,
@@ -441,7 +441,7 @@ const updateListSpot = async (req, res) => {
                 tripId,
                 destinationId
             };
-            //console.log(data);
+            // console.log(data);
             const update = await TripRepository.updateListSpot(_id, data);
             return update;
         });
@@ -528,7 +528,7 @@ const createRating = async (req, res) => {
     const { jwt } = req.headers;
     const {
         tripId,
-        rating
+        rates
     } = req.body;
     try {
         const authenData = VerifyToken(jwt);
@@ -537,7 +537,7 @@ const createRating = async (req, res) => {
         req.body = {
             tripId,
             accountId,
-            rating
+            rates
         };
         const account = await AccountRepository.getAccountById(req.body.accountId);
         if (!account) throw new NotFoundError(CreateRatingErrors.ACCOUNT_NEVER_EXIST);
@@ -548,23 +548,23 @@ const createRating = async (req, res) => {
             const result = await TripRepository.createRating(req.body);
             if (!result) throw new NotImplementError(CreateRatingErrors.CREATE_RATING_FAIL);
         } else {
-            const result = await TripRepository.updateRating(req.body.placeId, req.body.accountId, req.body.rating);
+            const result = await TripRepository.updateRating(req.body.placeId, req.body.accountId, req.body.rates);
             if (!result) throw new NotImplementError(CreateRatingErrors.UPDATE_RATING_FAIL);
         }
         const ra = await TripRepository.existed(req.body.placeId, req.body.accountId);
-        const sum = await TripRepository.sumRating(tripId);
         /* eslint-enable no-await-in-loop */
+        const sum = await TripRepository.getNotNull(tripId);
         const total = sum.map((su) => {
-            const { totalValue } = su;
-            return totalValue;
+            const { rating } = su;
+            return rating;
         });
         const sumRa = await Promise.all(total);
         let sumRating = 0;
         for (let i = 0; i < sumRa.length; i += 1) {
             sumRating += sumRa[i];
         }
-        /* eslint-enable no-await-in-loop */
         const count = await TripRepository.countRating(tripId);
+        /* eslint-enable no-await-in-loop */
         const rate = sumRating / count;
         const update = await TripRepository.updateRate(tripId, rate);
         if (!update) throw new NotImplementError(CreateRatingErrors.UPDATE_RATE_FAIL);
@@ -580,10 +580,7 @@ const getComment = async (req, res) => {
         if (!trip) throw new NotFoundError(GetCommentErrors.TRIP_NEVER_EXIST);
         const result = await TripRepository.getComment(tripId);
         if (!result) throw new NotImplementError(GetCommentErrors.GET_FAIL);
-        return res.onSuccess({
-            accountId: result.accountId,
-            comment: result.comment,
-        });
+        return res.onSuccess(result);
     } catch (error) {
         return res.onError(error);
     }
