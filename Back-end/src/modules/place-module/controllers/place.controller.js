@@ -141,7 +141,7 @@ const getPlaces = async (req, res) => {
         const places = await PlaceRepository.getPlaces();
         if (!places) throw new NotFoundError(GetPlacesErrors.GET_FAIL);
         const result1 = places.map(async (place) => {
-            const { _id } = place
+            const { _id } = place;
             const count = await PlaceRepository.countRating(_id);
             const placeInfo = {};
             placeInfo._id = place._id;

@@ -279,16 +279,21 @@ const getTripPublic = async (req, res) => {
     try {
         const trip = await TripRepository.getTripPublic();
         if (!trip) throw new NotImplementError(GetTripPublicErrors.GET_TRIP_FAIL);
-        const result = trip.map((tr) => {
+        const result1 = trip.map(async (tr) => {
+            const { destinationId } = tr;
+            const image = await DestinationRepository.getImages(destinationId);
+            const { images } = image;
             const tripInfo = {};
             tripInfo._id = tr._id;
             tripInfo.name = tr.name;
             tripInfo.totalDate = tr.totalDate;
             tripInfo.destinationId = tr.destinationId;
+            tripInfo.images = images;
             tripInfo.accountId = tr.accountId;
             tripInfo.rate = tr.rate;
             return tripInfo;
         });
+        const result = await Promise.all(result1);
         return res.onSuccess(result);
     } catch (error) {
         return res.onError(error);

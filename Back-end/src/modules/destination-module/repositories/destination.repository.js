@@ -87,7 +87,15 @@ const updateImage = async (destinationId, data) => {
     if (result.n === result.nModified) return true;
     return false;
 };
+const getImages = async (destinationId) => {
+    const result = await DestinationSchema.findOne({
+        _id: destinationId,
+        isDeleted: false
+    });
+    return result;
+};
 export default {
+    getImages,
     isExistedDestination,
     create,
     getDestinations,
