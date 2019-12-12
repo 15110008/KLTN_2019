@@ -52,7 +52,7 @@ export default class DroppableCard extends Component {
         const { x, getFieldDecorator, formItemLayout, dataRemain } = this.props
         if (!dataRemain) {
             return (
-                <div className='col-md-4' style={{ padding: 'unset' }}>
+                <div className='col-md-4 trip' style={{ padding: 'unset' }}>
                     <Container>
                         <Title>Ngày {x.day} ({x.date})</Title>
                         <Droppable droppableId={this.props.id} type="TASK">

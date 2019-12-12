@@ -275,7 +275,7 @@ export default class Trip extends Component {
         return (
             <div style={{
                 background: 'rgba(0, 0, 0, 0.02)'
-            }}>
+            }} className='trip'>
                 <div style={{ paddingTop: 100 }}>
                     <div style={{ padding: `0px 50px` }}>
                         <div className='row' style={{ marginBottom: '-35px' }}>
