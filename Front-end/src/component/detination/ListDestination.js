@@ -41,8 +41,6 @@ export default class ListDestination extends Component {
                 </div>
                 <div className='row'>
                     {this.state.data && this.state.data.map((x, index) => {
-                        const price = parseInt(x.price)
-                        const _price = price ? price.toLocaleString(undefined, { maximumFractionDigits: 2 }) : null
                         if (index < 12) {
                             return (
                                 <div className='col-md-3' style={{
@@ -51,8 +49,7 @@ export default class ListDestination extends Component {
                                     marginBottom: '15px'
 
                                 }}>
-                                    <div className='property-wrap' style={{ backgroundImage: 'no-repeat' }}
-                                    >
+                                    <div className='property-wrap' style={{ backgroundImage: 'no-repeat' }}>
                                         <img className="img" src={"http://localhost:3000/" + x.images[0]} style={{
                                             borderRadius: '5px 5px 0px 0px', height: 200, cursor: 'pointer'
                                         }}
@@ -80,11 +77,6 @@ export default class ListDestination extends Component {
                                                     'separator': " "
                                                 })}
                                             </div>
-                                            {/* 
-                                            <div className='extra-content destination-card-price'>
-                                                <div></div>
-                                                <div>{_price ? _price + '  Đ' : ''}</div>
-                                            </div> */}
                                         </div>
                                     </div>
                                 </div>
