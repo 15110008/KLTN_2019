@@ -18,9 +18,8 @@ class UserInfo extends Component {
           <img src={user.image} alt={user.name} className="photo" />
           <div className="userinfo">
             <div className="username">
-              {user.name}
+              Admin
             </div>
-            <div className="title">Admin</div>
           </div>
           <span
             onClick={() => this.setState({ isShowingUserMenu: !this.state.isShowingUserMenu })}

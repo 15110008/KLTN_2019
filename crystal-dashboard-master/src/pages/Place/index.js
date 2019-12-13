@@ -96,16 +96,15 @@ export default class Place extends Component {
     Axios.get('http://localhost:3000/v1/place')
       .then((response) => {
         if (response.data.success) {
-          response.data.data.map((x, index) => {
+          response.data.result.map((x, index) => {
             x.description = _.truncate(x.description, {
               'length': 500,
               'separator': /,? +/
             })
           })
           this.setState({
-            data: response.data.data
+            data: response.data.result
           })
-          console.log("TCL: Place -> loadData -> data", response.data.data)
 
         } else {
         }

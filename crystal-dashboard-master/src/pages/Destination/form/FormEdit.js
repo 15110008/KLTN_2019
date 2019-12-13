@@ -11,7 +11,6 @@ export default class FormEdit extends Component {
             destinationOption: [],
             fileList: []
         };
-
     }
 
     async componentDidMount() {

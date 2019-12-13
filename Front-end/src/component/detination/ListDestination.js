@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Axios from 'axios'
-import { history } from "react-router";
+import { Rate } from 'antd'
+import _ from 'lodash'
 
 export default class ListDestination extends Component {
     constructor(props) {
@@ -18,7 +19,7 @@ export default class ListDestination extends Component {
         Axios.get('http://localhost:3000/v1/place')
             .then((response) => {
                 if (response.data.success) {
-                    this.setState({ data: response.data.data })
+                    this.setState({ data: response.data.result })
                 } else {
                 }
             }).catch(error => {
@@ -31,7 +32,7 @@ export default class ListDestination extends Component {
 
     render() {
         return (
-            <div className="container">
+            <div className="container destination">
                 <div className="row justify-content-center">
                     <div className="col-md-12 heading-section text-center  mb-5">
                         <span className="subheading">Đề xuất</span>
@@ -65,10 +66,25 @@ export default class ListDestination extends Component {
                                                 onClick={() => this.onClick(x['_id'])} >
                                                 {x.name}
                                             </div>
+                                            <span><Rate style={{
+                                                fontSize: '15px',
+                                                marginLeft: '10px'
+                                            }} allowHalf disabled value={x.rate} />
+                                            </span>
+                                            <span className='rate-total'>
+                                                {x.count} người đánh giá
+                                            </span>
+                                            <div style={{ fontSize: '13px', marginLeft: '10px' }}>
+                                                {_.truncate(x.location, {
+                                                    'length': 40,
+                                                    'separator': " "
+                                                })}
+                                            </div>
+                                            {/* 
                                             <div className='extra-content destination-card-price'>
                                                 <div></div>
                                                 <div>{_price ? _price + '  Đ' : ''}</div>
-                                            </div>
+                                            </div> */}
                                         </div>
                                     </div>
                                 </div>

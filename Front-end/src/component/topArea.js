@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import background from '../images/bg_1.jpg';
+import background from '../images/background.jpg';
 
 export default class Index extends Component {
     render() {
@@ -11,10 +11,8 @@ export default class Index extends Component {
                     <div className="row no-gutters slider-text justify-content-center align-items-center">
                         <div className="col-lg-8 col-md-6 d-flex align-items-end">
                             <div className="text text-center">
-                                <h1 className="mb-4">The Simplest <br />Way to Find Property</h1>
-                                <p style={{ fontSize: '18px' }}>A small river named Duden flows by their place and supplies it with the
-                                  necessary regelialia.
-                       <br />It is a paradisematic country, in which roasted parts</p>
+                                <h1 className="mb-4" style={{ color: 'white' }}>Lên lịch trình cho chuyến đi tiếp theo của bạn</h1>
+                                <p style={{ fontSize: '18px', color: 'white' }}>Tạo lịch trình từng ngày hoàn toàn miễn phí ngay hôm nay. </p>
                             </div>
                         </div>
                     </div>

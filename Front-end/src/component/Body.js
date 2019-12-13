@@ -12,7 +12,7 @@ export default class Body extends Component {
                     <div className="container">
                         <div className="row justify-content-center">
                             <div className="col-md-12 heading-section text-center  mb-5">
-                                <span className="subheading">Our Services</span>
+                                <span className="subheading">Về chúng tôi</span>
                                 <h2 className="mb-2">Lên lịch trình du lịch theo sở thích cá nhân</h2>
                             </div>
                         </div>
@@ -21,11 +21,11 @@ export default class Body extends Component {
                                 <div className="media block-6 services d-block text-center">
                                     <div className="icon d-flex justify-content-center align-items-center">
                                         <img style={{ width: '70px', height: '70px' }}
-                                            src={'https://triphunter.vn/assets/icons/icon_planding_1-498fc51965ac4eeaf09cb257c6a0013a406ae2d504290fc16194f1b03fd3f839.svg'} />
+                                            src={'https://triphunter.vn/assets/icons/icon_planding_2-1aa4e8b9b5fafac6d00d74b76af29b2507d2348237f438fe33d46e1a26233977.svg'} />
                                     </div>
                                     <div className="media-body py-md-4">
-                                        <h3>Tìm điểm đến</h3>
-                                        <p>Tìm điểm tham quan, nhà hàng, khách sạn dễ dàng và nhanh chóng nhất.</p>
+                                        <h3>Kết nối bốn phương</h3>
+                                        <p>Cùng tham khảo, chia sẻ trải nghiệm trên từng chuyến đi của bạn tới bạn bè bốn phương</p>
                                     </div>
                                 </div>
                             </div>
@@ -33,7 +33,7 @@ export default class Body extends Component {
                                 <div className="media block-6 services d-block text-center">
                                     <div className="icon d-flex justify-content-center align-items-center">
                                         <img style={{ width: '70px', height: '70px' }}
-                                            src={'https://triphunter.vn/assets/icons/icon_planding_2-1aa4e8b9b5fafac6d00d74b76af29b2507d2348237f438fe33d46e1a26233977.svg'} />
+                                            src={'https://triphunter.vn/assets/icons/icon_planding_1-498fc51965ac4eeaf09cb257c6a0013a406ae2d504290fc16194f1b03fd3f839.svg'} />
                                     </div>
                                     <div className="media-body py-md-4">
                                         <h3>Dễ dàng tạo lịch trình</h3>
