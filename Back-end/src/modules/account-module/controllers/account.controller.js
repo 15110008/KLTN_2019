@@ -231,10 +231,10 @@ const updateInfo = async (req, res) => {
         const authenData = VerifyToken(jwt);
         if (!authenData) throw new NotImplementError(UpdateAccountErrors.AUTH_FAIL);
         const updated = await AccountRepository.updateInfo(authenData.accountId, data);
-        if (!updated) throw new NotImplementError(UpdateAccountErrors.UPDATED_FAILURE);
+        // if (!updated) throw new NotImplementError(UpdateAccountErrors.UPDATED_FAILURE);
         const account = await AccountRepository.getAccountById(authenData.accountId);
         if (!account) throw new NotFoundError(UpdateAccountErrors.GET_FAIL);
-        return res.onSuccess({
+        return res.onSuccess(updated, {
             _id: account._id,
             name: account.name,
             avatar: account.avatar,

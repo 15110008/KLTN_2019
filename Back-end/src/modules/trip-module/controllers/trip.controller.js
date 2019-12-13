@@ -280,6 +280,8 @@ const getTripPublic = async (req, res) => {
         const trip = await TripRepository.getTripPublic();
         if (!trip) throw new NotImplementError(GetTripPublicErrors.GET_TRIP_FAIL);
         const result1 = trip.map(async (tr) => {
+            const { _id } = tr;
+            const count = await TripRepository.countRating(_id);
             const { destinationId } = tr;
             const image = await DestinationRepository.getImages(destinationId);
             const { images } = image;
@@ -291,6 +293,7 @@ const getTripPublic = async (req, res) => {
             tripInfo.images = images;
             tripInfo.accountId = tr.accountId;
             tripInfo.rate = tr.rate;
+            tripInfo.count = count;
             return tripInfo;
         });
         const result = await Promise.all(result1);
@@ -308,16 +311,24 @@ const getTripUnPublic = async (req, res) => {
         const { accountId } = authenData;
         const trip = await TripRepository.getTripUnPublic(accountId);
         if (!trip) throw new NotFoundError(GetTripUnPublicErrors.GET_TRIP_FAILURE);
-        const result = trip.map((tr) => {
+        const result1 = trip.map(async (tr) => {
+            const { _id } = tr;
+            const count = await TripRepository.countRating(_id);
+            const { destinationId } = tr;
+            const image = await DestinationRepository.getImages(destinationId);
+            const { images } = image;
             const tripInfo = {};
             tripInfo._id = tr._id;
             tripInfo.name = tr.name;
             tripInfo.totalDate = tr.totalDate;
             tripInfo.destinationId = tr.destinationId;
+            tripInfo.images = images;
             tripInfo.accountId = tr.accountId;
             tripInfo.rate = tr.rate;
+            tripInfo.rate = count;
             return tripInfo;
         });
+        const result = await Promise.all(result1);
         return res.onSuccess(result);
     } catch (error) {
         return res.onError(error);
