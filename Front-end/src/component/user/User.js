@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Icon, Modal } from 'antd'
+import { Button, Icon, Modal, notification } from 'antd'
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 import './style.scss'
 import Avatar from 'react-avatar-edit'
@@ -21,6 +21,11 @@ export default class User extends Component {
     }
 
     componentDidMount() {
+        this.loadData()
+
+    }
+
+    loadData() {
         const token = localStorage.getItem('jwt')
         const headers = {
             headers: { jwt: token },
@@ -30,11 +35,23 @@ export default class User extends Component {
                 if (res.data.success) {
                     const data = res.data.result
                     this.setState({
-                        data: data
+                        data: data,
                     })
                 }
             }).catch((err) => {
                 console.log("TCL: User -> componentDidMount -> err", err)
+            })
+        Axios.get('http://localhost:3000/v1/account/me', headers)
+            .then((res) => {
+                if (res.data.success) {
+                    const data = res.data.result
+
+                    this.setState({
+                        avatar: data.avatar ? 'http://localhost:3000/' + data.avatar : null
+                    })
+                }
+            }).catch((err) => {
+                console.log("TCL: Info -> componentDidMount -> err", err)
             })
     }
 
@@ -70,13 +87,20 @@ export default class User extends Component {
                 },
             }
             var formData = new FormData();
-            let file = await this.dataURLtoFile(preview, 'demo.png')
+            let file = await this.dataURLtoFile(preview, 'avatar-' + email + '.png')
             console.log("TCL: User -> onSave -> file", file)
             formData.append('avatar', file, file.name)
             Axios.post('http://localhost:3000/v1/account/upload', formData, paramFile)
                 .then((res) => {
                     if (res.data.success) {
-                        console.log("TCL: User -> onSave -> res.data", res.data)
+                        notification['success']({
+                            message: 'Đăng tải hình thành công',
+                            onClick: () => {
+                                console.log('Notification Clicked!');
+                            },
+                        });
+                        this.loadData()
+                        this.handleCancel()
                     }
 
                 }).catch((err) => {
@@ -106,7 +130,7 @@ export default class User extends Component {
                         <div className='user-coverImage'>
                             <div className='ui container user-info' style={{ display: 'flex' }}>
                                 <div className='avatar'>
-                                    <img src={this.state.src ? this.state.src : "../../images/user.png"} />
+                                    <img src={this.state.avatar ? this.state.avatar : "../../images/user.png"} />
                                 </div>
 
                                 <div className='info' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
