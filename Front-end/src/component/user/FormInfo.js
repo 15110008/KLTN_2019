@@ -96,14 +96,13 @@ const CollectionCreateFormPassword = Form.create({ name: 'form_in_modal' })(
                     axios.put('http://localhost:3000/v1/account/changepassword', params, header)
                         .then((res) => {
                             if (res.data.success) {
-                                window.location.href = 'http://locahost:3006/user/info'
+                                window.location.href = 'http://localhost:3006/user/info'
                             }
                         }).catch((err) => {
                             console.log("TCL: extends -> onSave -> err", err)
 
                         })
                 } else {
-                    debugger
                     notification['error']({
                         message: 'Mật khẩu nhập lại chưa khớp',
                         onClick: () => {
@@ -180,7 +179,7 @@ const CollectionCreateFormInfo = Form.create({ name: 'form_in_modal' })(
             axios.put('http://localhost:3000/v1/account', params, header)
                 .then((res) => {
                     if (res.data.success) {
-                        window.location.href = 'http://locahost:3006/user/info'
+                        window.location.href = 'http://localhost:3006/user/info'
 
                     }
                 }).catch((err) => {

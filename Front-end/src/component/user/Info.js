@@ -79,19 +79,32 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
             const { visible, onCancel, onCreate, form } = this.props;
             const { getFieldDecorator } = form;
             return (
-                <Form layout={formLayout} labelAlign="left">
-                    <Form.Item {...formItemLayout} label="Email" >
-                        {getFieldDecorator('email', {
-                        })(<Input readOnly={true} disabled />)}
-                    </Form.Item>
-                    <Form.Item {...formItemLayout} label="Họ và tên">
-                        {getFieldDecorator('name')(<Input readOnly={true} type="textarea" />)}
-                    </Form.Item>
-                    <Form.Item {...formItemLayout} label="Số điện thoại">
-                        {getFieldDecorator('phone')(<Input readOnly={true} />)}
-                    </Form.Item>
+                <div style={{ width: '50%' }}>
+                    <Form layout={formLayout} labelAlign="left">
+                        <Form.Item {...formItemLayout} label="Email" >
+                            {getFieldDecorator('email', {
+                            })(<Input readOnly={true} disabled />)}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label="Họ và tên">
+                            {getFieldDecorator('name')(<Input readOnly={true} type="textarea" />)}
+                        </Form.Item>
+                        <Form.Item {...formItemLayout} label="Số điện thoại">
+                            {getFieldDecorator('phone')(<Input readOnly={true} />)}
+                        </Form.Item>
+
+                        <Modal
+                            visible={this.state.visible}
+                            title={this.state.title}
+                            centered
+                            footer={null}
+                            onCancel={() => this.handleCancel()}
+
+                        >
+                            <FormInfo ref={c => this.formInfoRef = c} handleCancel={() => this.handleCancel()} type={this.state.type} data={this.props.data} />
+                        </Modal>
+                    </Form>
                     <div style={{
-                        display: 'flex', justifyContent: 'center'
+                        display: 'flex', justifyContent: 'center', paddingBottom: 20
                     }}>
                         <Button style={{
                             marginRight: '24px',
@@ -111,17 +124,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                             })
                         }} type="danger">Đổi mật khẩu</Button>
                     </div>
-                    <Modal
-                        visible={this.state.visible}
-                        title={this.state.title}
-                        centered
-                        footer={null}
-                        onCancel={() => this.handleCancel()}
-
-                    >
-                        <FormInfo ref={c => this.formInfoRef = c} handleCancel={() => this.handleCancel()} type={this.state.type} data={this.props.data} />
-                    </Modal>
-                </Form>
+                </div>
             );
         }
     },
