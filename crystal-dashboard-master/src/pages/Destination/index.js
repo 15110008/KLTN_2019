@@ -176,11 +176,13 @@ export default class Destination extends Component {
     file && file.map((x, index) => {
       if (x.originFileObj) {
         formData.append('images', x.originFileObj)
+        console.log("TCL: Destination -> onSaveEdit -> x.originFileObj", x.originFileObj)
       } else {
         formData.append('images', x)
       }
     })
     formData.append('destinationId', this.state.id)
+    delete data.images
     this.formEditRef.formRef.validateFields(async (err) => {
       if (!err) {
         if (file) {

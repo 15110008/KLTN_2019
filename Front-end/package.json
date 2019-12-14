@@ -14,6 +14,7 @@
     "lodash.flow": "^3.5.0",
     "node-sass": "^4.12.0",
     "react": "^16.9.0",
+    "react-avatar-edit": "^0.8.3",
     "react-beautiful-dnd": "^12.2.0",
     "react-bootstrap": "^1.0.0-beta.12",
     "react-dnd": "^9.5.1",
