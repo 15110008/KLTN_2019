@@ -19,7 +19,13 @@ export default class ListDestination extends Component {
         Axios.get('http://localhost:3000/v1/place')
             .then((response) => {
                 if (response.data.success) {
-                    this.setState({ data: response.data.result })
+                    const numberMap = response.data.result.length / 12
+                    const numberArr = []
+                    for (let i = 1; i < numberMap; i++) {
+                        numberArr.push(i)
+                    }
+                    console.log("TCL: ListDestination -> loadData -> numberArr", numberArr)
+                    this.setState({ data: response.data.result, numberArr: numberArr })
                 } else {
                 }
             }).catch(error => {
@@ -83,21 +89,6 @@ export default class ListDestination extends Component {
                             )
                         }
                     })}
-                </div>
-                <div className="row ">
-                    <div className="col text-center">
-                        <div className="block-27">
-                            <ul>
-                                <li><a href="#/home">&lt;</a></li>
-                                <li className="active"><span>1</span></li>
-                                <li><a href="#/home">2</a></li>
-                                <li><a href="#/home">3</a></li>
-                                <li><a href="#/home">4</a></li>
-                                <li><a href="#/home">5</a></li>
-                                <li><a href="#/home">&gt;</a></li>
-                            </ul>
-                        </div>
-                    </div>
                 </div>
             </div >
         )

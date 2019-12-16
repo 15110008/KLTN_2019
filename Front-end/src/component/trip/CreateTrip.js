@@ -3,6 +3,7 @@ import axios from 'axios';
 import _ from 'lodash';
 import moment from 'moment';
 import React, { Component } from 'react';
+import Loading from '../base/Loading'
 import './style.scss';
 
 
@@ -280,7 +281,8 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                 startValue: null,
                 endValue: null,
                 endOpen: false,
-                result: {}
+                result: {},
+                loading: false
             };
         }
 
@@ -289,9 +291,13 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
         };
 
         async onCreateTrip() {
+
             const data = this.props.form.getFieldsValue()
             const token = localStorage.getItem('jwt')
             if (token) {
+                this.setState({
+                    loading: true
+                })
                 const totalDate = await this.getDaysBetweenDates(data.dateFrom, data.dateTo)
                 const arrayDate = await this.getDates(data.dateFrom, data.dateTo)
                 const toDes = _.find(this.props.destinationOption, x => {
@@ -355,6 +361,10 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                                 console.log('Notification Clicked!');
                             },
                         });
+                    }).finally(() => {
+                        this.setState({
+                            loading: false
+                        })
                     })
             } else {
                 notification['warning']({
@@ -473,7 +483,9 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
 
             const { getFieldDecorator } = form;
             const { endOpen, startValue, endValue } = this.state;
-            return (
+            console.log("TCL: extends -> render -> this.state.loading", this.state.loading)
+            return (this.state.loading ?
+                <Loading /> :
                 <div>
                     <Form layout={formLayout}>
                         <div className='row'>

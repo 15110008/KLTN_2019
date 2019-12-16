@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Button } from 'antd'
 import ListDestination from './detination/ListDestination';
 import ListTrip from './trip/ListTrip';
 import TopArea from './topArea'
@@ -113,6 +114,13 @@ export default class Body extends Component {
                                         </div>
                                 </div>
                             </div>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 30 }}>
+                            <Button
+                                onClick={() => window.location.href = 'http://localhost:3006/trip'}
+                                style={{ width: 200, height: 50 }}
+                                type="primary">
+                                <span style={{ fontSize: 17 }}>Bắt đầu tạo lịch trình</span></Button>
                         </div>
                     </div>
                 </section>

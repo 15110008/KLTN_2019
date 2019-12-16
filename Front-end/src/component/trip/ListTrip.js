@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Rate } from 'antd'
+import { Rate, Tooltip } from 'antd'
 import './style.scss'
 import _ from 'lodash'
 
@@ -51,7 +51,7 @@ export default class Trip extends Component {
                         {data && arr.map((x, index) => {
                             if (data[x]) {
                                 const number = this.randomIntFromInterval(0, _.size(data[x].images) - 1)
-                                console.log("TCL: Trip -> render -> number", number)
+                                console.log("TCL: Trip -> render -> number", x)
                                 return (
                                     <div className='col-md-3' style={{
                                         height: '330px',
@@ -81,6 +81,14 @@ export default class Trip extends Component {
                                                 <span className='rate-total'>
                                                     {data[x].count ? data[x].count : 0} người đánh giá
                                             </span>
+                                                <Tooltip placement="top" title={'Được tạo bởi ' + data[x].userName}>
+                                                    <span className='avatar' style={{
+                                                        position: 'absolute',
+                                                        right: '15px'
+                                                    }}>
+                                                        <img style={{ width: '38px', borderRadius: '50%' }} src={data[x].avatar ? 'http://localhost:3000/' + data[x].avatar : '../../images/user.png'} />
+                                                    </span>
+                                                </Tooltip>
                                                 {/* <div style={{ fontSize: '13px', marginLeft: '10px' }}>
                                             {_.truncate(x.location, {
                                                 'length': 40,
