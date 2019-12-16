@@ -298,7 +298,7 @@ const getTripPublic = async (req, res) => {
             tripInfo.accountId = tr.accountId;
             tripInfo.rate = tr.rate;
             tripInfo.count = count;
-            tripInfo.name = name;
+            tripInfo.userName = name;
             tripInfo.avatar = avatar;
             return tripInfo;
         });
