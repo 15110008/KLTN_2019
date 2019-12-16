@@ -56,7 +56,7 @@ export default class Body extends Component {
                         </div>
                     </div>
                 </section>
-                <section className="ftco-section goto-here">
+                <section className="ftco-section goto-here" style={{ paddingBottom: 'unset' }}>
                     <ListTrip />
                 </section>
                 <section className="ftco-section goto-here">

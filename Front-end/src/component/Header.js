@@ -25,7 +25,7 @@ export default class Header extends Component {
                     </div>
                 </Menu.Item>
                 <Menu.Item>
-                    <div onClick={() => window.location.replace('http://localhost:3006/user')}>
+                    <div onClick={() => window.location.replace('http://localhost:3006/user/my-trip')}>
                         Trang cá nhân
                     </div>
                 </Menu.Item>
@@ -77,6 +77,7 @@ export default class Header extends Component {
         this.setState({
             userVisible: false
         })
+        window.location.href = 'http://localhost:3006'
     }
 
     login() {
@@ -113,12 +114,17 @@ export default class Header extends Component {
             <div>
                 <nav className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
                     <div className="container">
-                        <a className="navbar-brand" href="#" style={{ marginBottom: 20 }} onClick={() => {
+                        {/* <a className="navbar-brand" href="#" style={{ marginBottom: 20 }} onClick={() => {
                             window.location.replace("http://localhost:3006")
-                        }}>MTrip</a>
-                        {/* <img onClick={() => {
+                        }}>MTrip</a> */}
+                        <img style={{
+                            height: '70px',
+                            marginBottom: '15px',
+                            marginTop: '-17px',
+                            marginLeft: '-52px',
+                        }} onClick={() => {
                             window.location.href = "http://localhost:3006"
-                        }} src={"../images/logo-travel4.svg"} style={{ width: 200, height: 200 }} /> */}
+                        }} src={"../images/logo travel.svg"} />
                         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                             <span className="oi oi-menu"></span> Menu
 	                </button>
@@ -130,7 +136,7 @@ export default class Header extends Component {
                                 <li className="nav-item"><a href="#" className="nav-link" onClick={() => {
                                     window.location.replace("http://localhost:3006/trip")
                                 }}>Tạo lịch trình</a></li>
-                                <li className="nav-item"><a href="about.html" className="nav-link">About</a></li>
+                                <li className="nav-item"><a href="about.html" className="nav-link">Liên hệ</a></li>
                                 <li className="nav-item" style={{ paddingTop: '3px' }}>
                                     {this.state.userVisible ? this.user() :
                                         this.login()

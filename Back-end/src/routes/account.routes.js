@@ -6,29 +6,29 @@ import AccountValidate from '../modules/account-module/middleware/account.middle
 const router = express.Router();
 
 const storage = multer.diskStorage({
-    destination(req, file, cb) {
-        // console.log(file);
-        cb(null, './uploads');
-    },
-    filename(req, file, cb) {
-        cb(null, new Date().toISOString() + file.originalname);
-    }
+  destination(req, file, cb) {
+    // console.log(file);
+    cb(null, './uploads');
+  },
+  filename(req, file, cb) {
+    cb(null, new Date().getTime() + '-' + file.originalname);
+  }
 });
 const fileFilter = (req, file, cb) => {
-    // reject a file
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-      cb(null, true);
-    } else {
-      cb(null, false);
-    }
+  // reject a file
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
 };
 const upload = multer({
-    storage,
-    limits: {
-      fileSize: 1024 * 1024 * 5
-    },
-    fileFilter
-  });
+  storage,
+  limits: {
+    fileSize: 1024 * 1024 * 5
+  },
+  fileFilter
+});
 
 // Create use routers
 // POST
