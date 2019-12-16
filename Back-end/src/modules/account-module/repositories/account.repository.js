@@ -128,8 +128,16 @@ const uploadImage = async (accountId, data) => {
     if (result.n === result.nModified) return true;
     return false;
 };
+const getName = async (accountId) => {
+    const result = await AccountSchema.findOne({
+        _id: accountId,
+        isDeleted: false
+    });
+    return result;
+};
 export default {
     create,
+    getName,
     isExistedEmail,
     getAccountByEmail,
     getPayloadJwtSchema,

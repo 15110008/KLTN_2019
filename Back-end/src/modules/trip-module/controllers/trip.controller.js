@@ -280,6 +280,9 @@ const getTripPublic = async (req, res) => {
         const trip = await TripRepository.getTripPublic();
         if (!trip) throw new NotImplementError(GetTripPublicErrors.GET_TRIP_FAIL);
         const result1 = trip.map(async (tr) => {
+            const { accountId } = tr;
+            const account = await AccountRepository.getName(accountId);
+            const { name } = account;
             const { _id } = tr;
             const count = await TripRepository.countRating(_id);
             const { destinationId } = tr;
@@ -294,6 +297,7 @@ const getTripPublic = async (req, res) => {
             tripInfo.accountId = tr.accountId;
             tripInfo.rate = tr.rate;
             tripInfo.count = count;
+            tripInfo.name = name;
             return tripInfo;
         });
         const result = await Promise.all(result1);
