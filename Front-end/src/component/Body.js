@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from 'antd'
+import { Button, notification } from 'antd'
 import ListDestination from './detination/ListDestination';
 import ListTrip from './trip/ListTrip';
 import TopArea from './topArea'
@@ -89,11 +89,10 @@ export default class Body extends Component {
                                 <div>
                                     <div style={{ paddingLeft: 563 }}><p className='step'>2</p></div>
                                     <div className='text-title' style={{ textAlign: 'right' }}>
-                                        Dự trù được chi phí hành trình
+                                        Lên lịch trình
                                     </div>
                                     <div style={{ textAlign: 'right' }}>
-                                        Hệ thống có thể tính toán và liệt kê ra bảng chi phí bao gồm chỗ ở, thăm quan, ăn uống,
-                                        di chuyển,…cho chuyến đi của bạn. Bạn cũng có thể thêm, xoá, sửa các chi phí trong chuyến đi theo ý muốn.
+                                        Hệ thống sẽ tính toán giúp bạn lên một lịch trình về mặt thời gian cũng như di chuyển từ điểm này sang điểm khác một cách hợp lý.
                                         </div>
                                 </div>
                             </div>
@@ -107,17 +106,19 @@ export default class Body extends Component {
                                 <div>
                                     <p className='step'>3</p>
                                     <div className='text-title'>
-                                        Lên lịch trình tối ưu
+                                        Chỉnh sửa lịch trình
                                     </div>
                                     <div>
-                                        Hệ thống sẽ tính toán giúp bạn lên một lịch trình tối ưu nhất về mặt thời cũng như di chuyển từ điểm này sang điểm khác một cách hợp lý nhất. Bạn cũng có thể chỉnh sửa, ghi chú lại những cảm nhận trong chuyến hành trình.Có thể chia sẻ, mời bạn bè tham gia vào lịch trình bạn tạo
+                                        Bạn cũng có thể chỉnh sửa, ghi chú lại những cảm nhận trong chuyến hành trình.Có thể chia sẻ, cảm nhận về những địa điểm
                                         </div>
                                 </div>
                             </div>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 30 }}>
                             <Button
-                                onClick={() => window.location.href = 'http://localhost:3006/trip'}
+                                onClick={() =>
+                                    window.location.href = 'http://localhost:3006/trip'
+                                }
                                 style={{ width: 200, height: 50 }}
                                 type="primary">
                                 <span style={{ fontSize: 17 }}>Bắt đầu tạo lịch trình</span></Button>

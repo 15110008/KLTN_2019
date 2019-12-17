@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Icon, Modal, notification } from 'antd'
+import { Button, Icon, Modal, notification, Tooltip } from 'antd'
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 import './style.scss'
 import Avatar from 'react-avatar-edit'
@@ -47,6 +47,7 @@ export default class User extends Component {
                     const data = res.data.result
 
                     this.setState({
+                        name: data.name ? data.name : null,
                         avatar: data.avatar ? 'http://localhost:3000/' + data.avatar : null
                     })
                 }
@@ -122,7 +123,6 @@ export default class User extends Component {
     };
 
     render() {
-        const name = localStorage.getItem('name')
         return (
             <Router >
                 <div style={{ paddingTop: 100 }} className='user'>
@@ -135,7 +135,7 @@ export default class User extends Component {
 
                                 <div className='info' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                     <h3 className='user-name'>
-                                        <div>{name}</div>
+                                        <div>{this.state.name}</div>
                                         <div>
                                             <Button type="primary" shape="round" icon="camera" onClick={() => this.setState({
                                                 visible: true

@@ -33,7 +33,6 @@ export default class CardSwap extends React.Component {
         // const data = this.props.getDatafromInput()
         const dataInput = this.inputRef.state.value
         if (!_.isEmpty(dataInput)) {
-            debugger
             const hourAndMinute = listSpot[index].startTime
             let newTime = hourAndMinute.split(':')
             let hour = parseInt(newTime[0]) * 60

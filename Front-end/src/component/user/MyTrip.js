@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
-import { Rate, Button, notification } from 'antd'
+import { Rate, Button, notification, Tooltip } from 'antd'
 import axios from 'axios'
 import './style.scss'
 
@@ -61,7 +61,11 @@ export default class MyTrip extends Component {
                                         <span className='rate-total'>
                                             {x.count ? x.count : 0} người đánh giá
                                             </span>
-                                        <span><Button className='button-share' type="primary" icon="share-alt" onClick={() => this.shareTrip(x['_id'])} /></span>
+                                        <span>
+                                            <Tooltip title="Chia sẻ" placement="top">
+                                                <Button className='button-share' type="primary" icon="share-alt" onClick={() => this.shareTrip(x['_id'])} />
+                                            </Tooltip>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
