@@ -284,6 +284,7 @@ const getTripPublic = async (req, res) => {
             const account = await AccountRepository.getName(accountId);
             const { name } = account;
             const { avatar } = account;
+            const { email } = account;
             const { _id } = tr;
             const count = await TripRepository.countRating(_id);
             const { destinationId } = tr;
@@ -300,6 +301,7 @@ const getTripPublic = async (req, res) => {
             tripInfo.count = count;
             tripInfo.userName = name;
             tripInfo.avatar = avatar;
+            tripInfo.email = email;
             return tripInfo;
         });
         const result = await Promise.all(result1);
