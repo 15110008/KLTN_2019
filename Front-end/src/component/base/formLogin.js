@@ -33,6 +33,7 @@ export default class formLogin extends Component {
 
     responseFacebook(response) {
         const me = this
+        console.log("TCL: formLogin -> responseFacebook -> me", me)
         console.log("TCL: Header -> responseFacebook -> response", response)
         const params = {
             facebook: {
@@ -48,9 +49,13 @@ export default class formLogin extends Component {
                 localStorage.setItem('jwt', res.data.result);
                 localStorage.setItem('name', response.name ? response.name : null);
                 localStorage.setItem('email', response.email ? response.email : null);
+                localStorage.setItem('avatar', response.picture.data.url ? response.picture.data.url : null);
+                localStorage.setItem('facebookLogin', true);
                 this.userVisible && this.userVisible()
                 this.getName && this.getName(response.name)
                 this.getEmail && this.getEmail(response.email)
+                this.getAvatar && this.getAvatar(response.picture.data.url)
+                console.log("TCL: formLogin -> responseFacebook -> response.picture.data.url", response.picture.data.url)
             } else {
                 notification['error']({
                     message: res.data.message,
@@ -63,6 +68,36 @@ export default class formLogin extends Component {
 
     responseGoogle(response) {
         console.log(response);
+        const me = this
+        const params = {
+            google: {
+                googleId: response.googleId,
+                googleToken: response.tokenId,
+                googleName: response.profileObj.name,
+                googleEmail: response.profileObj.email
+            }
+        }
+
+        axios.post('http://localhost:3000/v1/account/login/google', params).then(res => {
+            if (res.data.success) {
+                this.onClose()
+                localStorage.setItem('jwt', res.data.result);
+                localStorage.setItem('name', response.profileObj.name ? response.name : null);
+                localStorage.setItem('email', response.profileObj.email ? response.profileObj.email : null);
+                localStorage.setItem('avatar', response.profileObj.imageUrl ? response.profileObj.imageUrl : null);
+                localStorage.setItem('googleLogin', true);
+                this.userVisible && this.userVisible()
+                this.getName && this.getName(response.profileObj.name)
+                this.getEmail && this.getEmail(response.profileObj.email)
+                this.getAvatar && this.getAvatar(response.profileObj.imageUrl)
+            } else {
+                notification['error']({
+                    message: res.data.message,
+                });
+            }
+        }).catch(error => {
+            console.log("TCL: formLogin -> onSubmit -> error", error)
+        });
     }
 
     onSubmit(e) {
@@ -166,21 +201,27 @@ export default class formLogin extends Component {
         } else {
             fbContent = (<FacebookLogin
                 appId="430163910969334"
-                autoLoad={false}
                 fields="name,email,picture"
                 onClick={this.componentClicked}
                 onClose={() => this.onClose()}
-                userVisible={() => this.props.userVisible()}
-                getName={() => this.props.getName()}
-                getEmail={() => this.props.getEmail()}
+                userVisible={this.props.userVisible}
+                getName={this.props.getName}
+                getEmail={this.props.getEmail}
+                getAvatar={this.props.getAvatar}
                 callback={this.responseFacebook}
             />)
 
             googleContent = (< GoogleLogin
-                clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
+                clientId="66330207844-23svcr4j2tptb8nc2e0o1j2q7i5v7rde.apps.googleusercontent.com"
                 buttonText="Login"
                 onSuccess={this.responseGoogle}
                 onFailure={this.responseGoogle}
+                onClose={() => this.onClose()}
+                userVisible={this.props.userVisible}
+                getName={this.props.getName}
+                getEmail={this.props.getEmail}
+                getAvatar={this.props.getAvatar}
+                callback={this.responseFacebook}
                 cookiePolicy={'single_host_origin'}
             />)
         }

@@ -69,11 +69,6 @@ export default class Trip extends Component {
             })
 
     }
-
-    onEdit() {
-        window.location.replace("http://localhost:3006/trip-edit_v2/" + this.id)
-    }
-
     render() {
         const { data, dataRemain } = this.state
         return (
@@ -91,16 +86,6 @@ export default class Trip extends Component {
                                         background: 'white',
                                     }}
                                     onBack={() => window.history.back()}
-                                    title={
-                                        <span>
-                                            {this.state.title}
-                                            <span style={{
-                                                position: 'absolute',
-                                                top: '25px',
-                                                right: '25px'
-                                            }}><button className='btn btn-edit' onClick={() => this.onEdit()}> <Icon style={{ position: 'absolute', top: 13, left: 10 }} type="setting" />Chỉnh sửa</button></span>
-                                        </span>
-                                    }
                                     subTitle={this.state.dateFrom + ' - ' + this.state.dateTo}
                                 />
                                 <div style={{ overFlowX: 'auto', background: '#fff', marginTop: -10 }}>

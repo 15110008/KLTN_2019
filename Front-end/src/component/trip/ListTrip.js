@@ -28,8 +28,13 @@ export default class Trip extends Component {
             })
     }
 
-    onClick(id) {
-        window.location.href = "http://localhost:3006/trip-detail/" + id
+    onClick(id, dataEmail) {
+        const email = localStorage.getItem('email')
+        if (email == dataEmail) {
+            window.location.href = "http://localhost:3006/trip-detail-self/" + id
+        } else {
+            window.location.href = "http://localhost:3006/trip-detail/" + id
+        }
     }
 
     randomIntFromInterval(min, max) {
@@ -63,14 +68,14 @@ export default class Trip extends Component {
                                             <img className="img" src={"http://localhost:3000/" + data[x].images[number]} style={{
                                                 borderRadius: '5px 5px 0px 0px', height: 200, cursor: 'pointer'
                                             }}
-                                                onClick={() => this.onClick(data[x]['_id'])} />
+                                                onClick={() => this.onClick(data[x]['_id'], data[x].email)} />
                                             <div style={{
                                                 height: '100px',
                                                 borderRadius: '0px 0px 5px 5px',
                                                 border: `solid 1px #d9d9d9 `
                                             }}>
                                                 <div className='content destination-card-name' style={{ cursor: 'pointer', fontSize: '15px' }}
-                                                    onClick={() => this.onClick(data[x]['_id'])} >
+                                                    onClick={() => this.onClick(data[x]['_id'], data[x].email)} >
                                                     {data[x].name.split('Lịch trình')[1]}
                                                 </div>
                                                 <span><Rate style={{

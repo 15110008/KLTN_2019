@@ -37,6 +37,7 @@ export default class Header extends Component {
     setUser = () => this.setState({ userVisible: true })
     getName = (name) => this.setState({ name: name })
     getEmail = (email) => this.setState({ email: email })
+    getAvatar = (avatar) => this.setState({ avatar: avatar })
 
     contentLogin() {
         return (
@@ -46,6 +47,7 @@ export default class Header extends Component {
                 userVisible={this.setUser}
                 getName={this.getName}
                 getEmail={this.getEmail}
+                getAvatar={this.getAvatar}
             />
         )
     }
@@ -58,7 +60,13 @@ export default class Header extends Component {
         return <div style={{ padding: '8px' }}>
             <Dropdown overlay={this.menu} >
                 <div>
-                    <i className="fa fa-user-circle-o" aria-hidden="true" style={{ padding: '8px' }}></i>
+                    {/* <i className="fa fa-user-circle-o" aria-hidden="true" style={{ padding: '8px' }}></i> */}
+                    <img style={{
+                        width: '30px',
+                        height: '30px',
+                        marginRight: '10px',
+                        borderRadius: '50%'
+                    }} src={this.state.avatar ? this.state.avatar : '../images/user.png'} />
                     <span style={{ cursor: 'pointer' }}>{this.state.name === '' ? this.state.email : this.state.name}</span>
                     <Icon style={{
                         marginTop: '8px',
@@ -93,6 +101,7 @@ export default class Header extends Component {
         let jwt = localStorage.getItem('jwt')
         let email = localStorage.getItem('email')
         let name = localStorage.getItem('name')
+        let avatar = localStorage.getItem('avatar')
         if (jwt && (new Date().getTime() - jwt > hours * 60 * 60 * 1000)) {
             localStorage.clear()
         }
@@ -102,6 +111,7 @@ export default class Header extends Component {
             })
             this.getName(name)
             this.getEmail(email)
+            this.getAvatar(avatar)
         } else {
             this.setState({
                 userVisible: false
@@ -119,6 +129,7 @@ export default class Header extends Component {
                         }}>MTrip</a> */}
                         <img style={{
                             height: '70px',
+                            cursor: 'pointer',
                             marginBottom: '15px',
                             marginTop: '-17px',
                             marginLeft: '-52px',

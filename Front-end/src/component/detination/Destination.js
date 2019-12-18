@@ -28,6 +28,8 @@ class Destination extends Component {
             showingInfoWindow: false,
             activeMarker: {},
             selectedPlace: {},
+            dataComment: [],
+            avatar: null
         }
         this.next = this.next.bind(this);
         this.previous = this.previous.bind(this);
@@ -47,6 +49,10 @@ class Destination extends Component {
     }
 
     async loadData(id) {
+        const token = localStorage.getItem('jwt')
+        const headers = {
+            headers: { jwt: token },
+        }
         await axios({
             url: 'http://localhost:3000/v1/place/' + id,
             method: 'get'
@@ -68,70 +74,100 @@ class Destination extends Component {
         axios.get('http://localhost:3000/v1//place/comment/' + id)
             .then((res) => {
                 if (res.data.success) {
-
+                    this.setState({
+                        dataComment: res.data.result
+                    })
                 }
             }).catch((error) => {
-                console.log("TCL: Destination -> error", error)
+            })
+        axios.get('http://localhost:3000/v1/account/me', headers)
+            .then((res) => {
+                if (res.data.success) {
+                    const data = res.data.result
+                    this.setState({
+                        avatar: data.avatar ? 'http://localhost:3000/' + data.avatar : null
+                    })
+                }
+            }).catch((err) => {
             })
     }
 
     handleChange = value => {
-        const path = history.location.pathname
-        const desId = path.split('/')[2]
         const token = localStorage.getItem('jwt')
-        this.setState({ value });
-        const params = {
-            placeId: desId,
-            rating: value
-        }
-        const header = {
-            headers: { jwt: token },
-        }
-        axios.post('http://localhost:3000/v1/place/rating', params, header)
-            .then((res) => {
-                if (res.data.success) {
-                    notification['success']({
-                        message: 'Cảm ơn bạn đã đánh giá !!!',
-                        onClick: () => {
-                            console.log('Notification Clicked!');
-                        },
-                    });
-                }
-            }).catch((error) => {
-                console.log("TCL: Destination -> error", error)
-            })
-    };
-
-    onCreateComment() {
-        const data = this.formRef.getFieldsValue()
-        if (data.content) {
+        if (token) {
             const path = history.location.pathname
             const desId = path.split('/')[2]
             const token = localStorage.getItem('jwt')
+            this.setState({ value });
             const params = {
                 placeId: desId,
-                comment: data.content
+                rates: value
             }
             const header = {
                 headers: { jwt: token },
             }
-            axios.post('http://localhost:3000/v1/place/comment', params, header)
+            axios.post('http://localhost:3000/v1/place/rating', params, header)
                 .then((res) => {
                     if (res.data.success) {
                         notification['success']({
-                            message: 'Đăng tải bình luận thành công !!!',
+                            message: 'Cảm ơn bạn đã đánh giá !!!',
                             onClick: () => {
                                 console.log('Notification Clicked!');
                             },
                         });
-                        this.formRef.setFields({
-                            content: null
-                        })
                         this.loadData(desId)
                     }
                 }).catch((error) => {
-                    console.log("TCL: Destination -> error", error)
                 })
+        } else {
+            notification['error']({
+                message: 'Bạn phải đăng nhập trước',
+                onClick: () => {
+                    console.log('Notification Clicked!');
+                },
+            });
+        }
+    };
+
+    onCreateComment() {
+        const token = localStorage.getItem('jwt')
+        const data = this.formRef.getFieldsValue()
+        if (token) {
+            if (data.content) {
+                const path = history.location.pathname
+                const desId = path.split('/')[2]
+                const token = localStorage.getItem('jwt')
+                const params = {
+                    placeId: desId,
+                    comment: data.content
+                }
+                const header = {
+                    headers: { jwt: token },
+                }
+                axios.post('http://localhost:3000/v1/place/comment', params, header)
+                    .then((res) => {
+                        if (res.data.success) {
+                            notification['success']({
+                                message: 'Đăng tải bình luận thành công !!!',
+                                onClick: () => {
+                                    console.log('Notification Clicked!');
+                                },
+                            });
+                            this.formRef.setFields({
+                                content: null
+                            })
+                            this.loadData(desId)
+                        }
+                    }).catch((error) => {
+                    })
+            }
+        } else {
+            notification['error']({
+                message: 'Bạn phải đăng nhập trước',
+                onClick: () => {
+                    console.log('Notification Clicked!');
+                },
+            });
         }
     }
 
@@ -153,7 +189,7 @@ class Destination extends Component {
 
     render() {
         const arr = [0, 1, 2, 3, 4, 5]
-        const { data, value, meta } = this.state
+        const { data, value, meta, dataComment } = this.state
         return (data ?
             <div style={{ marginTop: 100, backgroundColor: '#f5f5f5' }}>
                 <div className='container destination'>
@@ -247,7 +283,7 @@ class Destination extends Component {
                             <div className='row'>
                                 <div className='col-md-4'>
                                     <div className='rate-container'>
-                                        {data.rate ? data.rate : 0} <Icon type="star" />
+                                        {data.rate ? (Math.round(data.rate * 10) / 10) : 0} <Icon type="star" />
                                     </div>
                                     <div className='user-rating'>{meta.count}<Icon type="user" /></div>
                                 </div>
@@ -280,7 +316,7 @@ class Destination extends Component {
                         <div className='container comment-container' style={{ paddingTop: 15 }}>
                             <div className='row'>
                                 <div style={{ width: 85 }}>
-                                    <Avatar size={64} icon="user" />
+                                    <Avatar size={64} src={this.state.avatar ? this.state.avatar : '../../images/user.png'} />
                                 </div>
                                 <div className='col-md-10'>
                                     <CollectionCreateForm
@@ -293,7 +329,22 @@ class Destination extends Component {
                                     <Button type="primary" shape="round" onClick={() => this.onCreateComment()}> Đăng tải bình luận
                                     </Button>
                                 </div>
+                                {dataComment && dataComment.map(x => {
+                                    return <div className='col-md-12' style={{ paddingTop: 50 }}>
+                                        <div className='row'>
+                                            <div style={{ width: 67 }}>
+                                                <Avatar size={64} src={x.accountId.avatar ? ('http://localhost:3000/' + x.accountId.avatar) : '../../images/user.png'} />
+                                            </div>
+                                            <div className='col-md-10'>
+                                                <div style={{ color: '#4183C4', fontWeight: 'bold' }}>{x.accountId.name}</div>
+                                                <div>{x.comment}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                })}
+
                             </div>
+
 
                         </div>
                     </div>
