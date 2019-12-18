@@ -149,7 +149,7 @@ const loginWithGoogle = async (req, res) => {
                 if (!jwt) throw new NotImplementError(LoginWithGoogleErrors.LOGIN_FAIL);
             }
         } else { // login with google ago
-            const updateAccount = await AccountRepository.updateFacebookToken(google.googleId, google.googleToken);
+            const updateAccount = await AccountRepository.updateGoogleToken(google.googleId, google.googleToken);
             if (!updateAccount) throw new NotImplementError(LoginWithGoogleErrors.UPDATE_GOOGLE_TOKEN_FAIL);
             const isExistedEmail = await AccountRepository.isExistedEmail(google.googleEmail);
             if (!isExistedEmail) throw new NotFoundError(LoginWithGoogleErrors.EMAIL_NEVER_EXIST);
