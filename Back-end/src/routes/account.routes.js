@@ -1,5 +1,6 @@
 import express from 'express';
 import multer from 'multer';
+import nodemailer from 'nodemailer';
 import AccountController from '../modules/account-module/controllers/account.controller';
 import AccountValidate from '../modules/account-module/middleware/account.middleware';
 
@@ -30,6 +31,42 @@ const upload = multer({
   fileFilter
 });
 
+// send mail for admin
+// Nodemailer
+router.post('/send-mail', (req, res) => {
+  // Tiến hành gửi mail, nếu có gì đó bạn có thể xử lý trước khi gửi mail
+  const transporter = nodemailer.createTransport({ // config mail server
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: 'Testnodemailer97@gmail.com', // Tài khoản gmail vừa tạo
+      pass: 'nguyenphuc97' // Mật khẩu tài khoản gmail vừa tạo
+    },
+    tls: {
+      // do not fail on invalid certs
+      rejectUnauthorized: false
+    }
+  });
+  const mainOptions = { // thiết lập đối tượng, nội dung gửi mail
+    from: 'Testnodemailer97@gmail.com',
+    to: 'nguyenngochoangphuc0311@gmail.com',
+    subject: req.body.Title,
+    text: req.body.Content,
+    html: '<b>Hello World?</b>'
+  };
+  transporter.sendMail(mainOptions, (err) => {
+    if (err) {
+      // console.log(err);
+      res.send('Gửi mail không thành công!');
+    } else {
+      // console.log('Message sent: ' + info.response);
+      res.send('Gửi thành công!');
+    }
+  });
+});
+
+
 // Create use routers
 // POST
 // Create account
@@ -42,6 +79,7 @@ router.post('/account/login/facebook', AccountValidate.loginWithFacebookInput, A
 router.post('/account/login/google', AccountValidate.loginWithGoogleInput, AccountValidate.reduceInput, AccountController.loginWithGoogle);
 // upload avatar
 router.post('/account/upload', upload.single('avatar'), AccountValidate.upload, AccountController.uploadImage);
+
 
 // GET
 // lấy thông tin của chính bản thân

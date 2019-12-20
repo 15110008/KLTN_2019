@@ -341,6 +341,7 @@ const deleteAccount = async (req, res) => {
         return res.onError(error);
     }
 };
+
 export default {
     create,
     uploadImage,
