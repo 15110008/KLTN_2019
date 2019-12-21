@@ -194,7 +194,7 @@ export default class Trip extends Component {
         await axios.put('http://localhost:3000/v1/trip/DetailSpot/' + this.id, { meta: this.state.data })
             .then((res) => {
                 if (res.data.success) {
-                    window.location.replace("http://localhost:3006/trip-detail/" + this.id)
+                    window.location.replace("http://localhost:3006/trip-detail-self/" + this.id)
                 }
             })
     }
@@ -216,8 +216,11 @@ export default class Trip extends Component {
         })
             .then(async (res) => {
                 if (res.data.success) {
-                    const data = res.data.meta
+                    let data = res.data.meta
                     const allTrip = []
+                    data = _.sortBy(data, x => {
+                        return x.day
+                    });
                     data.map(x => {
                         x.listPlaces.map(place => {
                             allTrip.push({

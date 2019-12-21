@@ -22,7 +22,8 @@ export default class formLogin extends Component {
             password: '',
             phoneNumber: '',
             password2: '',
-            login: 'Đăng nhập'
+            login: 'Đăng nhập',
+            error: false
         }
         this.onSubmit = this.onSubmit.bind(this);
     }
@@ -72,7 +73,7 @@ export default class formLogin extends Component {
         const params = {
             google: {
                 googleId: response.googleId,
-                googleToken: response.tokenId,
+                googleToken: response.accessToken,
                 googleName: response.profileObj.name,
                 googleEmail: response.profileObj.email
             }
@@ -82,7 +83,7 @@ export default class formLogin extends Component {
             if (res.data.success) {
                 this.onClose()
                 localStorage.setItem('jwt', res.data.result);
-                localStorage.setItem('name', response.profileObj.name ? response.name : null);
+                localStorage.setItem('name', response.profileObj.name ? response.profileObj.name : null);
                 localStorage.setItem('email', response.profileObj.email ? response.profileObj.email : null);
                 localStorage.setItem('avatar', response.profileObj.imageUrl ? response.profileObj.imageUrl : null);
                 localStorage.setItem('googleLogin', true);
@@ -125,25 +126,35 @@ export default class formLogin extends Component {
     }
 
     createAccount() {
-        if (this.state.password !== this.state.password2) {
-            notification['error']({
-                message: 'Mật khẩu 2 không khớp!'
-            });
+        if (this.state.name && this.state.name && this.state.email && this.state.password) {
+            if (this.state.password !== this.state.password2) {
+                notification['error']({
+                    message: 'Mật khẩu 2 không khớp!'
+                });
+            } else {
+                axios.post('http://localhost:3000/v1/account', {
+                    email: this.state.email,
+                    password: this.state.password,
+                    name: this.state.name,
+                }).then(response => {
+                    if (response.data.success) {
+                        const data = response.data.result
+                        this.onClose()
+                        this.props.userVisible && this.props.userVisible()
+                        this.props.getName && this.props.getName(!_.isEmpty(data.name) ? data.name : '')
+                        this.props.getEmail && this.props.getEmail(data.email)
+                    } else {
+                        notification['error']({
+                            message: response.data.message,
+                        });
+                    }
+                }).catch(error => {
+                });
+            }
         } else {
-            axios.post('http://localhost:3000/v1/account', {
-                email: this.state.email,
-                password: this.state.password,
-                name: this.state.name,
-            }).then(response => {
-                if (response.data.success) {
-                    this.props.userVisible && this.props.userVisible()
-                } else {
-                    notification['error']({
-                        message: response.data.message,
-                    });
-                }
-            }).catch(error => {
-            });
+            this.setState({
+                error: true
+            })
         }
     }
 
@@ -236,7 +247,7 @@ export default class formLogin extends Component {
                     <div className="col-md-6">
                         <Tabs defaultActiveKey="1" onChange={(val) => this.callback(val)}>
                             <TabPane tab="Đăng nhập" key="1">
-                                <input placeholder="Email" type="text" required="" value={this.state.email} onChange={(e) => this.onChange(e, 'email')} />
+                                <input placeholder="Email đăng nhập" type="text" required="" value={this.state.email} onChange={(e) => this.onChange(e, 'email')} />
                                 <input placeholder="Mật khẩu" type="password" required="" value={this.state.password} onChange={(e) => this.onChange(e, 'password')} />
                                 <div style={{ display: 'flex' }}>
                                     {fbContent}
@@ -251,10 +262,13 @@ export default class formLogin extends Component {
                             <TabPane tab="Tạo tài khoản" key="2" onChange={(val) => this.callback(val)}>
                                 <input placeholder="Tên" type="text" required="" value={this.state.name} onChange={(e) => this.onChange(e, 'name')} />
                                 <input placeholder="SĐT" type="text" required="" value={this.state.phoneNumber} onChange={(e) => this.onChange(e, 'phoneNumber')} />
-                                <input placeholder="Email" type="text" required="" value={this.state.email} onChange={(e) => this.onChange(e, 'email')} />
+                                <input placeholder="Email đăng nhập" type="text" required="" value={this.state.email} onChange={(e) => this.onChange(e, 'email')} />
                                 <input placeholder="Mật khẩu" type="password" required="" value={this.state.password} onChange={(e) => this.onChange(e, 'password')} />
                                 <input placeholder="Mật khẩu lần 2" type="password" required="" value={this.state.password2} onChange={(e) => this.onChange(e, 'password2')} />
-                                <div style={{ display: 'flex', paddingLeft: '25px', paddingTop: '20px' }}>
+                                {this.state.error ? <div style={{ fontSize: 12, color: 'red', paddingLeft: '25px', paddingTop: '20px' }}>Bạn chưa nhập đầy đủ thông tin</div> : ''}
+                                <div style={{
+                                    display: 'flex', paddingLeft: '25px', paddingTop: '10px'
+                                }}>
                                     <div className='btn-group' >
 
                                         <button onClick={() => this.createAccount()} className='btn btn-primary' > Tạo tài khoản </button>

@@ -48,8 +48,11 @@ export default class Trip extends Component {
         })
             .then(async (res) => {
                 if (res.data.success) {
-                    const data = res.data.meta
+                    let data = res.data.meta
                     const allTrip = []
+                    data = _.sortBy(data, x => {
+                        return x.day
+                    });
                     data.map(x => {
                         x.listPlaces.map(place => {
                             allTrip.push({
@@ -57,6 +60,7 @@ export default class Trip extends Component {
                             })
                         })
                     })
+                    console.log("TCL: loadData -> res.data.result.name", res.data.result.name)
                     this.setState({
                         data: data,
                         allTrip: allTrip,
@@ -66,6 +70,7 @@ export default class Trip extends Component {
                     })
                 }
             }).catch((err) => {
+                console.log("TCL: Trip -> loadData -> err", err)
             })
 
     }
@@ -86,6 +91,11 @@ export default class Trip extends Component {
                                         background: 'white',
                                     }}
                                     onBack={() => window.history.back()}
+                                    title={
+                                        <span>
+                                            {this.state.title}
+                                        </span>
+                                    }
                                     subTitle={this.state.dateFrom + ' - ' + this.state.dateTo}
                                 />
                                 <div style={{ overFlowX: 'auto', background: '#fff', marginTop: -10 }}>

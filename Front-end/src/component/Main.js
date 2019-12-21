@@ -11,6 +11,7 @@ import TripDetail_v2 from './trip/TripDetail_v2'
 import TripEdit_v2 from './trip/TripEdiit_v2'
 import Destination from './detination/Destination'
 import User from './user/User'
+import Contact from './contact/Contact'
 
 export default class Main extends Component {
     constructor(props) {
@@ -57,6 +58,7 @@ export default class Main extends Component {
                                 <Route exact path="/trip-edit_v2/:id" render={(props) => <TripEdit_v2  {...props} />}></Route>
                                 <Route path="/destination/:id">< Destination /></Route>
                                 <Route path="/user">< User /></Route>
+                                <Route path="/contact">< Contact /></Route>
                                 {/* <Route path="/dashboard">
                                     <Dashboard />
                                 </Route> */}

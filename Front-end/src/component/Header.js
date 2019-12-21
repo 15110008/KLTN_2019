@@ -74,7 +74,7 @@ export default class Header extends Component {
                         paddingLeft: '5px'
                     }} type="down" />
                 </div>
-            </Dropdown>,
+            </Dropdown>
         </div>
     }
 
@@ -147,7 +147,9 @@ export default class Header extends Component {
                                 <li className="nav-item"><a href="#" className="nav-link" onClick={() => {
                                     window.location.replace("http://localhost:3006/trip")
                                 }}>Tạo lịch trình</a></li>
-                                <li className="nav-item"><a href="about.html" className="nav-link">Liên hệ</a></li>
+                                <li className="nav-item"><a onClick={() => {
+                                    window.location.replace("http://localhost:3006/contact")
+                                }} className="nav-link">Liên hệ</a></li>
                                 <li className="nav-item" style={{ paddingTop: '3px' }}>
                                     {this.state.userVisible ? this.user() :
                                         this.login()

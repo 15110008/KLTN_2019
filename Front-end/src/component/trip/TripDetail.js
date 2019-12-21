@@ -36,9 +36,9 @@ export default class Trip extends Component {
         }
         this.id = this.props.match.params && this.props.match.params.id
     }
+
     componentDidMount() {
         this.loadData(this.id)
-        console.log(this.props)
     }
 
     async loadData(id) {
@@ -48,8 +48,11 @@ export default class Trip extends Component {
         })
             .then(async (res) => {
                 if (res.data.success) {
-                    const data = res.data.meta
+                    let data = res.data.meta
                     const allTrip = []
+                    data = _.sortBy(data, x => {
+                        return x.day
+                    });
                     data.map(x => {
                         x.listPlaces.map(place => {
                             allTrip.push({
@@ -66,6 +69,7 @@ export default class Trip extends Component {
                     })
                 }
             }).catch((err) => {
+                console.log("TCL: loadData -> err", err)
             })
 
     }
@@ -101,7 +105,7 @@ export default class Trip extends Component {
                                             }}><button className='btn btn-edit' onClick={() => this.onEdit()}> <Icon style={{ position: 'absolute', top: 13, left: 10 }} type="setting" />Chỉnh sửa</button></span>
                                         </span>
                                     }
-                                    subTitle={this.state.dateFrom + ' - ' + this.state.dateTo}
+                                    subTitle={this.state.dateFrom + '  -  ' + this.state.dateTo}
                                 />
                                 <div style={{ overFlowX: 'auto', background: '#fff', marginTop: -10 }}>
                                     <div className='container' style={{ paddingTop: 20 }} >

@@ -10,7 +10,7 @@ export default class MyTrip extends Component {
         this.state = {}
     }
     onClick(id) {
-        window.location.href = "http://localhost:3006/trip-detail/" + id
+        window.location.href = "http://localhost:3006/trip-detail-self/" + id
     }
 
     shareTrip(id) {

@@ -192,179 +192,181 @@ class Destination extends Component {
         const { data, value, meta, dataComment } = this.state
         return (data ?
             <div style={{ marginTop: 100, backgroundColor: '#f5f5f5' }}>
-                <div className='container destination'>
-                    <br />
-                    <div style={{
-                        border: '1px solid rgb(235, 237, 240)',
-                        background: '#ffff'
-                    }}>
-                        <span style={{ padding: 15, fontSize: 35, fontWeight: 'bold' }}>{data.name}</span>
-                        <span className='rate'>
-                            <Rate allowHalf disabled tooltips={desc} onChange={this.handleChange} value={value} />
-                        </span>
-                        <div><Icon type="environment" className="location-svg" /> {data.location}</div>
-                    </div>
-                    <div className='row' style={{ marginRight: 'unset', marginLeft: 'unset' }}>
-                        <div className='col-md-8' style={{ padding: 'unset', paddingRight: '15px' }}>
+                <div className='destination-parent'>
+                    <div className='container'>
+                        <br />
+                        <div style={{
+                            border: '1px solid rgb(235, 237, 240)',
+                            background: '#ffff'
+                        }}>
+                            <span style={{ padding: 15, fontSize: 35, fontWeight: 'bold' }}>{data.name}</span>
+                            <span className='rate'>
+                                <Rate allowHalf disabled tooltips={desc} onChange={this.handleChange} value={value} />
+                            </span>
+                            <div><Icon type="environment" className="location-svg" /> {data.location}</div>
+                        </div>
+                        <div className='row' style={{ marginRight: 'unset', marginLeft: 'unset' }}>
+                            <div className='col-md-8' style={{ padding: 'unset', paddingRight: '15px' }}>
+                                <div style={{
+                                    border: '1px solid rgb(235, 237, 240)',
+                                    background: '#ffff',
+                                    marginTop: 30
+                                }}>
+                                    <div className='row' style={{ marginLeft: 0, marginRight: 0 }}>
+                                        {data.images && arr.map((x, index) => {
+                                            if (x < 5) {
+                                                return <div className='col-md-4' style={{ paddingTop: x > 2 ? 7.5 : 0, paddingLeft: (x % 3 != 0 || x == 0) ? 0 : 7.5, paddingRight: x % 3 == 2 ? 0 : 7.5 }}>
+                                                    <img className='img-destination' onClick={(index) => this.onViewImage(index)} style={{ border: '2px solid rgb(235, 237, 240)' }} src={data.images[x] ? ("http://localhost:3000/" + data.images[x]) : ''} />
+                                                </div>
+                                            }
+                                            else if (_.size(data.images) > 5) {
+                                                return <div className='col-md-4' style={{ paddingTop: x > 2 ? 7.5 : 0, paddingLeft: (x % 3 != 0 || x == 0) ? 0 : 7.5, paddingRight: x % 3 == 2 ? 0 : 7.5 }}>
+                                                    <img className='img-destination' style={{ border: '2px solid rgb(235, 237, 240)' }} src={data.images[x] ? ("http://localhost:3000/" + data.images[x]) : ''} />
+                                                    <div className='overlay2' onClick={(index) => this.onViewImage(index)}>
+                                                        <div className='img-destination-content'>
+                                                            <span><Icon type="plus" style={{ color: '#fff' }} /></span><span>{_.size(data.images) - 6}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            } else {
+                                                // return <div className='col-md-4' style={{ paddingTop: x > 2 ? 7.5 : 0, paddingLeft: (x % 3 != 0 || x == 0) ? 0 : 7.5, paddingRight: x % 3 == 2 ? 0 : 7.5 }}>
+                                                //     <img className='img-destination' style={{ border: '2px solid rgb(235, 237, 240)' }} src={data.images[x] ? ("http://localhost:3000/" + data.images[x]) : ''} />
+                                                // </div>
+                                            }
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
                             <div style={{
                                 border: '1px solid rgb(235, 237, 240)',
                                 background: '#ffff',
-                                marginTop: 30
-                            }}>
-                                <div className='row' style={{ marginLeft: 0, marginRight: 0 }}>
-                                    {data.images && arr.map((x, index) => {
-                                        if (x < 5) {
-                                            return <div className='col-md-4' style={{ paddingTop: x > 2 ? 7.5 : 0, paddingLeft: (x % 3 != 0 || x == 0) ? 0 : 7.5, paddingRight: x % 3 == 2 ? 0 : 7.5 }}>
-                                                <img className='img-destination' onClick={(index) => this.onViewImage(index)} style={{ border: '2px solid rgb(235, 237, 240)' }} src={data.images[x] ? ("http://localhost:3000/" + data.images[x]) : ''} />
-                                            </div>
-                                        }
-                                        else if (_.size(data.images) > 5) {
-                                            return <div className='col-md-4' style={{ paddingTop: x > 2 ? 7.5 : 0, paddingLeft: (x % 3 != 0 || x == 0) ? 0 : 7.5, paddingRight: x % 3 == 2 ? 0 : 7.5 }}>
-                                                <img className='img-destination' style={{ border: '2px solid rgb(235, 237, 240)' }} src={data.images[x] ? ("http://localhost:3000/" + data.images[x]) : ''} />
-                                                <div className='overlay2' onClick={(index) => this.onViewImage(index)}>
-                                                    <div className='img-destination-content'>
-                                                        <span><Icon type="plus" style={{ color: '#fff' }} /></span><span>{_.size(data.images) - 6}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        } else {
-                                            // return <div className='col-md-4' style={{ paddingTop: x > 2 ? 7.5 : 0, paddingLeft: (x % 3 != 0 || x == 0) ? 0 : 7.5, paddingRight: x % 3 == 2 ? 0 : 7.5 }}>
-                                            //     <img className='img-destination' style={{ border: '2px solid rgb(235, 237, 240)' }} src={data.images[x] ? ("http://localhost:3000/" + data.images[x]) : ''} />
-                                            // </div>
-                                        }
-                                    })}
-                                </div>
+                                marginTop: 30,
+                            }} className='col-md-4'>
+                                {data && <Map
+                                    google={this.props.google}
+                                    zoom={10}
+                                    style={mapStyles}
+                                    initialCenter={{ lat: 11.939845, lng: 108.457586 }}
+                                >
+                                    <Marker
+                                        title={data.name}
+                                        onClick={this.onMarkerClick}
+                                        name={data.name}
+                                        position={{ lng: this.state.latitude, lat: this.state.longitude }} />
+                                    <InfoWindow
+                                        marker={this.state.activeMarker}
+                                        visible={this.state.showingInfoWindow}>
+                                        <div>
+                                            <div>{data.name}</div>
+                                        </div>
+                                    </InfoWindow>
+                                </Map>}
                             </div>
                         </div>
                         <div style={{
                             border: '1px solid rgb(235, 237, 240)',
                             background: '#ffff',
                             marginTop: 30,
-                        }} className='col-md-4'>
-                            {data && <Map
-                                google={this.props.google}
-                                zoom={10}
-                                style={mapStyles}
-                                initialCenter={{ lat: 11.939845, lng: 108.457586 }}
-                            >
-                                <Marker
-                                    title={data.name}
-                                    onClick={this.onMarkerClick}
-                                    name={data.name}
-                                    position={{ lng: this.state.latitude, lat: this.state.longitude }} />
-                                <InfoWindow
-                                    marker={this.state.activeMarker}
-                                    visible={this.state.showingInfoWindow}>
-                                    <div>
-                                        <div>{data.name}</div>
-                                    </div>
-                                </InfoWindow>
-                            </Map>}
+                        }}>
+                            <div className='container' style={{ paddingTop: 15 }}>
+                                <h3>Giới thiệu về {data.name}</h3>
+                                <p style={{ textAlign: "justify" }}>{data.description}</p>
+                            </div>
                         </div>
-                    </div>
-                    <div style={{
-                        border: '1px solid rgb(235, 237, 240)',
-                        background: '#ffff',
-                        marginTop: 30,
-                    }}>
-                        <div className='container' style={{ paddingTop: 15 }}>
-                            <h3>Giới thiệu về {data.name}</h3>
-                            <p style={{ textAlign: "justify" }}>{data.description}</p>
-                        </div>
-                    </div>
 
-                    <div style={{
-                        border: '1px solid rgb(235, 237, 240)',
-                        background: '#ffff',
-                        marginTop: 30,
-                    }} className='col-md-8'>
-                        <div className='container' style={{ paddingTop: 15 }}>
-                            <h3>Bình luận và đánh giá</h3>
-                            <div className='row'>
-                                <div className='col-md-4'>
-                                    <div className='rate-container'>
-                                        {data.rate ? (Math.round(data.rate * 10) / 10) : 0} <Icon type="star" />
+                        <div style={{
+                            border: '1px solid rgb(235, 237, 240)',
+                            background: '#ffff',
+                            marginTop: 30,
+                        }} className='col-md-8'>
+                            <div className='container' style={{ paddingTop: 15 }}>
+                                <h3>Bình luận và đánh giá</h3>
+                                <div className='row'>
+                                    <div className='col-md-4'>
+                                        <div className='rate-container'>
+                                            {data.rate ? (Math.round(data.rate * 10) / 10) : 0} <Icon type="star" />
+                                        </div>
+                                        <div className='user-rating'>{meta.count}<Icon type="user" /></div>
                                     </div>
-                                    <div className='user-rating'>{meta.count}<Icon type="user" /></div>
+                                    <div className='col-md-2' style={{
+                                        fontSize: '15px',
+                                        marginTop: '26px'
+                                    }}>
+                                        {insc.map((x) => {
+                                            return <div>{x}</div>
+                                        })}
+                                    </div>
+                                    <div className='col-md-6' style={{ marginTop: 20 }}>
+                                        <div>
+                                            <Progress percent={Math.floor((meta.count5 * 100) / meta.count)} status="normal" />
+                                            <Progress percent={Math.floor((meta.count4 * 100) / meta.count)} status="normal" />
+                                            <Progress percent={Math.floor((meta.count3 * 100) / meta.count)} status="normal" />
+                                            <Progress percent={Math.floor((meta.count2 * 100) / meta.count)} status="normal" />
+                                            <Progress percent={Math.floor((meta.count1 * 100) / meta.count)} status="normal" />
+                                        </div>,
                                 </div>
-                                <div className='col-md-2' style={{
-                                    fontSize: '15px',
-                                    marginTop: '26px'
-                                }}>
-                                    {insc.map((x) => {
-                                        return <div>{x}</div>
-                                    })}
                                 </div>
-                                <div className='col-md-6' style={{ marginTop: 20 }}>
-                                    <div>
-                                        <Progress percent={Math.floor((meta.count5 * 100) / meta.count)} status="normal" />
-                                        <Progress percent={Math.floor((meta.count4 * 100) / meta.count)} status="normal" />
-                                        <Progress percent={Math.floor((meta.count3 * 100) / meta.count)} status="normal" />
-                                        <Progress percent={Math.floor((meta.count2 * 100) / meta.count)} status="normal" />
-                                        <Progress percent={Math.floor((meta.count1 * 100) / meta.count)} status="normal" />
-                                    </div>,
+                                <div style={{ textAlign: 'center', paddingTop: 20 }}>
+                                    <div>Bạn nghĩ sao về {data.name} ?</div>
+                                    <div >
+                                        <Rate allowHalf tooltips={desc} onChange={this.handleChange} />
+                                    </div>
                                 </div>
                             </div>
-                            <div style={{ textAlign: 'center', paddingTop: 20 }}>
-                                <div>Bạn nghĩ sao về {data.name} ?</div>
-                                <div >
-                                    <Rate allowHalf tooltips={desc} onChange={this.handleChange} />
-                                </div>
-                            </div>
-                        </div>
-                        <hr />
-                        <div className='container comment-container' style={{ paddingTop: 15 }}>
-                            <div className='row'>
-                                <div style={{ width: 85 }}>
-                                    <Avatar size={64} src={this.state.avatar ? this.state.avatar : '../../images/user.png'} />
-                                </div>
-                                <div className='col-md-10'>
-                                    <CollectionCreateForm
-                                        ref={c => this.formRef = c}
-                                        wrappedComponentRef={this.saveFormRef}
-                                    />
-                                </div>
-                                <div style={{ width: 85 }}></div>
-                                <div className='col-md-10'>
-                                    <Button type="primary" shape="round" onClick={() => this.onCreateComment()}> Đăng tải bình luận
+                            <hr />
+                            <div className='container comment-container' style={{ paddingTop: 15 }}>
+                                <div className='row'>
+                                    <div style={{ width: 85 }}>
+                                        <Avatar size={64} src={this.state.avatar ? this.state.avatar : '../../images/user.png'} />
+                                    </div>
+                                    <div className='col-md-10'>
+                                        <CollectionCreateForm
+                                            ref={c => this.formRef = c}
+                                            wrappedComponentRef={this.saveFormRef}
+                                        />
+                                    </div>
+                                    <div style={{ width: 85 }}></div>
+                                    <div className='col-md-10'>
+                                        <Button type="primary" shape="round" onClick={() => this.onCreateComment()}> Đăng tải bình luận
                                     </Button>
-                                </div>
-                                {dataComment && dataComment.map(x => {
-                                    return <div className='col-md-12' style={{ paddingTop: 50 }}>
-                                        <div className='row'>
-                                            <div style={{ width: 67 }}>
-                                                <Avatar size={64} src={x.accountId.avatar ? ('http://localhost:3000/' + x.accountId.avatar) : '../../images/user.png'} />
-                                            </div>
-                                            <div className='col-md-10'>
-                                                <div style={{ color: '#4183C4', fontWeight: 'bold' }}>{x.accountId.name}</div>
-                                                <div>{x.comment}</div>
+                                    </div>
+                                    {dataComment && dataComment.map(x => {
+                                        return <div className='col-md-12' style={{ paddingTop: 50 }}>
+                                            <div className='row'>
+                                                <div style={{ width: 67 }}>
+                                                    <Avatar size={64} src={x.accountId.avatar ? ('http://localhost:3000/' + x.accountId.avatar) : '../../images/user.png'} />
+                                                </div>
+                                                <div className='col-md-10'>
+                                                    <div style={{ color: '#4183C4', fontWeight: 'bold' }}>{x.accountId.name}</div>
+                                                    <div>{x.comment}</div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                })}
+                                    })}
+
+                                </div>
+
 
                             </div>
-
-
                         </div>
+                        <Modal width={"70%"} className='modal-image' centered visible={this.state.previewVisible} closable={null} footer={null} onCancel={this.handleCancel}>
+                            <div className='icon-arrow-left' >
+                                <Icon className='left-circle' type="left-circle" onClick={this.previous} />
+                            </div>
+                            <Carousel ref={node => (this.carousel = node)} >
+                                {data.images && data.images.map((x, index) => {
+                                    return <div key={index}>
+                                        <img style={{ width: '100%', height: '600px' }} src={x ? ("http://localhost:3000/" + x) : ''} />
+                                    </div>
+                                })}
+                            </Carousel>
+                            <div className='icon-arrow-right'>
+                                <Icon className='right-circle' type="right-circle" onClick={this.next} />
+                            </div>
+                        </Modal>
                     </div>
-                    <Modal width={"70%"} className='modal-image' centered visible={this.state.previewVisible} closable={null} footer={null} onCancel={this.handleCancel}>
-                        <div className='icon-arrow-left' >
-                            <Icon className='left-circle' type="left-circle" onClick={this.previous} />
-                        </div>
-                        <Carousel ref={node => (this.carousel = node)} >
-                            {data.images && data.images.map((x, index) => {
-                                return <div key={index}>
-                                    <img style={{ width: '100%', height: '600px' }} src={x ? ("http://localhost:3000/" + x) : ''} />
-                                </div>
-                            })}
-                        </Carousel>
-                        <div className='icon-arrow-right'>
-                            <Icon className='right-circle' type="right-circle" onClick={this.next} />
-                        </div>
-                    </Modal>
-                </div>
-            </div >
+                </div >
+            </div>
             : '')
     }
 }

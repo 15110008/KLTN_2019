@@ -338,7 +338,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                                                 })
                                             })
                                             if (idx == arrayDate.length - 1) {
-                                                window.location.replace("http://localhost:3006/trip-detail/" + response.data.result._id)
+                                                window.location.replace("http://localhost:3006/trip-detail-self/" + response.data.result._id)
                                             }
                                         }
                                     }).catch((error) => {

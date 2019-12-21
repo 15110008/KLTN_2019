@@ -52,8 +52,15 @@ router.post('/send-mail', (req, res) => {
     from: 'Testnodemailer97@gmail.com',
     to: 'nguyenngochoangphuc0311@gmail.com',
     subject: req.body.Title,
-    text: req.body.Content,
-    html: '<b>Hello World?</b>'
+    // subject: 'Test trước xem ntn',
+    text: 'Nội dung nè',
+    // text: req.body.Content,
+    html: `<p>Được gửi bởi: ${req.body.name}</p>
+    <br/>
+    <br/>
+    <br/>
+    <div>${req.body.Content}</div>
+    `
   };
   transporter.sendMail(mainOptions, (err) => {
     if (err) {
