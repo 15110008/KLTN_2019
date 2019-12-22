@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Rate, Tooltip } from 'antd'
+import { Rate, Tooltip, Select } from 'antd'
 import './style.scss'
 import _ from 'lodash'
+
+const { Option } = Select;
 
 const arr = [0, 1, 2, 3]
 
@@ -15,6 +17,7 @@ export default class Trip extends Component {
     }
 
     componentDidMount() {
+        this.loadCombobox()
         axios.get('http://localhost:3000/v1/trip/Public')
             .then((res) => {
                 if (res.data.success) {
@@ -25,6 +28,39 @@ export default class Trip extends Component {
                 }
             }).catch((err) => {
                 console.log("TCL: Trip -> componentDidMount -> err", err)
+            })
+    }
+
+    async loadCombobox() {
+        await axios.get('http://localhost:3000/v1/destination')
+            .then((res) => {
+                const data = res.data.data
+                const destinationOption = []
+                data.map(x => {
+                    destinationOption.push({
+                        value: x._id,
+                        label: x.name
+                    })
+                })
+                this.setState({
+                    destinationOption: destinationOption
+                })
+            }).catch((error) => {
+
+            })
+    }
+
+    handleChange(value) {
+        const me = this
+        axios.get('http://localhost:3000/v1/trip/destination/' + value)
+            .then((res) => {
+                if (res.data.success) {
+                    this.setState({
+                        data: res.data.result
+                    })
+                }
+            }).catch((err) => {
+                console.log("TCL: Trip -> handleChange -> err", err)
             })
     }
 
@@ -42,18 +78,31 @@ export default class Trip extends Component {
     }
 
     render() {
-        const { data } = this.state
+        const { data, destinationOption } = this.state
         return (
             <div>
                 <div className="container destination">
                     <div className="row justify-content-center">
-                        <div className="col-md-12 heading-section text-center  mb-5">
+                        <div className="col-md-12 heading-section text-center mb-2">
                             <span className="subheading">Đề xuất</span>
                             <h2 className="mb-2">Lịch trình tạo gần đây</h2>
                         </div>
                     </div>
                     <div className='row'>
-                        {data && arr.map((x, index) => {
+                        <div className='col-md-3' style={{ paddingBottom: 30 }}>
+                            <Select
+                                onChange={(val) => this.handleChange(val)}
+                                placeholder={'Địa điểm'}
+                                style={{ width: 250 }}
+                                readOnly={this.props.readOnly}
+                            >
+                                {destinationOption && destinationOption.map((x, index) => {
+                                    return <Option key={index} value={x.value}>{x.label}</Option>
+                                })}
+                            </Select>
+                        </div>
+                        <div className='col-md-9'></div>
+                        {(_.isEmpty(data) || data) ? arr.map((x, index) => {
                             if (data[x]) {
                                 const number = this.randomIntFromInterval(0, _.size(data[x].images) - 1)
                                 console.log("TCL: Trip -> render -> number", x)
@@ -105,7 +154,7 @@ export default class Trip extends Component {
                                     </div>
                                 )
                             }
-                        })}
+                        }) : <div style={{ textAlign: 'center' }}>Hiện chưa có lịch trình nào</div>}
                     </div>
                 </div>
             </div>
