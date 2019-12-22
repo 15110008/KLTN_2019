@@ -8,7 +8,12 @@ const getSpot = async (spotId) => {
     const result = await SpotSchema.findOne({ spotId });
     return result;
 };
+const getSpots = async () => {
+    const result = await SpotSchema.find();
+    return result;
+};
 export default {
     create,
-    getSpot
+    getSpot,
+    getSpots
 };

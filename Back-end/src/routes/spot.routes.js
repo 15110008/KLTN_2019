@@ -6,5 +6,7 @@ const router = express.Router();
 
 router.post('/spot', SpotValidate.createInput, SpotController.create);
 
+router.get('/spot', SpotController.getSpots);
+
 
 export default router;

@@ -215,8 +215,9 @@ const getRate = async (tripId) => {
     return result;
 };
 const getTripDes = async (destinationId) => {
-    const result = await TripSchema.findOne({
+    const result = await TripSchema.find({
         destinationId,
+        public: true,
         isDeleted: false
     });
     return result;

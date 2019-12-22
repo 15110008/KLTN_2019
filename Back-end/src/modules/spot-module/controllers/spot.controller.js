@@ -27,7 +27,23 @@ const create = async (req, res) => {
         return res.onError(error);
     }
 };
+const getSpots = async (req, res) => {
+    try {
+        const spots = await SpotRepository.getSpots();
+        const result = spots.map((spot) => {
+            const spotInfo = {};
+            spotInfo.spotId = spot.spotId;
+            spotInfo.length = spot.length;
+            spotInfo.time = spot.time;
+            return spotInfo;
+        });
+        return res.onSuccess(result);
+    } catch (error) {
+        return res.onError(error);
+    }
+};
 
 export default {
-    create
+    create,
+    getSpots
 };

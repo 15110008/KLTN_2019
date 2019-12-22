@@ -28,7 +28,7 @@ router.get('/trip/comment/:id', TripController.getComment);
 // Get rate trip
 router.get('/trip/rate/:id', TripController.getRate);
 // get trip with destination
-router.get('/trip/destination', TripController.getTripWithDes);
+router.get('/trip/destination/:id', TripController.getTripWithDes);
 
 // dùng để test và check kết quả k dùng cho view
 // get all trip in db (admin)

@@ -629,7 +629,33 @@ const getTripWithDes = async (req, res) => {
     try {
         const trip = await TripRepository.getTripDes(destinationId);
         if (!trip) throw new NotFoundError(GetTripWithDesErrors.GET_TRIP_FAIL);
-        return res.onSuccess(trip);
+        const result1 = trip.map(async (tr) => {
+            const { accountId } = tr;
+            const account = await AccountRepository.getName(accountId);
+            const { name } = account;
+            const { avatar } = account;
+            const { email } = account;
+            const { _id } = tr;
+            const count = await TripRepository.countRating(_id);
+            // const { destinationId } = tr;
+            const image = await DestinationRepository.getImages(destinationId);
+            const { images } = image;
+            const tripInfo = {};
+            tripInfo._id = tr._id;
+            tripInfo.name = tr.name;
+            tripInfo.totalDate = tr.totalDate;
+            tripInfo.destinationId = tr.destinationId;
+            tripInfo.images = images;
+            tripInfo.accountId = tr.accountId;
+            tripInfo.rate = tr.rate;
+            tripInfo.count = count;
+            tripInfo.userName = name;
+            tripInfo.avatar = avatar;
+            tripInfo.email = email;
+            return tripInfo;
+        });
+        const result = await Promise.all(result1);
+        return res.onSuccess(result);
     } catch (error) {
         return res.onError(error);
     }
