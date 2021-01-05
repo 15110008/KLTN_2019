@@ -6,7 +6,7 @@
     "@atlaskit/css-reset": "^5.0.9",
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
     "antd": "^3.23.3",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "bootstrap": "^4.3.1",
     "google-maps-react": "^2.0.2",
     "immutability-helper": "^3.0.1",
