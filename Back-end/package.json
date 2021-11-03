@@ -34,7 +34,7 @@
     "nodemailer": "^6.4.2",
     "nodemon": "^1.17.5",
     "shortid": "^2.2.10",
-    "validator": "^10.4.0"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.5",
